@@ -3,9 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Vector Search</title>
 </head>
 <body>
-    <h1>Hello World</h1>
-</body>
+    <h1>Vector Search</h1>
+
+    <form action="/find_nearest" method="post">
+        <label for="user_vector">Enter your vector (comma-separated):</label>
+        <input type="text" name="user_vector" id="user_vector" required>
+        <button type="submit">Find Nearest Vectors</button>
+    </form>
+
+    {% if user_vector %}
+        <p>Your vector: {{ user_vector }}</p>
+    {% endif %}
+
+    {% if nearest_vectors %}
+        <p>Nearest vectors: {{ nearest_vectors }}</p>
+    {% endif %}
+</body>「
 </html>
