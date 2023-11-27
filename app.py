@@ -20,7 +20,7 @@ index.add(np.array(test_data, dtype=np.float32))
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 @app.route('/find_nearest', methods=['POST'])
 def find_nearest():
