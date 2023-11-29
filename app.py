@@ -46,7 +46,7 @@ index.add(np.array(all_user_vector, dtype=np.float32))
 
 @app.route('/')
 def home():
-    return redirect("/review")
+    return render_template("home.html")
 
 
 # マッチング処理
