@@ -2,3 +2,5 @@ Flask
 gunicorn
 faiss-cpu
 numpy
+firebase
+firebase_admin
