@@ -5,6 +5,8 @@ html{
 ul{
   background-color: lightblue;
   border-radius: 0.7rem;
+  padding: 0.3rem;
+  margin: 3rem;
 }
 
 li{
