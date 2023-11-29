@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect
 import faiss
 import numpy as np
 import firebase_admin
@@ -10,17 +10,27 @@ cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-doc_ref = db.collection('user')
-all_user = doc_ref.get()
+user_doc_ref = db.collection('user')
+all_user = user_doc_ref.get()
+
+review_doc_ref=db.collection('review')
 
 
 app = Flask(__name__)
-# データベースにいれるときのデータの型
+# ユーザーデータベースにいれるときのデータの型
 user_format={
     "gender":None,
     "mangaAnswer":[],
     "username":None,
 }
+
+# レビューデータベースに入れるときのデータの型
+review_format={
+    "contents":None,
+    "username":None,
+}
+
+
 # 新しく入力されたデータ
 answer =  [1.0, 5.0, 3.0, 0.0, 2.0, 3.0, 5.0, 3.0, 4.0, 0.0, 1.0, 1.0, 3.0, 5.0, 4.0, 5.0, 4.0, 5.0, 3.0, 0.0]
 
@@ -34,11 +44,13 @@ dimension = len(all_user_vector[0])  # ベクトルの次元数
 index = faiss.IndexFlatL2(dimension)
 index.add(np.array(all_user_vector, dtype=np.float32))
 
-# @app.route('/')
-# def home():
-#     return render_template('question.html')
-
 @app.route('/')
+def home():
+    return redirect("/review")
+
+
+# マッチング処理
+@app.route('/match')
 def find_nearest():
 
     # マッチング
@@ -53,14 +65,24 @@ def find_nearest():
     user_format['mangaAnswer']=answer
     user_format['username']="Kota"
 
-    document=doc_ref.document() 
-    document.set(user_format)
+    user_document=user_doc_ref.document() 
+    user_document.set(user_format)
 
     # -----------------
 
     # マッチング結果の出力
     print(nearest_values)
 
+    return render_template("home.html")
+
+# レビュー投稿
+@app.route('/review')
+def review():
+    # 入力されたレビューのデータ
+    review_format["contents"]="ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"
+    review_format["username"]="kota"
+    review_document=review_doc_ref.document() 
+    review_document.set(review_format)
     return render_template("home.html")
 
 if __name__ == '__main__':
