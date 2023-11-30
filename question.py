@@ -32,7 +32,7 @@ def question():
         mangaAnswer = []
 
         #HTMLフォームからデータを受け取る
-        for i in range(1,19):
+        for i in range(1,21):
             question_key = f'question-{i:02}'
             answer = request.form.get(question_key)
             answer=int(answer)
