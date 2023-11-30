@@ -41,10 +41,8 @@ def home():
     return render_template("question.html")
 
 # アンケート回答送信
-@app.route('/question', methods = ['GET', 'POST'])
+@app.route('/question', methods = ['POST'])
 def question():
-    if request.method == 'GET':
-        return render_template('templates/question.html')
     
     if request.method == 'POST':
         mangaAnswer = []
