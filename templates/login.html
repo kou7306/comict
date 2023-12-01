@@ -1,0 +1,17 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Login</title>
+</head>
+<body>
+  <h1>{% for message in messages %}
+    <p>{{ message }}</p>
+{% endfor %}</h1>
+  <form action="/" method='POST'>
+    Email: <input type="text" name="email"><br>
+    Password: <input type="password" name="password"><br>
+    <input type="submit">
+    <a href="{{ url_for('userAdd') }}">ユーザー登録</a>
+  </form>
+</body>
+</html>

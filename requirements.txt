@@ -4,3 +4,4 @@ faiss-cpu
 numpy
 firebase
 firebase_admin
+pyrebase4
