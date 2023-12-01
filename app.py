@@ -1,8 +1,73 @@
-from flask import Flask, render_template, request, jsonify, redirect
+from flask import Flask, render_template, request, jsonify, redirect, session, url_for, flash, get_flashed_messages
+import pyrebase
 import faiss
 import numpy as np
 import firebase_admin
 from firebase_admin import credentials,firestore
+
+app = Flask(__name__)
+config = {
+    "apiKey": "AIzaSyBPva6sGWXi6kjmk8mjWWVCGEKKEBIfTIY",
+    "authDomain": "giikucamp12.firebaseapp.com",
+    "projectId": "giikucamp12",
+    "storageBucket": "giikucamp12.appspot.com",
+    "messagingSenderId": "755980381836",
+    "appId": "1:755980381836:web:acdae710db8366cc4095a9",
+    "measurementId": "G-00EVCKC0JQ",
+    "databaseURL": ""
+}
+
+firebase = pyrebase.initialize_app(config)
+auth = firebase.auth()
+
+app.secret_key = "secret"
+
+@app.route("/accesTest")
+def accesTest():
+    if 'user' in session:
+        return redirect("/question")
+    else:
+        flash("ログインしてください")
+        return redirect("/")
+
+@app.route("/", methods=['POST', 'GET'])
+def index():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        try:
+            auth.sign_in_with_email_and_password(email, password)
+            session['user'] = email
+            return redirect(url_for('accesTest'))
+        except:
+            flash("ログインに失敗しました")
+            return redirect("/")
+    else:
+        messages = get_flashed_messages()
+        return render_template("login.html", messages=messages)
+
+@app.route("/userAdd", methods=['POST', 'GET'])
+def userAdd():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        try:
+            auth.create_user_with_email_and_password(email, password)
+            flash("ユーザー登録が完了しました")
+            return redirect("/question")
+        except:
+            flash("ユーザー登録に失敗しました")
+            return redirect("/")
+    else:
+        return render_template("userAdd.html")
+
+@app.route("/logout")
+def logput():
+    session.pop('user', None)
+    flash("ログアウトしました")
+    return redirect('/')
+
+
 
 # データベースの準備等
 cred = credentials.Certificate("key.json")
@@ -16,7 +81,6 @@ all_user = user_doc_ref.get()
 review_doc_ref=db.collection('review')
 
 
-app = Flask(__name__)
 # ユーザーデータベースにいれるときのデータの型
 user_format={
     "gender":None,
@@ -38,15 +102,15 @@ review_format={
 
 
 
-@app.route('/')
-def home():
-    return render_template("question.html")
+
+
 
 # アンケート回答送信
-@app.route('/question', methods = ['POST'])
+@app.route('/question', methods = ['GET','POST'])
 def question():
-    
-    if request.method == 'POST':
+    if request.method == 'GET':
+        return render_template("question.html")
+    else:
         mangaAnswer = []
 
         #HTMLフォームからデータを受け取る
@@ -92,23 +156,12 @@ def question():
             # 一人のレビュワーの全てのレビューした漫画のデータを取り出す
             for doc in query_result:
                 title_data.append(doc.to_dict()["mangaTitle"])
-            
-        print(nearest_values_users)    
-        print(title_data)
+     
 
         
 
         return render_template("home.html",review_users=nearest_values_users,title_data=title_data)
 
-
-# # ユーザーデータベースの参照
-# user_doc_ref = db.collection('user')
-
-# # 特定のusernameを持つデータを検索
-# target_username = "Syunsuke"  # ここに検索したいusernameを指定
-
-# # クエリの作成
-# query = user_doc_ref.where('username', '==', target_username)
 
 # レビュー投稿
 @app.route('/review')
