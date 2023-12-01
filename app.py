@@ -26,6 +26,8 @@ user_format={
 
 # レビューデータベースに入れるときのデータの型
 review_format={
+    "mangaTitle":None,
+    "evaluation":None,
     "contents":None,
     "username":None,
 }
@@ -76,12 +78,27 @@ def question():
         index = faiss.IndexFlatL2(dimension)
         index.add(np.array(all_user_vector, dtype=np.float32))
         # 最近傍のベクトルを検索
-        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=4)
+        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=2)
         # 結果の値だけを取り出す
         nearest_values_users = [all_users[i] for i in indices[0]]
+        # 対象ユーザーのレビューした作品名を取り出す
+        title_data=[]
+        for user in nearest_values_users:
+            # usernameが一致するレビューデータをすべて取り出す
+            query = review_doc_ref.where('username', '==', user["username"])
+            # クエリを実行して結果を取得
+            query_result = query.get()
+
+            # 一人のレビュワーの全てのレビューした漫画のデータを取り出す
+            for doc in query_result:
+                title_data.append(doc.to_dict()["mangaTitle"])
+            
+        print(nearest_values_users)    
+        print(title_data)
+
         
 
-        return render_template("home.html",review_users=nearest_values_users)
+        return render_template("home.html",review_users=nearest_values_users,title_data=title_data)
 
 
 # # ユーザーデータベースの参照
@@ -97,6 +114,8 @@ def question():
 @app.route('/review')
 def review():
     # 入力されたレビューのデータ
+    review_format["evaluation"]=4
+    review_format["mangaTitle"]="ワンピース"
     review_format["contents"]="ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"
     review_format["username"]="kota"
     review_document=review_doc_ref.document() 
