@@ -42,6 +42,21 @@ def index():
     messages = get_flashed_messages()
     return render_template("login.html", messages=messages)
 
+@app.route("/userAdd", methods=['POST', 'GET'])
+def userAdd():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        try:
+            auth.create_user_with_email_and_password(email, password)
+            flash("ユーザー登録が完了しました")
+            return redirect("/")
+        except:
+            flash("ユーザー登録に失敗しました")
+            return redirect("/")
+    else:
+        return render_template("userAdd.html")
+
 @app.route("/logout")
 def logput():
     session.pop('user', None)
