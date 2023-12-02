@@ -4,15 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vector Search</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
-    <button><a href="/match">ユーザーデータベースに追加</a></button>
-    <button><a href="/review">レビューデータベースに追加</a></button>
-    {% for review_user in review_users %}
+    <div class="wrapper1">
+        <h1>あなたの属性に近いユーザー</h1>
+        <div class="users">
+            <div class="user_info">
+                <p class="user_name">user1</p>
+                <p class="user_details">ユーザー情報</p>
+            </div>
+            <div class="user_info">
+                <p class="user_name">user1</p>
+                <p class="user_details">ユーザー情報</p>
+            </div>
+            <div class="user_info">
+                <p class="user_name">user1</p>
+                <p class="user_details">ユーザー情報</p>
+            </div> 
+        </div>
+    </div>
+
+    
+    <h1>おすすめの漫画</h1>
+    <div class="manga_info">
+        <p>ダイヤのA</p>
+        <p>詳細はこちら</p>
+    </div>
+    <div class="manga_info">
+        <p>黒子のバスケ</p>
+        <p>詳細はこちら</p>
+    </div>
+    <div class="manga_info">
+        <p>ハイキュー</p>
+        <p>詳細はこちら</p>
+    </div>
+    
+    
+    <!-- {% for review_user in review_users %}
     <p>{{review_user["username"]}}</p>
     {% endfor %}
     {% for title in title_data %}
     <p>{{title}}</p>
-    {% endfor %}
+    {% endfor %} -->
 </body>
 </html>
