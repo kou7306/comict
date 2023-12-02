@@ -43,6 +43,20 @@
           </div>
         </nav>
     </header>
+
+    {% for doc in user_query %}
+    <a href="/{{user_id}}/{{doc.id}}/userpage"><p>{{doc.to_dict()["username"]}}</p></a>
+    {% endfor %}
+    {% for doc in review_query %}
+    <p>{{doc.to_dict()["mangaTitle"]}}</p>
+    {% endfor %}
+
+    <button onclick="showAlert()">アラートを表示</button>
+    
+    {% for title in title_data %}
+    <p>{{title}}</p>
+    {% endfor %}
+
     <section class="manga container">
         <h2>あなたにおすすめの漫画</h2>
         <div class="swiper mySwiper">

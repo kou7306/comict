@@ -53,10 +53,53 @@ auth = firebase.auth()
 
 app.secret_key = "secret"
 
+# マッチング関数
+def matching(mangaAnswer):
+    # データベースにあるすべてのユーザーデータを取得
+    all_user_vector = []
+    all_users = []
+    for user in all_user:
+        all_user_vector.append(user.to_dict()["mangaAnswer"])
+        all_users.append(user.to_dict())
+
+    # Faissインデックスの作成
+    dimension = len(all_user_vector[0])  # ベクトルの次元数
+    index = faiss.IndexFlatL2(dimension)
+    index.add(np.array(all_user_vector, dtype=np.float32))
+    
+    # 最近傍のベクトルを検索
+    _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=2)
+    
+    # 結果の値だけを取り出す
+    nearest_values_users = [all_users[i] for i in indices[0]]
+    
+    # 対象ユーザーのレビューした作品名を取り出す
+    title_data = []
+    review_query_results = []
+    user_query_results = []
+    
+    for user in nearest_values_users:
+        # usernameが一致するレビューデータをすべて取り出す
+        review_query_result = review_doc_ref.where('username', '==', user["username"]).get()
+        user_query_result = db.collection('user').where('username', '==', user["username"]).get()
+        
+        review_query_results.extend(review_query_result)
+        user_query_results.extend(user_query_result)
+    
+    return review_query_results, user_query_results
+
+
+
 @app.route("/<user_id>/accesTest")
 def accesTest(user_id):
     if 'user' in session:
-        return redirect(f"/{user_id}/question")
+        user=db.collection('user').document(user_id).get()
+        if(user.to_dict()["mangaAnswer"]==[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]):
+            return redirect(f"/{user_id}/question")
+        else:
+            # マッチング
+            review_query, user_query =matching(user.to_dict()["mangaAnswer"])
+            return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
     else:
         flash("ログインしてください")
         return redirect("/")
@@ -105,7 +148,7 @@ def index():
 # ユーザーネームの重複を確認する関数
 def is_username_duplicate(username):
     # usersコレクションからユーザーネームが一致するドキュメントをクエリ
-    query = user_doc_ref .where('username', '==', username)
+    query = user_doc_ref.where('username', '==', username)
     
     # クエリを実行して結果を取得
     query_result = query.stream()
@@ -183,33 +226,10 @@ def question(user_id):
 
 
         # マッチング
-        # データベースにあるすべてのユーザーデータを取得
-        all_user_vector=[]
-        all_users=[]
-        for user in all_user:
-            all_user_vector.append(user.to_dict()["mangaAnswer"])
-            all_users.append(user.to_dict())
+        review_query, user_query = matching(mangaAnswer)
 
-        # Faissインデックスの作成
-        dimension = len(all_user_vector[0])  # ベクトルの次元数
-        index = faiss.IndexFlatL2(dimension)
-        index.add(np.array(all_user_vector, dtype=np.float32))
-        # 最近傍のベクトルを検索
-        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=2)
-        # 結果の値だけを取り出す
-        nearest_values_users = [all_users[i] for i in indices[0]]
-        # 対象ユーザーのレビューした作品名を取り出す
-        title_data=[]
-        for user in nearest_values_users:
-            # usernameが一致するレビューデータをすべて取り出す
-            query = review_doc_ref.where('username', '==', user["username"])
-            # クエリを実行して結果を取得
-            query_result = query.get()
 
-            # 一人のレビュワーの全てのレビューした漫画のデータを取り出す
-            for doc in query_result:
-                title_data.append(doc.to_dict()["mangaTitle"])
-        return render_template("home.html",user_id=user_id,review_users=nearest_values_users,title_data=title_data)
+        return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
 
 
 # レビュー投稿
@@ -238,6 +258,7 @@ def review(user_id):
 
 
 
+
 @app.route('/home')
 def iho():
     return render_template("home.html")
@@ -245,13 +266,13 @@ def iho():
 
 @app.route('/<user_id>/userpage', methods=['GET', 'POST'])
 def user_page(user_id):   
+
     user_doc_ref = db.collection('user').document(user_id)
     user_doc=user_doc_ref.get()
     user_data=user_doc.to_dict()
     username=user_doc.to_dict()["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
-
     # アンケート結果の取得・表示
     with open('templates/question.html', 'r', encoding='utf-8') as file:
         html_code = file.read()
@@ -284,5 +305,28 @@ def user_page(user_id):
 
     return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
 
+# reviewer page
+@app.route('/<user_id>/<reviewer_id>/userpage', methods = ['GET','POST'])
+def reviewer(user_id,reviewer_id):
+    if request.method == 'GET':
+        # ユーザーのフォロー状態を保存する変数（デモ用）
+        is_following = False
+        user_doc_ref = db.collection('user').document(user_id)
+        user_doc=user_doc_ref.get()
+        username=user_doc.to_dict()["username"]
+        # 特定のユーザーネームに一致するドキュメントを取得
+        query = review_doc_ref.where('username', '==', username).get() 
+        return render_template("reviewerpage.html",query=query,username=username,reviewer_id=reviewer_id,user_id=user_id,follow_status='フォロー済み' if is_following else '未フォロー')
+    else:
+        data = request.get_json()
+        is_following = data.get('is_following')
+
+        # フォロー状態をトグル（デモ用）
+        is_following = not is_following
+        # フォロー状態をクライアントに返す
+        return jsonify({'isFollowing': is_following})
+
+
 if __name__ == '__main__':
     app.run(debug=False)
+
