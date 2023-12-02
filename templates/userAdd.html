@@ -5,8 +5,20 @@
 </head>
 <body>
   <form action="/userAdd" method='POST'>
-    Email: <input type="text" name="email"><br>
-    Password: <input type="password" name="password"><br>
+    <p>username:<input type="text" name="username" required></p>
+    <ul id="gender">
+      <p>性別</p>
+      <li>
+        <input type="radio" name="gender" id="man" class="radio__input" value="1" required>
+        <label for="man">男</label>
+      </li>
+      <li>
+        <input type="radio" name="gender" id="woman" class="radio__input" value="2">
+        <label for="woman">女</label>
+      </li>
+    </ul>
+    <p>Email: <input type="text" name="email" required></p>
+    <p>Password: <input type="password" name="password" required></p>
     <input type="submit">
   </form>
 </body>
