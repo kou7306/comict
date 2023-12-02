@@ -13,9 +13,16 @@
         <form action="/" method='POST'>
             <h1>Login</h1>
 
+            <h5>{% for message in messages %}<p>{{ message }}</p>{% endfor %}</h5>
+
             <div class="input-box">
-                <input type="text" name="email" placeholder="Username" required>
+                <input type="text" name="username" placeholder="Username" required>
                 <i class='bx bxs-user'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="text" name="email" placeholder="Email" required>
+                <i class='bx bx-envelope'></i>
             </div>
 
             <div class="input-box">
@@ -23,10 +30,14 @@
                 <i class='bx bxs-lock-alt' ></i>
             </div>
 
+            <div class="reset-link">
+                <a href="{{ url_for('reset') }}">パスワードを忘れた方はこちら</a>
+            </div>
+
             <button type="submit" class="btn">Login</button>
 
             <div class="userAdd-link">
-                <p>ユーザー登録は<a href="{{ url_for('userAdd') }}">こちら</p>
+                <a href="{{ url_for('userAdd') }}">ユーザー登録はこちら</a>
             </div>
         </form>
 </body>
