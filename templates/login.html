@@ -10,8 +10,9 @@
   <form action="/" method='POST'>
     Email: <input type="text" name="email"><br>
     Password: <input type="password" name="password"><br>
-    <input type="submit">
-    <a href="{{ url_for('userAdd') }}">ユーザー登録</a>
+    <input type="submit"><br>
+    <a href="{{ url_for('userAdd') }}">ユーザー登録</a><br>
+    <a href="{{ url_for('reset') }}">パスワードを忘れた方はこちら</a>
   </form>
 </body>
 </html>
