@@ -58,6 +58,20 @@ def accesTest(user_id):
         flash("ログインしてください")
         return redirect("/")
 
+@app.route("/reset", methods=['POST', 'GET'])
+def reset():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        try:
+            auth.send_password_reset_email(email)
+            flash("パスワード再設定メールを送信しました")
+            return redirect("/")
+        except:
+            flash("パスワード再設定メールの送信に失敗しました")
+            return redirect("/")
+    else:
+        return render_template("reset.html")
+    
 # login
 @app.route("/", methods=['POST', 'GET'])
 def index():
@@ -140,7 +154,7 @@ def logput():
 
 
 
-# アンケート回答送信
+# アンケート回答を受信
 @app.route('/<user_id>/question', methods = ['GET','POST'])
 def question(user_id):
     if request.method == 'GET':
