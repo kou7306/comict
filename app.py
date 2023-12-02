@@ -105,7 +105,7 @@ def index():
 # ユーザーネームの重複を確認する関数
 def is_username_duplicate(username):
     # usersコレクションからユーザーネームが一致するドキュメントをクエリ
-    query = user_doc_ref .where('username', '==', username)
+    query = user_doc_ref.where('username', '==', username)
     
     # クエリを実行して結果を取得
     query_result = query.stream()
@@ -202,14 +202,11 @@ def question(user_id):
         title_data=[]
         for user in nearest_values_users:
             # usernameが一致するレビューデータをすべて取り出す
-            query = review_doc_ref.where('username', '==', user["username"])
-            # クエリを実行して結果を取得
-            query_result = query.get()
+            review_query = review_doc_ref.where('username', '==', user["username"]).get()
+            user_query= db.collection('user').where('username', '==', user["username"]).get()
 
-            # 一人のレビュワーの全てのレビューした漫画のデータを取り出す
-            for doc in query_result:
-                title_data.append(doc.to_dict()["mangaTitle"])
-        return render_template("home.html",user_id=user_id,review_users=nearest_values_users,title_data=title_data)
+
+        return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
 
 
 # レビュー投稿
@@ -238,6 +235,7 @@ def review(user_id):
 
 
 
+
 @app.route('/home')
 def iho():
     return render_template("home.html")
@@ -245,12 +243,37 @@ def iho():
 
 @app.route('/<user_id>/userpage', methods=['GET', 'POST'])
 def user_page(user_id):   
+
     user_doc_ref = db.collection('user').document(user_id)
     user_doc=user_doc_ref.get()
     user_data=user_doc.to_dict()
     username=user_doc.to_dict()["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
+    return render_template("userpage.html",query=query,username=username)
+
+# reviewer page
+@app.route('/<user_id>/<reviewer_id>/userpage', methods = ['GET','POST'])
+def reviewer(user_id,reviewer_id):
+    if request.method == 'GET':
+        # ユーザーのフォロー状態を保存する変数（デモ用）
+        is_following = False
+        user_doc_ref = db.collection('user').document(user_id)
+        user_doc=user_doc_ref.get()
+        username=user_doc.to_dict()["username"]
+        # 特定のユーザーネームに一致するドキュメントを取得
+        query = review_doc_ref.where('username', '==', username).get()
+ 
+        return render_template("reviewerpage.html",query=query,username=username,reviewer_id=reviewer_id,user_id=user_id,follow_status='フォロー済み' if is_following else '未フォロー')
+    else:
+        data = request.get_json()
+        is_following = data.get('is_following')
+
+        # フォロー状態をトグル（デモ用）
+        is_following = not is_following
+        # フォロー状態をクライアントに返す
+        return jsonify({'isFollowing': is_following})
+
 
     # アンケート結果の取得・表示
     with open('templates/question.html', 'r', encoding='utf-8') as file:
@@ -285,4 +308,5 @@ def user_page(user_id):
     return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
+

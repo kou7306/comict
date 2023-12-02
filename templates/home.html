@@ -36,11 +36,21 @@
   </header>
 
 
+    <a href="/{{user_id}}/review">review</a>
+    
+
+    <h1><a href="/{{user_id}}/userpage">User Page</a></h1>
 
     
-    <!-- {% for review_user in review_users %}
-    <p>{{review_user["username"]}}</p>
+    {% for doc in user_query %}
+    <a href="/{{user_id}}/{{doc.id}}/userpage"><p>{{doc.to_dict()["username"]}}</p></a>
     {% endfor %}
+    {% for doc in review_query %}
+    <p>{{doc.to_dict()["mangaTitle"]}}</p>
+    {% endfor %}
+
+    <button onclick="showAlert()">アラートを表示</button>
+    
     {% for title in title_data %}
     <p>{{title}}</p>
     {% endfor %} -->
@@ -55,5 +65,6 @@
       </div>
     </div>
   </footer>
+  <script src="../static/javascript/home.js"></script>
 </body>
 </html>

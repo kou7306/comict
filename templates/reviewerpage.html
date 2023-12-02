@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+</head>
+<body>
+    <h1>Welcome to your user page!</h1>
+    <p>Your username is: {{ username }}</p>
+    {% for doc in query %}
+    <p>{{doc.to_dict()["mangaTitle"]}}</p>
+    {% endfor %}
+    <div id="followStatus">{{ follow_status }}</div>
+    <button id="followButton" onclick="toggleFollow()">フォロー</button>
+    
+
+    <script>
+        function toggleFollow() {
+            const followStatus = document.getElementById('followStatus');
+            const followButton = document.getElementById('followButton');
+        
+            // ここでユーザーのIDや他の必要な情報を取得
+            const is_following = '{{ is_following }}';  // Flaskからレンダリングされたテンプレート変数
+        
+            // サーバーにPOSTリクエストを送信
+            fetch('/{{user_id}}/{{reviewer_id}}/userpage', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ is_following }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('成功:', data);
+        
+                // フォロー状態に応じて表示を変更
+                if (data.isFollowing) {
+                    followStatus.textContent = 'フォロー済み';
+                    followButton.textContent = 'アンフォロー';
+                } else {
+                    followStatus.textContent = '未フォロー';
+                    followButton.textContent = 'フォロー';
+                }
+            })
+            .catch((error) => {
+                console.error('エラー:', error);
+                // エラー処理が必要な場合はここに記述
+            });
+        }
+        </script> 
+
+</body>
+</html>
