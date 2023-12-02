@@ -4,6 +4,7 @@ import faiss
 import numpy as np
 import firebase_admin
 from firebase_admin import credentials,firestore
+from bs4 import BeautifulSoup
 
 
 # データベースの準備等
@@ -231,11 +232,21 @@ def review(user_id):
         review_document.set(review_format)
         return redirect(f"/{user_id}/review")
 
-# mypage
-@app.route('/<user_id>/userpage')
-def userpage(user_id):
+
+
+
+
+@app.route('/home')
+def iho():
+    return render_template("home.html")
+
+
+@app.route('/<user_id>/userpage', methods=['GET', 'POST'])
+def user_page(user_id):   
+
     user_doc_ref = db.collection('user').document(user_id)
     user_doc=user_doc_ref.get()
+    user_data=user_doc.to_dict()
     username=user_doc.to_dict()["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
@@ -264,9 +275,38 @@ def reviewer(user_id,reviewer_id):
         return jsonify({'isFollowing': is_following})
 
 
-@app.route('/home')
-def iho():
-    return render_template("home.html")
+    # アンケート結果の取得・表示
+    with open('templates/question.html', 'r', encoding='utf-8') as file:
+        html_code = file.read()
+    result = user_data.get('mangaAnswer')
+
+    #アンケートの設問と回答を格納する配列
+    question, answer = [], []
+    soup = BeautifulSoup(html_code, 'html.parser')
+
+    #アンケートの設問を取得
+    h2_elems = soup.find_all('h2')
+    for h2 in h2_elems:
+        question.append(h2.text)
+
+    #アンケートの回答を取得
+    temp = []
+    for value_to_find in result:
+        value_to_find=int(value_to_find)
+        value_to_find=str(value_to_find)
+        input_tags = soup.find_all('input', {'value': value_to_find})
+        for input_tag in input_tags:
+            label_tag = soup.find('label', {'for': input_tag.get('id')})
+            if label_tag:
+                temp.append(label_tag.text)
+    for i in range(20):
+        answer.append(temp[i])
+
+    #設問と回答をタプル化
+    combined_list = zip(question, answer)
+
+    return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
 
 if __name__ == '__main__':
     app.run(debug=True)
+
