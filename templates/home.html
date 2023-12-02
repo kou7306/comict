@@ -7,38 +7,40 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
-    <div class="wrapper1">
+    <!-- <div class="wrapper1">
         <h1>あなたの属性に近いユーザー</h1>
         <div class="users">
             <div class="user_info">
                 <p class="user_name">user1</p>
-                <p class="user_details">ユーザー情報</p>
             </div>
             <div class="user_info">
                 <p class="user_name">user1</p>
-                <p class="user_details">ユーザー情報</p>
             </div>
             <div class="user_info">
                 <p class="user_name">user1</p>
-                <p class="user_details">ユーザー情報</p>
             </div> 
+        </div>
+    </div> -->
+    <div class="review-carousel">
+        <!-- カルーセル内のカード -->
+        <div class="card">
+          <h2>ユーザー名</h2>
+          <div class="card"><p>レビュー内容1</p></div>
+          <div class="card"><p>レビュー内容1</p></div>
+          <!-- 他のレビューを追加 -->
+        </div>
+    
+        <!-- カードを動かすためのコントロール -->
+        <div class="controls">
+          <button onclick="prevCard()">前へ</button>
+          <button onclick="nextCard()">次へ</button>
         </div>
     </div>
 
+
+    <a href="/{{user_id}}/review">review</a>
     
-    <h1>おすすめの漫画</h1>
-    <div class="manga_info">
-        <p>ダイヤのA</p>
-        <p>詳細はこちら</p>
-    </div>
-    <div class="manga_info">
-        <p>黒子のバスケ</p>
-        <p>詳細はこちら</p>
-    </div>
-    <div class="manga_info">
-        <p>ハイキュー</p>
-        <p>詳細はこちら</p>
-    </div>
+
     
     
     <!-- {% for review_user in review_users %}

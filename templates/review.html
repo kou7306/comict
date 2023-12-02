@@ -40,7 +40,7 @@
 
   <main style="padding: 5rem 0;">
 <!-- レビュー記録フォーム -->
-    <form action="">
+    <form action="/{{user_id}}/review" method="POST">
         <div class="container shadow-sm p-4 rounded" style="background-color: white;">
             <div class="mb-3" style="font-size: 1.4em;">レビューフォーム</div>
             <div class="row mb-3">
@@ -70,11 +70,13 @@
                     <i class="fa-solid fa-star" style="color:gray" id="starbutton_5" onclick="star_update(5)"></i>
                 </div>
             </div>
+                <!-- 隠しフィールド -->
+            <input type="hidden" name="rating" id="rating_input" value="0">
             <div class="row mb-3">
                 <label for="comment" class="col-sm-2 col-form-label" style="font-size: 1.05em;">コメント</label>
                 <div class="col-sm-9"><textarea name="comment_text" id="comment" rows="5" cols="30" class="form-control"></textarea></div>
             </div>
-            <input type="submit" value="記録を残す" class="btn btn-info btn-lg text-white mt-2" style="width:100%" onclick="test()" id="submitbutton">
+            <input type="submit" value="投稿" class="btn btn-info btn-lg text-white mt-2" style="width:100%" onclick="test()" id="submitbutton">
         </div>
     </form>
 
@@ -132,7 +134,7 @@
     <!-- ★の表示 -->
     <script src="https://kit.fontawesome.com/12a4c3ee6d.js" crossorigin="anonymous"></script>
     <!-- ★の切り替え -->
-    <script src="../static/js/script.js"></script>
+    <script src="../static/javascript/review.js"></script>
     
   </body>
 </html>
