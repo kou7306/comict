@@ -37,9 +37,13 @@ function star_update(n){
         }
     }
     inputFunction();
+    // rating_input の値を更新
+    const ratingInput = document.getElementById('rating_input');
+    ratingInput.value = rate;
 }
 
 // 記録ができているかアラートで確認
 function test(){
-    window.alert("作品名は「"+workName.value+"」、評価は「"+rate+"」、コメントは「"+comment.value+"」です");
+    // window.alert("作品名は「"+workName.value+"」、評価は「"+rate+"」、コメントは「"+comment.value+"」を投稿しました");
+   window.alert("投稿しました");
 }

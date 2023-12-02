@@ -206,20 +206,31 @@ def question(user_id):
             # 一人のレビュワーの全てのレビューした漫画のデータを取り出す
             for doc in query_result:
                 title_data.append(doc.to_dict()["mangaTitle"])
-        return render_template("home.html",review_users=nearest_values_users,title_data=title_data)
+        return render_template("home.html",user_id=user_id,review_users=nearest_values_users,title_data=title_data)
 
 
 # レビュー投稿
-@app.route('/review')
-def review():
-    # 入力されたレビューのデータ
-    review_format["evaluation"]=4
-    review_format["mangaTitle"]="ワンピース"
-    review_format["contents"]="ああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああああ"
-    review_format["username"]="kota"
-    review_document=review_doc_ref.document() 
-    review_document.set(review_format)
-    return render_template("home.html")
+@app.route('/<user_id>/review',methods=['GET','POST'])
+def review(user_id):
+    if request.method == 'GET':
+        return render_template("review.html",user_id=user_id)
+    else:
+        # formから取得
+        work_name = request.form['work_name']
+        rating = request.form['rating']
+        comment = request.form['comment_text']
+        # Firestoreから指定したuser_idに対応するユーザーネームを取得
+        user_doc_ref = db.collection('user').document(user_id)
+        user_doc=user_doc_ref.get()
+
+        # 入力されたレビューのデータ
+        review_format["evaluation"]=rating
+        review_format["mangaTitle"]=work_name
+        review_format["contents"]=comment
+        review_format["username"]=user_doc.to_dict()["username"]
+        review_document=review_doc_ref.document() 
+        review_document.set(review_format)
+        return redirect(f"/{user_id}/review")
 
 @app.route('/home')
 def iho():
