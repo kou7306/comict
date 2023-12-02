@@ -115,3 +115,47 @@ body {
 .userAdd-link a:hover{
     text-decoration: underline;
 }
+
+.login-box .radio-box {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    margin: 30px 0;
+}
+
+.radio-box {
+    width: 420px;
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, .2);
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 10px rgba(0 ,0 ,0 , .2);
+    color: white;
+    border-radius: 10px;
+    padding: 30px 40px;
+}
+
+.gender{
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    margin-top: -15px;
+}
+
+.radio-input{
+    padding-left: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.Select-gender {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.pass-warning {
+    color: white;
+    font-size: 10px;
+    text-align: start;
+    margin: -15px 10px 15px;
+}
