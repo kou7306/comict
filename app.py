@@ -94,14 +94,6 @@ def matching(mangaAnswer):
 
 
 
-@app.route('/<user_id>/home')
-def homepage(user_id):
-    user=db.collection('user').document(user_id).get()
-    # マッチング
-    review_query, user_query =matching(user.to_dict()["mangaAnswer"])
-    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
-
-
 
 @app.route("/<user_id>/accesTest")
 def accesTest(user_id):
@@ -110,11 +102,18 @@ def accesTest(user_id):
         if(user.to_dict()["mangaAnswer"]==[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]):
             return redirect(f"/{user_id}/question")
         else:
-            redirect(f"/{user_id}/home")
+            return redirect(f"/{user_id}/home")
 
     else:
         flash("ログインしてください")
         return redirect("/")
+
+@app.route('/<user_id>/home')
+def homepage(user_id):
+    user=db.collection('user').document(user_id).get()
+    # マッチング
+    review_query, user_query =matching(user.to_dict()["mangaAnswer"])
+    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
 
 @app.route("/reset", methods=['POST', 'GET'])
 def reset():
