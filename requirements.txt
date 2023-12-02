@@ -6,3 +6,4 @@ firebase
 firebase_admin
 pyrebase4
 beautifulsoup4
+requests

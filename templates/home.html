@@ -50,73 +50,28 @@
     {% for doc in review_query %}
     <p>{{doc.to_dict()["mangaTitle"]}}</p>
     {% endfor %}
-
-    <button onclick="showAlert()">アラートを表示</button>
     
     {% for title in title_data %}
     <p>{{title}}</p>
     {% endfor %}
 
-    <section class="manga container">
+    <!-- <section class="manga container">
         <h2>あなたにおすすめの漫画</h2>
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
+                {% for url in book_urls %}
                 <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
+                    <div class="image-placeholder"><img src="{{url}}" alt=""></div>
                 </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="image-placeholder"></div>
-                </div>
+                {% endfor %}
             </div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
-    </section>
+    </section> -->
+    {% for url in book_urls %}
+        <div><img src="{{url}}" alt=""></div>
+    {% endfor %}
     <!-- フッター -->
     <footer id="footer" class="footer text-center pt-2 bg-dark">
         <div class="container">
@@ -126,6 +81,7 @@
                 </div>
             </div>
         </div>
+        
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="../static/javascript/home.js"></script>
