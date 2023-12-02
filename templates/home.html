@@ -8,19 +8,16 @@
 </head>
 <body>
 
-
-
-
     <a href="/{{user_id}}/review">review</a>
     
 
     <h1><a href="/{{user_id}}/userpage">User Page</a></h1>
     
-    <!-- {% for review_user in review_users %}
-    <p>{{review_user["username"]}}</p>
+    {% for doc in user_query %}
+    <a href="/{{user_id}}/{{doc.id}}/userpage"><p>{{doc.to_dict()["username"]}}</p></a>
     {% endfor %}
-    {% for title in title_data %}
-    <p>{{title}}</p>
-    {% endfor %} -->
+    {% for doc in review_query %}
+    <p>{{doc.to_dict()["mangaTitle"]}}</p>
+    {% endfor %}
 </body>
 </html>

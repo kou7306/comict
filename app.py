@@ -104,7 +104,7 @@ def index():
 # ユーザーネームの重複を確認する関数
 def is_username_duplicate(username):
     # usersコレクションからユーザーネームが一致するドキュメントをクエリ
-    query = user_doc_ref .where('username', '==', username)
+    query = user_doc_ref.where('username', '==', username)
     
     # クエリを実行して結果を取得
     query_result = query.stream()
@@ -201,14 +201,11 @@ def question(user_id):
         title_data=[]
         for user in nearest_values_users:
             # usernameが一致するレビューデータをすべて取り出す
-            query = review_doc_ref.where('username', '==', user["username"])
-            # クエリを実行して結果を取得
-            query_result = query.get()
+            review_query = review_doc_ref.where('username', '==', user["username"]).get()
+            user_query= db.collection('user').where('username', '==', user["username"]).get()
 
-            # 一人のレビュワーの全てのレビューした漫画のデータを取り出す
-            for doc in query_result:
-                title_data.append(doc.to_dict()["mangaTitle"])
-        return render_template("home.html",user_id=user_id,review_users=nearest_values_users,title_data=title_data)
+
+        return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
 
 
 # レビュー投稿
@@ -234,6 +231,7 @@ def review(user_id):
         review_document.set(review_format)
         return redirect(f"/{user_id}/review")
 
+# mypage
 @app.route('/<user_id>/userpage')
 def userpage(user_id):
     user_doc_ref = db.collection('user').document(user_id)
@@ -242,6 +240,18 @@ def userpage(user_id):
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
     return render_template("userpage.html",query=query,username=username)
+
+# reviewer page
+@app.route('/<user_id>/<reviewer_id>/userpage')
+def reviewer(user_id,reviewer_id):
+    user_doc_ref = db.collection('user').document(user_id)
+    user_doc=user_doc_ref.get()
+    username=user_doc.to_dict()["username"]
+    # 特定のユーザーネームに一致するドキュメントを取得
+    query = review_doc_ref.where('username', '==', username).get()
+    return render_template("reviewerpage.html",query=query,username=username,reviewer_id=reviewer_id)
+   
+
 
 
 @app.route('/home')
