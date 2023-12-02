@@ -23,6 +23,8 @@ user_format={
     "gender":None,
     "mangaAnswer":[],
     "username":None,
+    "フォロワー数":0,
+    "フォロー数":0,
 }
 
 # レビューデータベースに入れるときのデータの型
@@ -232,22 +234,19 @@ def review(user_id):
         review_document.set(review_format)
         return redirect(f"/{user_id}/review")
 
+@app.route('/<user_id>/userpage')
+def userpage(user_id):
+    user_doc_ref = db.collection('user').document(user_id)
+    user_doc=user_doc_ref.get()
+    username=user_doc.to_dict()["username"]
+    # 特定のユーザーネームに一致するドキュメントを取得
+    query = review_doc_ref.where('username', '==', username).get()
+    return render_template("userpage.html",query=query,username=username)
+
+
 @app.route('/home')
 def iho():
     return render_template("home.html")
-
-@app.route('/<user_id>/userpage', methods=['GET', 'POST'])
-def user_page(user_id):   
-    # Firestoreから指定したuser_idに対応するユーザーデータを取得
-    user_doc = db.collection('user').document(user_id).get()
-    user_data = user_doc.to_dict()
-
-    # ユーザーの名前
-    username = user_data['username']
-
-    questionnaire_result = user_data.get('mangaAnswer')
-
-    return render_template("userpage.html", username=username, user_id=user_id)
 
 if __name__ == '__main__':
     app.run(debug=True)
