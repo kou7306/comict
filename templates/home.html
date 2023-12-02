@@ -19,5 +19,7 @@
     {% for doc in review_query %}
     <p>{{doc.to_dict()["mangaTitle"]}}</p>
     {% endfor %}
+    <button onclick="showAlert()">アラートを表示</button>
+    <script src="../static/javascript/home.js"></script>
 </body>
 </html>
