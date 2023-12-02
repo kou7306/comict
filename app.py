@@ -282,7 +282,7 @@ def user_page(user_id):
     #設問と回答をタプル化
     combined_list = zip(question, answer)
 
-    return render_template("userpage.html", username=username, user_id=user_id, result=result, combined_list=combined_list)
+    return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
 
 if __name__ == '__main__':
     app.run(debug=False)
