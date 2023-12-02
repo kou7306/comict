@@ -11,17 +11,26 @@
     {% for doc in query %}
     <p>{{doc.to_dict()["mangaTitle"]}}</p>
     {% endfor %}
-    <div id="followStatus">{{ follow_status }}</div>
-    <button id="followButton" onclick="toggleFollow()">フォロー</button>
-    
+    {% if is_following %}
+    <div id="followStatus">フォロー済み</div>
+    <button id="followButton" onclick="toggleFollow()">フォロー解除</button>
+    {% else %}
+    <div id="followStatus">未フォロー</div>
+    <button id="followButton" onclick="toggleFollow()">フォロー</button>  
+    {% endif %}
+    <a href="/{{user_id}}/home">home</a>
 
     <script>
         function toggleFollow() {
             const followStatus = document.getElementById('followStatus');
             const followButton = document.getElementById('followButton');
+            let is_following=false;
         
-            // ここでユーザーのIDや他の必要な情報を取得
-            const is_following = '{{ is_following }}';  // Flaskからレンダリングされたテンプレート変数
+            if(followButton.textContent == 'フォロー'){
+                is_following=false;
+            }else{
+                is_following=true;
+            }
         
             // サーバーにPOSTリクエストを送信
             fetch('/{{user_id}}/{{reviewer_id}}/userpage', {

@@ -14,9 +14,12 @@ firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 user_doc_ref = db.collection('user')
+
 all_user = user_doc_ref.get()
 
 review_doc_ref=db.collection('review')
+
+is_following=False
 
 
 # ユーザーデータベースにいれるときのデータの型
@@ -25,8 +28,7 @@ user_format={
     "mangaAnswer":[],
     "favorite_manga":[],
     "username":None,
-    "フォロワー数":0,
-    "フォロー数":0,
+    "follow":[],
 }
 
 # レビューデータベースに入れるときのデータの型
@@ -53,6 +55,8 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 
 app.secret_key = "secret"
+
+
 
 # マッチング関数
 def matching(mangaAnswer):
@@ -91,6 +95,7 @@ def matching(mangaAnswer):
 
 
 
+
 @app.route("/<user_id>/accesTest")
 def accesTest(user_id):
     if 'user' in session:
@@ -98,12 +103,18 @@ def accesTest(user_id):
         if(user.to_dict()["mangaAnswer"]==[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]):
             return redirect(f"/{user_id}/question")
         else:
-            # マッチング
-            review_query, user_query =matching(user.to_dict()["mangaAnswer"])
-            return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
+            return redirect(f"/{user_id}/home")
+
     else:
         flash("ログインしてください")
         return redirect("/")
+
+@app.route('/<user_id>/home')
+def homepage(user_id):
+    user=db.collection('user').document(user_id).get()
+    # マッチング
+    review_query, user_query =matching(user.to_dict()["mangaAnswer"])
+    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
 
 @app.route("/reset", methods=['POST', 'GET'])
 def reset():
@@ -119,6 +130,8 @@ def reset():
     else:
         return render_template("reset.html")
     
+
+
 # login
 @app.route("/", methods=['POST', 'GET'])
 def index():
@@ -260,9 +273,7 @@ def review(user_id):
 
 
 
-@app.route('/home')
-def iho():
-    return render_template("home.html")
+
 
 
 @app.route('/<user_id>/userpage', methods=['GET', 'POST'])
@@ -274,6 +285,10 @@ def user_page(user_id):
     username=user_doc.to_dict()["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
+
+    return render_template("userpage.html",query=query,username=username)
+
+
     # アンケート結果の取得・表示
     with open('templates/question.html', 'r', encoding='utf-8') as file:
         html_code = file.read()
@@ -309,24 +324,51 @@ def user_page(user_id):
 
     return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list, favorite_titles=favorite_titles)
 
+  
 # reviewer page
 @app.route('/<user_id>/<reviewer_id>/userpage', methods = ['GET','POST'])
 def reviewer(user_id,reviewer_id):
     if request.method == 'GET':
-        # ユーザーのフォロー状態を保存する変数（デモ用）
-        is_following = False
-        user_doc_ref = db.collection('user').document(user_id)
-        user_doc=user_doc_ref.get()
-        username=user_doc.to_dict()["username"]
-        # 特定のユーザーネームに一致するドキュメントを取得
-        query = review_doc_ref.where('username', '==', username).get() 
-        return render_template("reviewerpage.html",query=query,username=username,reviewer_id=reviewer_id,user_id=user_id,follow_status='フォロー済み' if is_following else '未フォロー')
+
+        # レビュワーの情報をとってくる
+        reviewer_doc = db.collection('user').document(reviewer_id).get()
+        reviewername=reviewer_doc.to_dict()["username"]
+        # 特定のユーザーネームに一致するレビュー情報を取得
+        query = review_doc_ref.where('username', '==', reviewername).get()
+
+        # そのユーザーをフォローしてるか
+        user_doc = db.collection('user').document(user_id).get()
+        fquery = user_doc_ref.where('follow', 'array_contains', reviewername)
+        results = fquery.stream()
+        if len(list(results)) > 0:
+            is_following= True
+        else:
+            is_following= False
+    
+        return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following)
     else:
         data = request.get_json()
         is_following = data.get('is_following')
 
         # フォロー状態をトグル（デモ用）
         is_following = not is_following
+        # レビュワーの情報をとってくる
+        reviewer_doc = db.collection('user').document(reviewer_id).get()
+        reviewername=reviewer_doc.to_dict()["username"]
+        user_doc = db.collection('user').document(user_id)
+        current_follow = user_doc.get().to_dict().get("follow", [])
+        if(is_following):
+
+            current_follow.append(reviewername)
+        else:
+            current_follow.remove(reviewername)
+        # 更新するデータを作成
+        update_data = {"follow": current_follow}
+        # ドキュメントを更新
+        user_doc.update(update_data)
+
+
+
         # フォロー状態をクライアントに返す
         return jsonify({'isFollowing': is_following})
 
