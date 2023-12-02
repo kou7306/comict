@@ -1,21 +1,44 @@
-<html>
+<!DOCTYPE html>
+<html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <title>Login</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content=width=device-width>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/login.css') }}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
-  <h1>{% for message in messages %}
-    <p>{{ message }}</p>
-{% endfor %}</h1>
-  <form action="/" method='POST'>
+    <div class="login-box">
+        <form action="/" method='POST'>
+            <h1>Login</h1>
 
-    <p>username:<input type="text" name="username" required></p>
-    <p>Email: <input type="text" name="email"></p>
-    <p>Password: <input type="password" name="password"></p>
-    <input type="submit">
-    <p><a href="{{ url_for('userAdd') }}">ユーザー登録</a></p>
-    <p><a href="{{ url_for('reset') }}">パスワードを忘れた方はこちら</a></p>
+            <h5>{% for message in messages %}<p>{{ message }}</p>{% endfor %}</h5>
 
-  </form>
+            <div class="input-box">
+                <input type="text" name="username" placeholder="Username" required>
+                <i class='bx bxs-user'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="text" name="email" placeholder="Email" required>
+                <i class='bx bx-envelope'></i>
+            </div>
+
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" required>
+                <i class='bx bxs-lock-alt' ></i>
+            </div>
+
+            <div class="reset-link">
+                <a href="{{ url_for('reset') }}">パスワードを忘れた方はこちら</a>
+            </div>
+
+            <button type="submit" class="btn">Login</button>
+
+            <div class="userAdd-link">
+                <a href="{{ url_for('userAdd') }}">ユーザー登録はこちら</a>
+            </div>
+        </form>
 </body>
 </html>
