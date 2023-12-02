@@ -129,7 +129,7 @@ def userAdd():
                 user_doc=user_doc_ref.document(user_id)
                 user_format["username"]=username
                 # デフォルトで外れ値を指定しておく
-                user_format["gender"]=[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]
+                user_format["mangaAnswer"]=[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]
                 user_format["gender"]=gender
                 user_doc.set(user_format)
 
@@ -158,7 +158,7 @@ def logput():
 @app.route('/<user_id>/question', methods = ['GET','POST'])
 def question(user_id):
     if request.method == 'GET':
-        return render_template("question.html")
+        return render_template("question.html",user_id=user_id)
     else:
         mangaAnswer = []
 
@@ -170,12 +170,13 @@ def question(user_id):
             mangaAnswer.append(answer)
             
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
-        user_doc = db.collection('user').document(user_id).get()
+        user_doc_ref = db.collection('user').document(user_id)
+        user_doc=user_doc_ref.get()
         # データベースにデータを格納
-        user_format['gender']=user_doc.to_dict("gender")
+        user_format['gender']=user_doc.to_dict()["gender"]
         user_format['mangaAnswer']=mangaAnswer
-        user_format['username']=user_doc.to_dict("username")
-        user_doc.set(user_format)
+        user_format['username']=user_doc.to_dict()["username"]
+        user_doc_ref.set(user_format)
 
 
         # マッチング
@@ -218,6 +219,10 @@ def review():
     review_format["username"]="kota"
     review_document=review_doc_ref.document() 
     review_document.set(review_format)
+    return render_template("home.html")
+
+@app.route('/home')
+def iho():
     return render_template("home.html")
 
 if __name__ == '__main__':
