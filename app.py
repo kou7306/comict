@@ -285,8 +285,43 @@ def user_page(user_id):
     username=user_doc.to_dict()["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
+
     return render_template("userpage.html",query=query,username=username)
 
+
+    # アンケート結果の取得・表示
+    with open('templates/question.html', 'r', encoding='utf-8') as file:
+        html_code = file.read()
+    result = user_data.get('mangaAnswer')
+
+    #アンケートの設問と回答を格納する配列
+    question, answer = [], []
+    soup = BeautifulSoup(html_code, 'html.parser')
+
+    #アンケートの設問を取得
+    h2_elems = soup.find_all('h2')
+    for h2 in h2_elems:
+        question.append(h2.text)
+
+    #アンケートの回答を取得
+    temp = []
+    for value_to_find in result:
+        value_to_find=int(value_to_find)
+        value_to_find=str(value_to_find)
+        input_tags = soup.find_all('input', {'value': value_to_find})
+        for input_tag in input_tags:
+            label_tag = soup.find('label', {'for': input_tag.get('id')})
+            if label_tag:
+                temp.append(label_tag.text)
+    for i in range(20):
+        answer.append(temp[i])
+
+    #設問と回答をタプル化
+    combined_list = zip(question, answer)
+
+    return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
+
+  
 # reviewer page
 @app.route('/<user_id>/<reviewer_id>/userpage', methods = ['GET','POST'])
 def reviewer(user_id,reviewer_id):
@@ -335,38 +370,7 @@ def reviewer(user_id,reviewer_id):
         return jsonify({'isFollowing': is_following})
 
 
-    # アンケート結果の取得・表示
-    with open('templates/question.html', 'r', encoding='utf-8') as file:
-        html_code = file.read()
-    result = user_data.get('mangaAnswer')
-
-    #アンケートの設問と回答を格納する配列
-    question, answer = [], []
-    soup = BeautifulSoup(html_code, 'html.parser')
-
-    #アンケートの設問を取得
-    h2_elems = soup.find_all('h2')
-    for h2 in h2_elems:
-        question.append(h2.text)
-
-    #アンケートの回答を取得
-    temp = []
-    for value_to_find in result:
-        value_to_find=int(value_to_find)
-        value_to_find=str(value_to_find)
-        input_tags = soup.find_all('input', {'value': value_to_find})
-        for input_tag in input_tags:
-            label_tag = soup.find('label', {'for': input_tag.get('id')})
-            if label_tag:
-                temp.append(label_tag.text)
-    for i in range(20):
-        answer.append(temp[i])
-
-    #設問と回答をタプル化
-    combined_list = zip(question, answer)
-
-    return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 

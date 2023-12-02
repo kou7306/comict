@@ -1,39 +1,47 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+@import url("https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
     margin: 0;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .review-carousel {
-    display: flex;
-    overflow: hidden;
-  }
-  
-  .cards-container {
-    display: flex;
-  }
-  
-  .card {
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-color: white;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.manga {
+    padding: 100px 0 150px 0;
+}
+
+.manga h2 {
+    font-size: 25px;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
+
+.swiper {
+    width: 100%;
+}
+
+.swiper-slide {
+    width: 250px;
+    display: inline-block;
+    background-position: center;
+    background-size: cover;
+}
+
+.image-placeholder {
+    display: block;
     width: 300px;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    margin-right: 10px;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .controls {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-left: 10px;
-  }
-  
-  button {
-    margin-bottom: 10px;
-    cursor: pointer;
-  }
-  
+    height: 400px;
+    background-color: #ccc;
+}
+
