@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>好きな作品を追加する</title>
+</head>
+<body>
+    <h1>好きな作品を追加する</h1>
+    <form id="add_favorite_form" action="/{{ user_id }}/favoriteAdd" method="POST">
+        <label for="favorite_title">好きな作品のタイトル:</label>
+        <input type="text" id="favorite_title" name="favorite_title">
+        <input type="submit" value="追加" formaction="/{{ user_id }}/favoriteAdd">
+        <input type="submit" value="更新" formaction="/{{ user_id }}/userpage">
+    </form>
+
+    <h2>現在の好きな作品リスト:</h2>
+    <ul>
+        {% for title in favorite_titles %}
+            <li>{{ title }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

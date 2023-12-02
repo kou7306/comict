@@ -26,6 +26,7 @@ is_following=False
 user_format={
     "gender":None,
     "mangaAnswer":[],
+    "favorite_manga":[],
     "username":None,
     "follow":[],
 }
@@ -318,7 +319,10 @@ def user_page(user_id):
     #設問と回答をタプル化
     combined_list = zip(question, answer)
 
-    return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
+    #好きな作品のリストをデータベースから取得
+    favorite_titles = user_doc.to_dict()["favorite_manga"]
+
+    return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list, favorite_titles=favorite_titles)
 
   
 # reviewer page
@@ -368,8 +372,21 @@ def reviewer(user_id,reviewer_id):
         # フォロー状態をクライアントに返す
         return jsonify({'isFollowing': is_following})
 
-
-
+# 好きな作品を追加
+@app.route('/<user_id>/favoriteAdd', methods=['GET', 'POST'])
+def add_manga(user_id):
+    user_doc_ref = db.collection('user').document(user_id)
+    user_doc=user_doc_ref.get()
+    favorite_titles =user_doc.to_dict()["favorite_manga"]
+    if request.method == 'GET':
+        return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
+    elif request.method == 'POST':
+        manga_title = request.form['favorite_title'] # 'favorite_title'から取得
+        user_doc_ref = db.collection('user').document(user_id)
+        user_doc_ref.update({'favorite_manga': firestore.ArrayUnion([manga_title])})
+        favorite_titles.append(manga_title)
+        return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
+    
 if __name__ == '__main__':
     app.run(debug=False)
 
