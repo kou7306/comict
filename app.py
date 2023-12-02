@@ -24,6 +24,8 @@ user_format={
     "gender":None,
     "mangaAnswer":[],
     "username":None,
+    "フォロワー数":0,
+    "フォロー数":0,
 }
 
 # レビューデータベースに入れるときのデータの型
@@ -233,9 +235,13 @@ def review(user_id):
         review_document.set(review_format)
         return redirect(f"/{user_id}/review")
 
+
+
+
 @app.route('/home')
 def iho():
     return render_template("home.html")
+
 
 @app.route('/<user_id>/userpage', methods=['GET', 'POST'])
 def user_page(user_id):   

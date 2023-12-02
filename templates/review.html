@@ -12,7 +12,7 @@
   </head>
   <body class="margin-screen">
 
-  <!-- 本文 -->
+  
   <!-- ヘッダー -->
   <header class="nav-color">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
@@ -27,10 +27,13 @@
               <a class="nav-link" href="home.html">ホーム</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">マイページ</a>
+              <a class="nav-link" href="/{{user_id}}/userpage">マイページ</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">お問い合わせ</a>
+              <a class="nav-link" href="/{{user_id}}/review">レビュー投稿</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">個性の更新</a>
             </li>
           </ul>
         </div>
@@ -39,7 +42,8 @@
   </header>
 
   <main style="padding: 5rem 0;">
-<!-- レビュー記録フォーム -->
+    <!-- 本文スタート -->
+  <!-- レビュー記録フォーム -->
     <form action="/{{user_id}}/review" method="POST">
         <div class="container shadow-sm p-4 rounded" style="background-color: white;">
             <div class="mb-3" style="font-size: 1.4em;">レビューフォーム</div>
@@ -117,7 +121,9 @@
         </div>
         <div>とてもタメになりました！！最高です！！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！</div>
     </div>
+    <!-- 本文エンド -->
   </main>
+
 
     <!-- フッター -->
     <footer id="footer" class="footer text-center pt-2 bg-dark">

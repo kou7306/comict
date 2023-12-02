@@ -8,12 +8,10 @@
 <body>
     <h1>Welcome to your user page!</h1>
     <p>Your username is: {{ username }}</p>
-    {% for doc in query %}
-    <p>{{doc.to_dict()["mangaTitle"]}}</p>
-    {% endfor %}
     {% for q,ans in combined_list %}
         <p>{{ q }}: {{ ans }}</p>
     {% endfor %}
     <p>{{result}}</p>
+
 </body>
 </html>
