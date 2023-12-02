@@ -8,8 +8,9 @@
     <p>{{ message }}</p>
 {% endfor %}</h1>
   <form action="/" method='POST'>
-    Email: <input type="text" name="email"><br>
-    Password: <input type="password" name="password"><br>
+    <p>username:<input type="text" name="username" required></p>
+    <p>Email: <input type="text" name="email"></p>
+    <p>Password: <input type="password" name="password"></p>
     <input type="submit">
     <a href="{{ url_for('userAdd') }}">ユーザー登録</a>
   </form>
