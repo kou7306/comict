@@ -273,31 +273,6 @@ def user_page(user_id):
     username=user_doc.to_dict()["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
-    return render_template("userpage.html",query=query,username=username)
-
-# reviewer page
-@app.route('/<user_id>/<reviewer_id>/userpage', methods = ['GET','POST'])
-def reviewer(user_id,reviewer_id):
-    if request.method == 'GET':
-        # ユーザーのフォロー状態を保存する変数（デモ用）
-        is_following = False
-        user_doc_ref = db.collection('user').document(user_id)
-        user_doc=user_doc_ref.get()
-        username=user_doc.to_dict()["username"]
-        # 特定のユーザーネームに一致するドキュメントを取得
-        query = review_doc_ref.where('username', '==', username).get()
- 
-        return render_template("reviewerpage.html",query=query,username=username,reviewer_id=reviewer_id,user_id=user_id,follow_status='フォロー済み' if is_following else '未フォロー')
-    else:
-        data = request.get_json()
-        is_following = data.get('is_following')
-
-        # フォロー状態をトグル（デモ用）
-        is_following = not is_following
-        # フォロー状態をクライアントに返す
-        return jsonify({'isFollowing': is_following})
-
-
     # アンケート結果の取得・表示
     with open('templates/question.html', 'r', encoding='utf-8') as file:
         html_code = file.read()
@@ -330,6 +305,28 @@ def reviewer(user_id,reviewer_id):
 
     return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list)
 
+# reviewer page
+@app.route('/<user_id>/<reviewer_id>/userpage', methods = ['GET','POST'])
+def reviewer(user_id,reviewer_id):
+    if request.method == 'GET':
+        # ユーザーのフォロー状態を保存する変数（デモ用）
+        is_following = False
+        user_doc_ref = db.collection('user').document(user_id)
+        user_doc=user_doc_ref.get()
+        username=user_doc.to_dict()["username"]
+        # 特定のユーザーネームに一致するドキュメントを取得
+        query = review_doc_ref.where('username', '==', username).get() 
+        return render_template("reviewerpage.html",query=query,username=username,reviewer_id=reviewer_id,user_id=user_id,follow_status='フォロー済み' if is_following else '未フォロー')
+    else:
+        data = request.get_json()
+        is_following = data.get('is_following')
+
+        # フォロー状態をトグル（デモ用）
+        is_following = not is_following
+        # フォロー状態をクライアントに返す
+        return jsonify({'isFollowing': is_following})
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
 
