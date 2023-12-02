@@ -7,14 +7,36 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.css') }}">
 </head>
 <body>
+  <!-- ヘッダー -->
+  <header class="nav-color">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="home.html">Best Work</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="home.html">ホーム</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/{{user_id}}/userpage">マイページ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/{{user_id}}/review">レビュー投稿</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">個性の更新</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
 
 
 
-
-    <a href="/{{user_id}}/review">review</a>
-    
-
-    <h1><a href="/{{user_id}}/userpage">User Page</a></h1>
     
     <!-- {% for review_user in review_users %}
     <p>{{review_user["username"]}}</p>
@@ -22,5 +44,16 @@
     {% for title in title_data %}
     <p>{{title}}</p>
     {% endfor %} -->
+  
+  <!-- フッター -->
+  <footer id="footer" class="footer text-center pt-2 bg-dark">
+    <div class="container">
+      <div class="row">
+        <div class="col text-white">
+          <p>&copy; 2023 12/02 hackathon-31.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
