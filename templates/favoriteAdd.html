@@ -1,7 +1,7 @@
-
-{% extends "base.html" %} {% block extra_css %} 
+{% extends "base.html" %} {% block extra_css %}
 {% endblock %} {% block content%}
 
+<main style="padding: 1rem 0;">
     <body>
         <h1>好きな作品を追加する</h1>
         <form id="add_favorite_form" action="/{{ user_id }}/favoriteAdd" method="POST">
@@ -12,11 +12,12 @@
         </form>
 
         <h2>現在の好きな作品リスト:</h2>
-        <ul>
+        <div>
             {% for title in favorite_titles %}
-                <li>{{ title }}</li>
+                <div class="title">{{ title }}</div>
             {% endfor %}
-        </ul>
+        </div>
     </body>
+</main>
 
 {% endblock %}

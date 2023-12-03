@@ -1,8 +1,9 @@
-
 {% extends "base.html" %} {% block extra_css %} 
+<link rel="stylesheet" href="../static/css/userpage.css">
 {% endblock %} {% block content%}
 
-<link rel="stylesheet" href="../static/css/userpage.css">
+
+<div style="padding: 1rem 0;">
     <body>
         <div>
             <h1>ユーザーページ</h1>
@@ -19,15 +20,16 @@
                 {% endfor %}
             </div>
             <div class="right">
-                <h2>好きな作品のリスト</h2>
+                    <h2>好きな作品のリスト</h2>
                 {% for title in favorite_titles %}
-                    <li>{{ title }}</li>
+                    <div>{{ title }}</div>
                 {% endfor %}
                 <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
             </div>
         </main>
     </body>
-    
+</div>
+
 
 {% endblock %}
 
