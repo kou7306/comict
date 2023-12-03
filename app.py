@@ -397,8 +397,10 @@ def reviewer(user_id,reviewer_id):
             is_following= True
         else:
             is_following= False
+
+        favorite_titles =reviewer_doc.to_dict()["favorite_manga"]
     
-        return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following)
+        return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_titles=favorite_titles)
     else:
         data = request.get_json()
         is_following = data.get('is_following')
