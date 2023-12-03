@@ -1,11 +1,22 @@
+
 {% extends "base.html" %} {% block extra_css %} 
 {% endblock %} {% block content%}
-    <h1>Welcome to your user page!</h1>
-    <p>Your username is: {{ username }}</p>
-    {% for q,ans in combined_list %}
-        <p>{{ q }}: {{ ans }}</p>
-    {% endfor %}
+
+    <h1>ユーザーページ</h1>
+    <h2>ユーザーネーム: {{ username }}</h2>
     {% for doc in query %}
     <p>{{doc.to_dict()["mangaTitle"]}}</p>
     {% endfor %}
+    <h2>アンケート結果</h2>
+
+    {% for q,ans in combined_list %}
+        <p>{{ q }}: {{ ans }}</p>
+    {% endfor %}
+    <h2>好きな作品</h2>
+    {% for title in favorite_titles %}
+        <li>{{ title }}</li>
+    {% endfor %}
+    <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
     {% endblock %}
+
+    
