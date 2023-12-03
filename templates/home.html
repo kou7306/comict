@@ -10,10 +10,12 @@
     <!-- Bootstrap JavaScript CDN読み込み -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="../static/css/home.css">
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@9/swiper.min.css"
     />
+
 </head>
 <body>
     <!-- ヘッダー -->
@@ -55,23 +57,20 @@
     <p>{{title}}</p>
     {% endfor %}
 
-    <!-- <section class="manga container">
+    <section class="manga container">
         <h2>あなたにおすすめの漫画</h2>
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
-                {% for url in book_urls %}
+                {% for title,url in data %}
                 <div class="swiper-slide">
-                    <div class="image-placeholder"><img src="{{url}}" alt=""></div>
+                    <a href="/{{user_id}}/{{title}}/detail"><img class="image-placeholder" src="{{url}}" alt=""></a></div>
                 </div>
                 {% endfor %}
             </div>
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
-    </section> -->
-    {% for url in book_urls %}
-        <div><img src="{{url}}" alt=""></div>
-    {% endfor %}
+    </section>
     <!-- フッター -->
     <footer id="footer" class="footer text-center pt-2 bg-dark">
         <div class="container">

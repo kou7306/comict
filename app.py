@@ -99,7 +99,6 @@ def matching(mangaAnswer):
     nearest_values_users = [all_users[i] for i in indices[0]]
     
     # 対象ユーザーのレビューした作品名を取り出す
-    title_data = []
     review_query_results = []
     user_query_results = []
     
@@ -137,10 +136,17 @@ def homepage(user_id):
 
     # 漫画の画像取得
     book_urls=[]
+    titles=[]
     for doc in review_query:
         title=doc.to_dict()["mangaTitle"]  
-        book_urls.append(get_rakuten_book_cover(title))
-    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query,book_urls=book_urls)
+        titles.append(title)
+        image=get_rakuten_book_cover(title)
+        book_urls.append(image)
+    data=list(zip(titles,book_urls))
+
+
+    
+    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query,data=data)
 
 @app.route("/reset", methods=['POST', 'GET'])
 def reset():
@@ -393,6 +399,14 @@ def reviewer(user_id,reviewer_id):
 
         # フォロー状態をクライアントに返す
         return jsonify({'isFollowing': is_following})
+    
+# 作品詳細ページ
+@app.route('/<user_id>/<title>/detail')
+def detail(user_id,title):
+    query = review_doc_ref.where('mangaTitle', '==', title).get()
+    
+    
+    return render_template("detail.html",user_id=user_id,title=title,query=query)
 
 
 if __name__ == '__main__':
