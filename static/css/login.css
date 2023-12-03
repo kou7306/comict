@@ -12,7 +12,8 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: gray;
+    background-image: url('../images/back1.jpg');
+    background-size: cover;
 }
 
 .login-box {
@@ -21,7 +22,7 @@ body {
     border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(20px);
     box-shadow: 0 0 10px rgba(0 ,0 ,0 , .2);
-    color: white;
+    color: #8B4513;
     border-radius: 10px;
     padding: 30px 40px;
 }
@@ -54,12 +55,12 @@ body {
     background: transparent;
     border: 2px solid rgba(255, 255, 255, .2);
     border-radius: 40px;
-    color: white;
+    color: #8B4513;
     padding: 20px 45px 20px 20px;
 }
 
 .input-box input::placeholder {
-    color: white;
+    color: #8B4513;
 }
 
 .input-box i {
@@ -78,7 +79,7 @@ body {
 }
 
 .reset-link a{
-    color: white;
+    color: #8B4513;
     text-decoration: none;
 }
 
@@ -89,14 +90,14 @@ body {
 .login-box .btn{
     width: 100%;
     height: 45px;
-    background: white;
+    background: #8B4513;
     border: none;
     outline: none;
     border-radius: 40px;
     box-shadow: 0 0 10px rgba(0 ,0 ,0 , .1);
     cursor: pointer;
     font-size: 16px;
-    color: black;
+    color: white;
     font-weight: 600;
 }
 
@@ -108,7 +109,7 @@ body {
 }
 
 .userAdd-link a{
-    color: white;
+    color: #8B4513;
     text-decoration: none;
 }
 
@@ -129,13 +130,13 @@ body {
     border: 2px solid rgba(255, 255, 255, .2);
     backdrop-filter: blur(20px);
     box-shadow: 0 0 10px rgba(0 ,0 ,0 , .2);
-    color: white;
+    color: #8B4513;
     border-radius: 10px;
     padding: 30px 40px;
 }
 
 .gender{
-    color: white;
+    color: #8B4513;
     font-size: 16px;
     text-align: center;
     margin-top: -15px;
@@ -154,14 +155,14 @@ body {
 }
 
 .pass-warning {
-    color: white;
+    color: #8B4513;
     font-size: 10px;
     text-align: start;
     margin: -15px 10px 15px;
 }
 
 .reset-message {
-    color: white;
+    color: #8B4513;
     font-size: 12px;
     text-align: center;
     margin: 15px 10px 15px;

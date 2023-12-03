@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %} {% block extra_css %} {% endblock %} {% block content%}
     <h1>{{title}}</h1>
     {% for doc in query %}
     <p>{{doc.to_dict()["username"]}}</p>
     <p>{{doc.to_dict()["evaluation"]}}</p>
     <p>{{doc.to_dict()["contents"]}}</p>
     {% endfor %}
-</body>
-</html>
+    {% endblock %}
