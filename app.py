@@ -286,9 +286,6 @@ def user_page(user_id):
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
 
-    return render_template("userpage.html",query=query,username=username)
-
-
     # アンケート結果の取得・表示
     with open('templates/question.html', 'r', encoding='utf-8') as file:
         html_code = file.read()
@@ -323,6 +320,7 @@ def user_page(user_id):
     favorite_titles = user_doc.to_dict()["favorite_manga"]
 
     return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list, favorite_titles=favorite_titles)
+
 
   
 # reviewer page
