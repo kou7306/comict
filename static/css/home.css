@@ -7,13 +7,13 @@
     font-family: "Poppins", sans-serif;
 
 }
-
 body {
 
     height: 100vh;
     background-image: url('../images/back1.jpg');
     background-size: cover;
     z-index: -999;
+    padding: 100px 0 0;
 
 }
 
