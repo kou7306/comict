@@ -59,18 +59,20 @@
     {% endfor %}
 
     <section class="manga container">
-        <h2>あなたにおすすめの漫画</h2>
-        <div class="swiper mySwiper">
-            <div class="swiper-wrapper">
-                {% for title,url in data %}
-                <div class="swiper-slide">
-                    <a href="/{{user_id}}/{{title}}/detail"><img class="image-placeholder" src="{{url}}" alt=""></a></div>
-                </div>
-                {% endfor %}
-            </div>
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        </div>
+      <h2>あなたにおすすめの漫画</h2>
+      <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+              {% for title, url in data %}
+              <div class="swiper-slide">
+                  <a href="/{{ user_id }}/{{ title }}/detail">
+                      <img class="image-placeholder" src="{{ url }}" alt="">
+                  </a>
+              </div>
+              {% endfor %}
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+      </div>
     </section>
 
     

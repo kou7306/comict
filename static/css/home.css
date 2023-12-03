@@ -9,9 +9,11 @@
 }
 
 body {
+
     height: 100vh;
     background-image: url('../images/back1.jpg');
     background-size: cover;
+
 }
 
 .container {
@@ -34,14 +36,13 @@ body {
 }
 
 .swiper-slide {
-    width: 250px;
-    display: inline-block;
     background-position: center;
     background-size: cover;
 }
 
 .image-placeholder {
     display: block;
+
     width: 300px;
     height: 400px;
 }
