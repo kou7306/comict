@@ -1,32 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Page</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content=width=device-width>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/reviewerpage.css') }}">
 </head>
 <body>
-    <h1>ユーザーページ</h1>
-    <h2>ユーザーネーム: {{ username }}</h2>
-    {% for doc in query %}
-    <p>{{doc.to_dict()["mangaTitle"]}}</p>
-    {% endfor %}
-    <h2>好きな作品</h2>
-    {% if favorite_titles !="no" %}
-    {% for title in favorite_titles %}
-        <li>{{ title }}</li>
-    {% endfor %}
-    {%endif%}
-    
-    {% if is_following %}
-    <div id="followStatus">フォロー済み</div>
-    <button id="followButton" onclick="toggleFollow()">フォロー解除</button>
-    {% else %}
-    <div id="followStatus">未フォロー</div>
-    <button id="followButton" onclick="toggleFollow()">フォロー</button>  
-    {% endif %}
-    <a href="/{{user_id}}/home">home</a>
 
+    <div class="container">
+        <h1>ユーザーページ</h1>
+        <div class="user-container">
+            <h2>ユーザーネーム: {{ username }}</h2>
+            <div class="follow-user">
+                {% if is_following %}
+                <button id="followButton" onclick="toggleFollow()">フォロー解除</button>
+                {% else %}
+            </div>
+            <div class="un-follow-user">
+                <button id="followButton" onclick="toggleFollow()">フォロー</button>  
+                {% endif %}
+            </div>
+        </div>
+        <h2>好きな作品</h2>
+        <div class="favorite-titles">
+            {% for doc in query %}
+            <p>{{doc.to_dict()["mangaTitle"]}}</p>
+            {% endfor %}
+            {% for title in favorite_titles %}
+                <li>{{ title }}</li>
+            {% endfor %}
+        </div>
+
+        <div class="home-link">
+            <button id="homeButton" onclick="location.href='/{{user_id}}/home'">home</button>
+        </div>
+    </div>
     <script>
         function toggleFollow() {
             const followStatus = document.getElementById('followStatus');
