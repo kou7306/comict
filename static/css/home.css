@@ -45,3 +45,38 @@ body {
     background-color: #ccc;
 }
 
+
+/* user_container */
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  width: 25%;
+  text-align: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+h3 {
+  font-size: 18px;
+  margin: 8px 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #eee;
+  border-radius: 9999px;
+  font-size: 14px;
+}
