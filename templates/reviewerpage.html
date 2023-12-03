@@ -6,11 +6,16 @@
     <title>User Page</title>
 </head>
 <body>
-    <h1>Welcome to your user page!</h1>
-    <p>Your username is: {{ username }}</p>
+    <h1>ユーザーページ</h1>
+    <h2>ユーザーネーム: {{ username }}</h2>
     {% for doc in query %}
     <p>{{doc.to_dict()["mangaTitle"]}}</p>
     {% endfor %}
+    <h2>好きな作品</h2>
+    {% for title in favorite_titles %}
+        <li>{{ title }}</li>
+    {% endfor %}
+    
     {% if is_following %}
     <div id="followStatus">フォロー済み</div>
     <button id="followButton" onclick="toggleFollow()">フォロー解除</button>
