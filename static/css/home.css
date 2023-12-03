@@ -13,6 +13,7 @@ body {
     height: 100vh;
     background-image: url('../images/back1.jpg');
     background-size: cover;
+    z-index: -999;
 
 }
 
@@ -64,7 +65,7 @@ li {
   box-sizing: border-box;
 }
 
-img {
+.user_img {
   width: 100px;
   height: 100px;
   border-radius: 50%;
