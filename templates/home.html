@@ -64,7 +64,7 @@
         <ul>
           {% for query in reviewer_query %}
           {% for follow in query %}
-          <li></li>
+          <li>
           <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
             <a href="/{{user_id}}/{{follow.id}}/userpage"><h3>{{follow.to_dict()["username"]}}</h3></a>
@@ -75,5 +75,6 @@
           {% endfor %}
       </ul>
     </section>
+    <script src="../static/javascript/home.js"></script>
 {% endblock %}
 
