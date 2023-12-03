@@ -1,0 +1,21 @@
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+.main-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left {
+    width: 45%; 
+    text-align: left;
+    margin-right: 15px;
+}
+
+.right {
+    width: 45%;     
+    text-align: left;
+    margin-right: 15px;
+}
