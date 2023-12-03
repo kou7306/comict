@@ -233,7 +233,6 @@ def userAdd():
                 return redirect(f"/{user_id}/question")
             except:
                 flash("ユーザー登録に失敗しました")
-                print(user_id)
                 return redirect("/")
             
         else:
