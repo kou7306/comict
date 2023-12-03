@@ -9,7 +9,8 @@
 
 body {
     height: 100vh;
-    background-color: white;
+    background-image: url('../images/back1.jpg');
+    background-size: cover;
 }
 
 .container {

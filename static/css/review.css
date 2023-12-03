@@ -18,5 +18,7 @@ label{
     margin-top:15px;
 }
 body{
-    background-color: #f5f5f5;
+    background-image: url('../images/back1.jpg');
+    background-size: cover;
+    height: 100vh;
 }
