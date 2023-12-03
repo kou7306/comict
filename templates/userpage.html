@@ -1,8 +1,10 @@
 
 {% extends "base.html" %} {% block extra_css %} 
 {% endblock %} {% block content%}
-
+<div class="userpage">
+    <br>
     <h1>ユーザーページ</h1>
+    <br>
     <h2>ユーザーネーム: {{ username }}</h2>
     {% for doc in query %}
     <p>{{doc.to_dict()["mangaTitle"]}}</p>
@@ -18,5 +20,7 @@
     {% endfor %}
     <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
     {% endblock %}
+</div>
+
 
     
