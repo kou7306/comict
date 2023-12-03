@@ -45,14 +45,19 @@
         <h2>あなたの属性に近いユーザー</h2>
         <ul>
           {% for doc in user_query %}
+          {% if doc.to_dict()["username"] != username %}
           <li>
 
           <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
             <a href="/{{user_id}}/{{doc.id}}/userpage"><h3>{{doc.to_dict()["username"]}}</h3></a>
+            {% if doc.to_dict()["favorite_manga"] %}
             <p><span class="tag">{{doc.to_dict()["favorite_manga"][0]}}</span><span class="tag">{{doc.to_dict()["favorite_manga"][1]}}</span></p>
-          </div>    
+            {% endif %}
+        </div>    
         </li>
+    
+        {% endif %}
           {% endfor %}
         
       </ul>
