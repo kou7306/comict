@@ -1,0 +1,20 @@
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+main{
+    display: flex;
+    min-height: 100vh;
+    margin: 15px 0 30px 0;
+}
+.left{
+    flex: 1;
+    text-align: left;
+    margin-right: 15px;
+}
+.right{
+    flex: 1;
+    text-align: left;
+    margin-right: 15px;
+}
