@@ -5,6 +5,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+
 }
 
 body {
@@ -43,8 +44,8 @@ body {
     display: block;
     width: 300px;
     height: 400px;
-    background-color: #ccc;
 }
+
 
 
 /* user_container */
@@ -81,3 +82,4 @@ h3 {
   border-radius: 9999px;
   font-size: 14px;
 }
+

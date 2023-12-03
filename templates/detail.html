@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block extra_css %} {% endblock %} {% block content%}
+    <h1>{{title}}</h1>
+    {% for doc in query %}
+    <p>{{doc.to_dict()["username"]}}</p>
+    <p>{{doc.to_dict()["evaluation"]}}</p>
+    <p>{{doc.to_dict()["contents"]}}</p>
+    {% endfor %}
+    {% endblock %}

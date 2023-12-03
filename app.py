@@ -5,6 +5,7 @@ import numpy as np
 import firebase_admin
 from firebase_admin import credentials,firestore
 from bs4 import BeautifulSoup
+import requests
 
 
 # データベースの準備等
@@ -56,6 +57,26 @@ auth = firebase.auth()
 
 app.secret_key = "secret"
 
+def get_rakuten_book_cover(book_title):
+    api_key = '1078500249535096776'
+    base_url = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404'
+
+    params = {
+        'format': 'json',
+        'applicationId': api_key,
+        'title': book_title,
+    }
+
+    response = requests.get(base_url, params=params)
+    data = response.json()
+
+    if 'Items' in data and data['Items']:
+        first_item = data['Items'][0]['Item']
+        image_url = first_item.get('mediumImageUrl', first_item.get('largeImageUrl', 'Image not available'))
+        return image_url
+    else:
+        return None
+
 
 
 # マッチング関数
@@ -73,13 +94,12 @@ def matching(mangaAnswer):
     index.add(np.array(all_user_vector, dtype=np.float32))
     
     # 最近傍のベクトルを検索
-    _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=2)
+    _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=5)
     
     # 結果の値だけを取り出す
     nearest_values_users = [all_users[i] for i in indices[0]]
     
     # 対象ユーザーのレビューした作品名を取り出す
-    title_data = []
     review_query_results = []
     user_query_results = []
     
@@ -114,7 +134,20 @@ def homepage(user_id):
     user=db.collection('user').document(user_id).get()
     # マッチング
     review_query, user_query =matching(user.to_dict()["mangaAnswer"])
-    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
+
+    # 漫画の画像取得
+    book_urls=[]
+    titles=[]
+    for doc in review_query:
+        title=doc.to_dict()["mangaTitle"]  
+        titles.append(title)
+        image=get_rakuten_book_cover(title)
+        book_urls.append(image)
+    data=list(zip(titles,book_urls))
+
+
+    
+    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query,data=data)
 
 @app.route("/reset", methods=['POST', 'GET'])
 def reset():
@@ -366,9 +399,17 @@ def reviewer(user_id,reviewer_id):
         user_doc.update(update_data)
 
 
-
         # フォロー状態をクライアントに返す
         return jsonify({'isFollowing': is_following})
+    
+# 作品詳細ページ
+@app.route('/<user_id>/<title>/detail')
+def detail(user_id,title):
+    query = review_doc_ref.where('mangaTitle', '==', title).get()
+    
+    
+    return render_template("detail.html",user_id=user_id,title=title,query=query)
+
 
 # 好きな作品を追加
 @app.route('/<user_id>/favoriteAdd', methods=['GET', 'POST'])
@@ -384,7 +425,6 @@ def add_manga(user_id):
         user_doc_ref.update({'favorite_manga': firestore.ArrayUnion([manga_title])})
         favorite_titles.append(manga_title)
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
-    
-if __name__ == '__main__':
-    app.run(debug=False)
 
+if __name__ == '__main__':
+    app.run(debug=True)
