@@ -61,7 +61,8 @@
     <section id="reviewer">
         <h2>フォローしたユーザー</h2>
         <ul>
-          {% for follow in reviewer_query %}
+          {% for query in reviewer_query %}
+          {% for follow in query %}
           <li></li>
           <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
@@ -70,7 +71,7 @@
           </div>    
         </li>
           {% endfor %}
-        
+          {% endfor %}
       </ul>
     </section>
 {% endblock %}
