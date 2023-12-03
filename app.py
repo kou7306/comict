@@ -290,12 +290,13 @@ def question(user_id):
         data=list(zip(titles,book_urls))
 
         # フォロワーの情報を取得
+        reviewer_queries=[]  
         for follower in user.to_dict()["follow"]:
-            reviewer_query = user_doc_ref.where('username', '==', follower).get()
+            reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
 
-
+        username=user.to_dict()["username"]
         
-        return render_template("home.html",user_id=user_id,reviewer_query=reviewer_query,user_query=user_query,review_query=review_query,data=data)
+        return render_template("home.html",user_id=user_id,reviewer_query=reviewer_queries,user_query=user_query,review_query=review_query,data=data,username=username)
 
 
        
