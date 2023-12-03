@@ -6,3 +6,5 @@
 
 ## 概要はこちら
 https://www.canva.com/design/DAF15dmZLMc/92dKzVKYS-D2vmjLBXNBKQ/view?utm_content=DAF15dmZLMc&utm_campaign=designshare&utm_medium=link&utm_source=editor#1
+
+## 技育CAMPハッカソンvol.12 企業賞受賞作品
