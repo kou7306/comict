@@ -75,7 +75,7 @@ def get_rakuten_book_cover(book_title):
         image_url = first_item.get('mediumImageUrl', first_item.get('largeImageUrl', 'Image not available'))
         return image_url
     else:
-        return None
+        return "no"
 
 
 
@@ -145,9 +145,13 @@ def homepage(user_id):
         book_urls.append(image)
     data=list(zip(titles,book_urls))
 
+    # フォロワーの情報を取得
+    for follower in user.to_dict()["follow"]:
+        reviewer_query = user_doc_ref.where('username', '==', follower).get()
+
 
     
-    return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query,data=data)
+    return render_template("home.html",user_id=user_id,reviewer_query=reviewer_query,user_query=user_query,review_query=review_query,data=data)
 
 @app.route("/reset", methods=['POST', 'GET'])
 def reset():
@@ -272,12 +276,30 @@ def question(user_id):
         user_doc_ref.set(user_format)
 
 
+        user=db.collection('user').document(user_id).get()
         # マッチング
-        review_query, user_query = matching(mangaAnswer)
+        review_query, user_query =matching(user.to_dict()["mangaAnswer"])
+
+        # 漫画の画像取得
+        book_urls=[]
+        titles=[]
+        for doc in review_query:
+            title=doc.to_dict()["mangaTitle"]  
+            titles.append(title)
+            image=get_rakuten_book_cover(title)
+            book_urls.append(image)
+        data=list(zip(titles,book_urls))
+
+        # フォロワーの情報を取得
+        for follower in user.to_dict()["follow"]:
+            reviewer_query = user_doc_ref.where('username', '==', follower).get()
 
 
-        return render_template("home.html",user_id=user_id,user_query=user_query,review_query=review_query)
+        
+        return render_template("home.html",user_id=user_id,reviewer_query=reviewer_query,user_query=user_query,review_query=review_query,data=data)
 
+
+       
 
 # レビュー投稿
 @app.route('/<user_id>/review',methods=['GET','POST'])
