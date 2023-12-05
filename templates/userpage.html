@@ -1,36 +1,39 @@
 {% extends "base.html" %} {% block extra_css %} 
-<link rel="stylesheet" href="../static/css/userpage.css">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/userpage.css') }}">
 {% endblock %} {% block content%}
 
 
 
-<div style="padding: 1rem 0;">
-    <body>
-        <div>
-            <h1>ユーザーページ</h1>
-            <h2>ユーザーネーム: {{ username }}</h2>
-            <!-- {% for doc in query %}
-            <p>{{doc.to_dict()["mangaTitle"]}}</p>
-            {% endfor %} -->
-            <div class="right">
-                <h2>好きな作品</h2>
-                {% for title in favorite_titles %}
-                    <div>{{ title }}</div>
-                {% endfor %}
-            <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
-        </div>
-        </div>
-        <main>
-            <div class="left">
-                <h2>アンケート結果</h2>
+<section class="contents">
+    <div>
+        <h1>ユーザーページ</h1>
+        <h2>ユーザーネーム: {{ username }}</h2>
+        <!-- {% for doc in query %}
+        <p>{{doc.to_dict()["mangaTitle"]}}</p>
+        {% endfor %} -->
+
+    </div>
+    <main>
+        <div class="left">
+            <h3>アンケート結果</h2>
+            <div class="result">
                 {% for q,ans in combined_list %}
-                    <p>{{ q }}: {{ ans }}</p>
+                <p>{{ q }}: {{ ans }}</p>
                 {% endfor %}
             </div>
 
-        </main>
-    </body>
-</div>
+        </div>
+        <div class="right">
+            <h3>好きな作品</h2>
+            {% for title in favorite_titles %}
+                <div class="title">{{ title }}</div>
+            {% endfor %}
+            <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
+        </div>
+
+    </main>
+</section>
+
 
 
 {% endblock %}
