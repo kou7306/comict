@@ -14,14 +14,10 @@
         <div class="user-container">
             <h2>ユーザーネーム: {{ username }}</h2>
             <div class="follow-user">
-                {% if is_following %}
-                <button id="followButton" onclick="toggleFollow()">フォロー解除</button>
-                {% else %}
+                <button id="followButton" onclick="toggleFollow()"></button>
+
             </div>
-            <div class="un-follow-user">
-                <button id="followButton" onclick="toggleFollow()">フォロー</button>  
-                {% endif %}
-            </div>
+
         </div>
         <h2>好きな作品</h2>
         <div class="favorite-titles">
@@ -38,15 +34,21 @@
         </div>
     </div>
     <script>
-        function toggleFollow() {
-            const followStatus = document.getElementById('followStatus');
-            const followButton = document.getElementById('followButton');
-            let is_following=false;
+        const followButton = document.getElementById('followButton');
         
-            if(followButton.textContent == 'フォロー'){
-                is_following=false;
+        var is_following = {{ is_following | tojson | safe }};
+        if(is_following){
+            followButton.textContent = 'フォロー解除';
+        }else{
+            followButton.textContent = 'フォロー';
+        }
+
+        function toggleFollow() {
+            
+            if(is_following){
+                followButton.textContent = 'フォロー解除';
             }else{
-                is_following=true;
+                followButton.textContent = 'フォロー';
             }
         
             // サーバーにPOSTリクエストを送信
@@ -60,13 +62,11 @@
             .then(response => response.json())
             .then(data => {
                 console.log('成功:', data);
-        
+                is_following=data.isFollowing
                 // フォロー状態に応じて表示を変更
-                if (data.isFollowing) {
-                    followStatus.textContent = 'フォロー済み';
-                    followButton.textContent = 'アンフォロー';
+                if (is_following) {  
+                    followButton.textContent = 'フォロー解除';
                 } else {
-                    followStatus.textContent = '未フォロー';
                     followButton.textContent = 'フォロー';
                 }
             })
