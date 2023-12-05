@@ -1,10 +1,6 @@
-body{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-image: url('../images/back1.jpg');
-  background-size: cover;
+
+form{
+  margin-top: 30px;
 }
 
 .form-group{
@@ -12,6 +8,7 @@ body{
   justify-content: center;
   align-items: center;
   flex-flow: column;
+  padding: 0 20px;
 }
 
 .form-group h1 {

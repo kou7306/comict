@@ -1,5 +1,7 @@
 
-{% extends "base.html" %} {% block extra_css %} {% endblock %} {% block content%}
+{% extends "base.html" %} {% block extra_css %} 
+<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+{% endblock %} {% block content%}
 
 
 
@@ -34,7 +36,7 @@
 
     <section id="user">
         <h2>あなたの属性に近いユーザー</h2>
-        <ul>
+        <ul class="near-user">
           {% for id in user_query %}
           {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
           <li>
@@ -56,7 +58,7 @@
 
     <section id="reviewer">
         <h2>フォローしたユーザー</h2>
-        <ul>
+        <ul class="follow-user">
           {% for query in reviewer_query %}
           {% for follow in query %}
           <li>
