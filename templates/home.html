@@ -3,17 +3,7 @@
 
 
 
-<!-- 
-    {% for doc in user_query %}
-    <a href="/{{user_id}}/{{doc.id}}/userpage"><p>{{doc.to_dict()["username"]}}</p></a>
-    {% endfor %}
-    {% for doc in review_query %}
-    <p>{{doc.to_dict()["mangaTitle"]}}</p>
-    {% endfor %}
-    
-    {% for title in title_data %}
-    <p>{{title}}</p>
-    {% endfor %} -->
+
 
     <section class="manga container">
       <h2>あなたにおすすめの漫画</h2>
@@ -45,15 +35,15 @@
     <section id="user">
         <h2>あなたの属性に近いユーザー</h2>
         <ul>
-          {% for doc in user_query %}
-          {% if doc.to_dict()["username"] != username %}
+          {% for id in user_query %}
+          {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
           <li>
 
           <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
-            <a href="/{{user_id}}/{{doc.id}}/userpage"><h3>{{doc.to_dict()["username"]}}</h3></a>
-            {% if doc.to_dict()["favorite_manga"] %}
-            <p><span class="tag">{{doc.to_dict()["favorite_manga"][0]}}</span><span class="tag">{{doc.to_dict()["favorite_manga"][1]}}</span></p>
+            <a href="/{{user_id}}/{{id}}/userpage"><h3>{{user_doc_ref.document(id).get().to_dict()["username"]}}</h3></a>
+            {% if user_doc_ref.document(id).get().to_dict()["favorite_manga"] %}
+            <p><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][0]}}</span><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][1]}}</span></p>
             {% endif %}
         </div>    
         </li>
