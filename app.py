@@ -57,6 +57,7 @@ auth = firebase.auth()
 
 app.secret_key = "secret"
 
+# 楽天ブックスAPIを叩く関数
 def get_rakuten_book_cover(book_title):
     api_key = '1078500249535096776'
     base_url = 'https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404'
@@ -72,7 +73,7 @@ def get_rakuten_book_cover(book_title):
 
     if 'Items' in data and data['Items']:
         first_item = data['Items'][0]['Item']
-        image_url = first_item.get('mediumImageUrl', first_item.get('largeImageUrl', 'Image not available'))
+        image_url = first_item.get('largeImageUrl', first_item.get('mediumImageUrl', 'Image not available'))
         return image_url
     else:
         return "no"
@@ -106,7 +107,7 @@ def matching(mangaAnswer):
     for user in nearest_values_users:
         # usernameが一致するレビューデータをすべて取り出す
         review_query_result = review_doc_ref.where('username', '==', user["username"]).get()
-        user_query_result = db.collection('user').where('username', '==', user["username"]).get()
+        user_query_result = user_doc_ref.where('username', '==', user["username"]).get()
         
         review_query_results.extend(review_query_result)
         user_query_results.extend(user_query_result)
@@ -119,7 +120,7 @@ def matching(mangaAnswer):
 @app.route("/<user_id>/accesTest")
 def accesTest(user_id):
     if 'user' in session:
-        user=db.collection('user').document(user_id).get()
+        user=user_doc_ref.document(user_id).get()
         if(user.to_dict()["mangaAnswer"]==[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]):
             return redirect(f"/{user_id}/question")
         else:
@@ -131,7 +132,7 @@ def accesTest(user_id):
 
 @app.route('/<user_id>/home')
 def homepage(user_id):
-    user=db.collection('user').document(user_id).get()
+    user=user_doc_ref.document(user_id).get()
     # マッチング
     review_query, user_query =matching(user.to_dict()["mangaAnswer"])
 
@@ -265,16 +266,14 @@ def question(user_id):
             mangaAnswer.append(answer)
             
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
-        user_doc_ref = db.collection('user').document(user_id)
-        user_doc=user_doc_ref.get()
+        user_doc = user_doc_ref.document(user_id)
+        user=user_doc.get()
         # データベースにデータを格納
-        user_format['gender']=user_doc.to_dict()["gender"]
+        user_format['gender']=user.to_dict()["gender"]
         user_format['mangaAnswer']=mangaAnswer
-        user_format['username']=user_doc.to_dict()["username"]
-        user_doc_ref.set(user_format)
+        user_format['username']=user.to_dict()["username"]
+        user_doc.set(user_format)
 
-
-        user=db.collection('user').document(user_id).get()
         # マッチング
         review_query, user_query =matching(user.to_dict()["mangaAnswer"])
 
@@ -311,14 +310,14 @@ def review(user_id):
         rating = request.form['rating']
         comment = request.form['comment_text']
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
-        user_doc_ref = db.collection('user').document(user_id)
-        user_doc=user_doc_ref.get()
+        user_doc = user_doc_ref.document(user_id)
+        user=user_doc.get()
 
         # 入力されたレビューのデータ
         review_format["evaluation"]=rating
         review_format["mangaTitle"]=work_name
         review_format["contents"]=comment
-        review_format["username"]=user_doc.to_dict()["username"]
+        review_format["username"]=user.to_dict()["username"]
         review_document=review_doc_ref.document() 
         review_document.set(review_format)
         return redirect(f"/{user_id}/review")
@@ -333,10 +332,10 @@ def review(user_id):
 @app.route('/<user_id>/userpage', methods=['GET', 'POST'])
 def user_page(user_id):   
 
-    user_doc_ref = db.collection('user').document(user_id)
-    user_doc=user_doc_ref.get()
-    user_data=user_doc.to_dict()
-    username=user_doc.to_dict()["username"]
+    user_doc = user_doc_ref.document(user_id)
+    user=user_doc.get()
+    user_data=user.to_dict()
+    username=user.to_dict()["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
 
@@ -371,7 +370,7 @@ def user_page(user_id):
     combined_list = zip(question, answer)
 
     #好きな作品のリストをデータベースから取得
-    favorite_titles = user_doc.to_dict()["favorite_manga"]
+    favorite_titles = user.to_dict()["favorite_manga"]
 
     return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list, favorite_titles=favorite_titles)
 
@@ -383,13 +382,13 @@ def reviewer(user_id,reviewer_id):
     if request.method == 'GET':
 
         # レビュワーの情報をとってくる
-        reviewer_doc = db.collection('user').document(reviewer_id).get()
+        reviewer_doc = user_doc_ref.document(reviewer_id).get()
         reviewername=reviewer_doc.to_dict()["username"]
         # 特定のユーザーネームに一致するレビュー情報を取得
         query = review_doc_ref.where('username', '==', reviewername).get()
 
         # そのユーザーをフォローしてるか
-        user_doc = db.collection('user').document(user_id).get()
+        user_doc = user_doc_ref.document(user_id).get()
         fquery = user_doc_ref.where('follow', 'array_contains', reviewername)
         results = fquery.stream()
         if len(list(results)) > 0:
@@ -408,9 +407,9 @@ def reviewer(user_id,reviewer_id):
         # フォロー状態をトグル（デモ用）
         is_following = not is_following
         # レビュワーの情報をとってくる
-        reviewer_doc = db.collection('user').document(reviewer_id).get()
+        reviewer_doc = user_doc_ref.document(reviewer_id).get()
         reviewername=reviewer_doc.to_dict()["username"]
-        user_doc = db.collection('user').document(user_id)
+        user_doc = user_doc_ref.document(user_id)
         current_follow = user_doc.get().to_dict().get("follow", [])
         if(is_following):
 
@@ -438,16 +437,21 @@ def detail(user_id,title):
 # 好きな作品を追加
 @app.route('/<user_id>/favoriteAdd', methods=['GET', 'POST'])
 def add_manga(user_id):
-    user_doc_ref = db.collection('user').document(user_id)
-    user_doc=user_doc_ref.get()
-    favorite_titles =user_doc.to_dict()["favorite_manga"]
+    user_doc = user_doc_ref.document(user_id)
+    user=user_doc.get()
+    favorite_titles =user.to_dict()["favorite_manga"]
     if request.method == 'GET':
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
     elif request.method == 'POST':
         manga_title = request.form['favorite_title'] # 'favorite_title'から取得
-        user_doc_ref = db.collection('user').document(user_id)
-        user_doc_ref.update({'favorite_manga': firestore.ArrayUnion([manga_title])})
-        favorite_titles.append(manga_title)
+        # ドキュメントの更新
+        user_doc.update({
+            'favorite_manga': firestore.ArrayUnion([manga_title])
+        })
+
+        # ユーザーデータの取得
+        user_data = user_doc.get().to_dict()
+        favorite_titles = user_data.get('favorite_manga', [])  # favorite_titlesが存在しない場合は空のリストを使う
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
 
 if __name__ == '__main__':
