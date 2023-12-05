@@ -16,7 +16,7 @@ db = firestore.client()
 
 user_doc_ref = db.collection('user')
 
-all_user = user_doc_ref.get()
+all_user = user_doc_ref.stream()
 
 review_doc_ref=db.collection('review')
 
@@ -81,13 +81,14 @@ def get_rakuten_book_cover(book_title):
 
 
 # マッチング関数
-def matching(mangaAnswer):
+def matching(mangaAnswer,user_id):
     # データベースにあるすべてのユーザーデータを取得
     all_user_vector = []
     all_users = []
     for user in all_user:
-        all_user_vector.append(user.to_dict()["mangaAnswer"])
-        all_users.append(user.to_dict())
+        if(user.id!=user_id):
+            all_user_vector.append(user.to_dict()["mangaAnswer"])
+            all_users.append(user.to_dict())
 
     # Faissインデックスの作成
     dimension = len(all_user_vector[0])  # ベクトルの次元数
@@ -134,7 +135,7 @@ def accesTest(user_id):
 def homepage(user_id):
     user=user_doc_ref.document(user_id).get()
     # マッチング
-    review_query, user_query =matching(user.to_dict()["mangaAnswer"])
+    review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
 
     # 漫画の画像取得
     book_urls=[]
@@ -275,7 +276,7 @@ def question(user_id):
         user_doc.set(user_format)
 
         # マッチング
-        review_query, user_query =matching(user.to_dict()["mangaAnswer"])
+        review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
 
         # 漫画の画像取得
         book_urls=[]
