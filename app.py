@@ -389,29 +389,25 @@ def reviewer(user_id,reviewer_id):
         query = review_doc_ref.where('username', '==', reviewername).get()
 
         # そのユーザーをフォローしてるか
-        user_doc = user_doc_ref.document(user_id).get()
-        fquery = user_doc_ref.where('follow', 'array_contains', reviewername)
-        results = fquery.stream()
-        if len(list(results)) > 0:
-            is_following= True
-        else:
-            is_following= False
-        favorite_titles="no"
-        if(reviewer_doc.to_dict()["favorite_manga"]):
-            favorite_titles =reviewer_doc.to_dict()["favorite_manga"]
-    
+        user_doc = user_doc_ref.document(user_id)
+        # 'follow' フィールド中に 'reviewername' が含まれているか確認
+        is_following = any(user == reviewername for user in user_doc.get().to_dict()['follow'])
+
+
+        favorite_titles = user_doc.get().to_dict().get('favorite_manga', [])  # favorite_titlesが存在しない場合は空のリストを使う
         return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_titles=favorite_titles)
     else:
         data = request.get_json()
         is_following = data.get('is_following')
 
-        # フォロー状態をトグル（デモ用）
+        # フォロー状態をトグル
         is_following = not is_following
         # レビュワーの情報をとってくる
         reviewer_doc = user_doc_ref.document(reviewer_id).get()
         reviewername=reviewer_doc.to_dict()["username"]
         user_doc = user_doc_ref.document(user_id)
-        current_follow = user_doc.get().to_dict().get("follow", [])
+        user_data = user_doc.get().to_dict()
+        current_follow = user_data.get("follow", [])
         if(is_following):
 
             current_follow.append(reviewername)
@@ -452,7 +448,7 @@ def add_manga(user_id):
 
         # ユーザーデータの取得
         user_data = user_doc.get().to_dict()
-        favorite_titles = user_data.get('favorite_manga', [])  # favorite_titlesが存在しない場合は空のリストを使う
+        favorite_titles = user_data.get('favorite_manga', [])  # favorite_mangaが存在しない場合は空のリストを使う
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
 
 if __name__ == '__main__':
