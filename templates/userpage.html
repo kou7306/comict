@@ -9,9 +9,16 @@
         <div>
             <h1>ユーザーページ</h1>
             <h2>ユーザーネーム: {{ username }}</h2>
-            {% for doc in query %}
+            <!-- {% for doc in query %}
             <p>{{doc.to_dict()["mangaTitle"]}}</p>
-            {% endfor %}
+            {% endfor %} -->
+            <div class="right">
+                <h2>好きな作品</h2>
+                {% for title in favorite_titles %}
+                    <div>{{ title }}</div>
+                {% endfor %}
+            <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
+        </div>
         </div>
         <main>
             <div class="left">
@@ -20,13 +27,7 @@
                     <p>{{ q }}: {{ ans }}</p>
                 {% endfor %}
             </div>
-            <div class="right">
-                    <h2>好きな作品のリスト</h2>
-                {% for title in favorite_titles %}
-                    <div>{{ title }}</div>
-                {% endfor %}
-                <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
-            </div>
+
         </main>
     </body>
 </div>
