@@ -1,31 +1,9 @@
-@import url("https://fonts.googleapis.com/css?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
-
-}
-body {
-    background-image: url('../images/back1.jpg');
-    background-size: cover;
-    background-repeat: no-repeat;
-    z-index: -999;
-    padding: 100px 0 0;
-
+section{
+  margin: 30px 50px;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
-.manga {
-    padding: 100px 0 150px 0;
-}
-
-.manga h2 {
+h2 {
     font-size: 25px;
     font-weight: 400;
     margin-bottom: 20px;
@@ -48,17 +26,16 @@ body {
 }
 
 
-
 /* user_container */
-ul {
+.follow-user,.near-user {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   padding: 0;
 }
 
-li {
-  width: 25%;
+.follow-user li,.near-user li {
+  width: 30%;
   text-align: center;
   padding: 16px;
   box-sizing: border-box;
