@@ -30,6 +30,8 @@ user_format={
     "favorite_manga":[],
     "username":None,
     "follow":[],
+    "user_query":[],
+    "review_query":[],
 }
 
 # レビューデータベースに入れるときのデータの型
@@ -101,17 +103,19 @@ def matching(mangaAnswer,user_id):
     # 結果の値だけを取り出す
     nearest_values_users = [all_users[i] for i in indices[0]]
     
-    # 対象ユーザーのレビューした作品名を取り出す
+    # 対象ユーザーのレビューした情報のIDを取り出す
     review_query_results = []
     user_query_results = []
     
     for user in nearest_values_users:
         # usernameが一致するレビューデータをすべて取り出す
-        review_query_result = review_doc_ref.where('username', '==', user["username"]).get()
-        user_query_result = user_doc_ref.where('username', '==', user["username"]).get()
-        
-        review_query_results.extend(review_query_result)
-        user_query_results.extend(user_query_result)
+        review_query_result = review_doc_ref.where('username', '==', user["username"]).stream()
+        user_query_result = user_doc_ref.where('username', '==', user["username"]).stream()
+        for doc in review_query_result:
+            review_query_results.append(doc.id)
+        for doc in user_query_result:
+            user_query_results.append(doc.id)
+
     
     return review_query_results, user_query_results
 
@@ -131,17 +135,20 @@ def accesTest(user_id):
         flash("ログインしてください")
         return redirect("/")
 
+
+
+
+# home
 @app.route('/<user_id>/home')
 def homepage(user_id):
     user=user_doc_ref.document(user_id).get()
-    # マッチング
-    review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
-
+    
     # 漫画の画像取得
     book_urls=[]
     titles=[]
-    for doc in review_query:
-        title=doc.to_dict()["mangaTitle"]  
+    for id in user.to_dict()['review_query']:
+        review=review_doc_ref.document(id).get()
+        title=review.to_dict()["mangaTitle"]  
         titles.append(title)
         image=get_rakuten_book_cover(title)
         book_urls.append(image)
@@ -152,7 +159,9 @@ def homepage(user_id):
     for follower in user.to_dict()["follow"]:
         reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
     
-    return render_template("home.html",user_id=user_id,reviewer_query=reviewer_queries,user_query=user_query,review_query=review_query,data=data)
+    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data)
+
+
 
 @app.route("/reset", methods=['POST', 'GET'])
 def reset():
@@ -273,16 +282,19 @@ def question(user_id):
         user_format['gender']=user.to_dict()["gender"]
         user_format['mangaAnswer']=mangaAnswer
         user_format['username']=user.to_dict()["username"]
-        user_doc.set(user_format)
+
 
         # マッチング
         review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
-
+        user_format['user_query']=user_query
+        user_format['review_query']=review_query
+        user_doc.set(user_format)
         # 漫画の画像取得
         book_urls=[]
         titles=[]
-        for doc in review_query:
-            title=doc.to_dict()["mangaTitle"]  
+        for id in review_query:
+            review=review_doc_ref.document(id).get()
+            title=review.to_dict()["mangaTitle"]  
             titles.append(title)
             image=get_rakuten_book_cover(title)
             book_urls.append(image)
@@ -295,7 +307,7 @@ def question(user_id):
 
         username=user.to_dict()["username"]
         
-        return render_template("home.html",user_id=user_id,reviewer_query=reviewer_queries,user_query=user_query,review_query=review_query,data=data,username=username)
+        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user_query,review_query=review_query,data=data,username=username)
 
 
        
@@ -322,8 +334,6 @@ def review(user_id):
         review_document=review_doc_ref.document() 
         review_document.set(review_format)
         return redirect(f"/{user_id}/review")
-
-
 
 
 
@@ -394,7 +404,7 @@ def reviewer(user_id,reviewer_id):
         is_following = any(user == reviewername for user in user_doc.get().to_dict()['follow'])
 
 
-        favorite_titles = user_doc.get().to_dict().get('favorite_manga', [])  # favorite_titlesが存在しない場合は空のリストを使う
+        favorite_titles = reviewer_doc.to_dict().get('favorite_manga', [])  # favorite_titlesが存在しない場合は空のリストを使う
         return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_titles=favorite_titles)
     else:
         data = request.get_json()
