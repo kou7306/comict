@@ -64,3 +64,8 @@ form{
   font-weight: 600;
   margin: 30px 0;
 }
+
+input[type='range'] {
+  width: 80%; /* スライダーの幅を変更 */
+  margin: 10px 0; /* スライダーの上下の余白を追加 */
+}

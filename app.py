@@ -6,10 +6,14 @@ import firebase_admin
 from firebase_admin import credentials,firestore
 from bs4 import BeautifulSoup
 import requests
+import os
 
 
-# データベースの準備等
-cred = credentials.Certificate("key.json")
+# # サービス アカウント キー ファイルへのパスを環境変数から取得
+# firebase_admin_key_path = os.environ'FIREBASE_ADMIN_KEY_PATH')
+
+# Firebase Admin SDK を初期化
+cred = credentials.Certificate('key.json')
 
 firebase_admin.initialize_app(cred)
 db = firestore.client()
@@ -21,6 +25,8 @@ all_user = user_doc_ref.stream()
 review_doc_ref=db.collection('review')
 
 is_following=False
+
+
 
 
 # ユーザーデータベースにいれるときのデータの型
@@ -88,36 +94,39 @@ def matching(mangaAnswer,user_id):
     all_user_vector = []
     all_users = []
     for user in all_user:
-        if(user.id!=user_id):
+        if(user.id!=user_id): # 自分以外
             all_user_vector.append(user.to_dict()["mangaAnswer"])
             all_users.append(user.to_dict())
+    if(all_user_vector != []):
+        # Faissインデックスの作成
+        dimension = len(all_user_vector[0])  # ベクトルの次元数
+        index = faiss.IndexFlatL2(dimension)
+        index.add(np.array(all_user_vector, dtype=np.float32))
+        
+        # 最近傍のベクトルを検索
+        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=5)
+        
+        # 結果の値だけを取り出す
+        nearest_values_users = [all_users[i] for i in indices[0]]
+        
+        # 対象ユーザーのレビューした情報のIDを取り出す
+        review_query_results = []
+        user_query_results = []
+        
+        for user in nearest_values_users:
+            # usernameが一致するレビューデータをすべて取り出す
+            review_query_result = review_doc_ref.where('username', '==', user["username"]).stream()
+            print(user_query_result)
+            print(review_query_result)
+            user_query_result = user_doc_ref.where('username', '==', user["username"]).stream()
+            for doc in review_query_result:
+                review_query_results.append(doc.id)
+            for doc in user_query_result:
+                user_query_results.append(doc.id)
 
-    # Faissインデックスの作成
-    dimension = len(all_user_vector[0])  # ベクトルの次元数
-    index = faiss.IndexFlatL2(dimension)
-    index.add(np.array(all_user_vector, dtype=np.float32))
-    
-    # 最近傍のベクトルを検索
-    _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=5)
-    
-    # 結果の値だけを取り出す
-    nearest_values_users = [all_users[i] for i in indices[0]]
-    
-    # 対象ユーザーのレビューした情報のIDを取り出す
-    review_query_results = []
-    user_query_results = []
-    
-    for user in nearest_values_users:
-        # usernameが一致するレビューデータをすべて取り出す
-        review_query_result = review_doc_ref.where('username', '==', user["username"]).stream()
-        user_query_result = user_doc_ref.where('username', '==', user["username"]).stream()
-        for doc in review_query_result:
-            review_query_results.append(doc.id)
-        for doc in user_query_result:
-            user_query_results.append(doc.id)
-
-    
-    return review_query_results, user_query_results
+        
+        return review_query_results, user_query_results
+    return None,None
 
 
 
@@ -126,8 +135,8 @@ def matching(mangaAnswer,user_id):
 def accesTest(user_id):
     if 'user' in session:
         user=user_doc_ref.document(user_id).get()
-        if(user.to_dict()["mangaAnswer"]==[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]):
-            return redirect(f"/{user_id}/question")
+        if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(160)]):
+            return redirect(f"/{user_id}/genre")
         else:
             return redirect(f"/{user_id}/home")
 
@@ -236,7 +245,7 @@ def userAdd():
                 user_doc=user_doc_ref.document(user_id)
                 user_format["username"]=username
                 # デフォルトで外れ値を指定しておく
-                user_format["mangaAnswer"]=[99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0,99.0]
+                user_format["mangaAnswer"]= [99.0 for x in range(160)]
                 user_format["gender"]=gender
                 user_doc.set(user_format)
 
@@ -258,22 +267,38 @@ def logput():
     flash("ログアウトしました")
     return redirect('/')
 
+# ジャンル選択
+@app.route("/<user_id>/genre",methods = ['GET',"POST"])
+def genre(user_id):
+    if request.method == 'GET':
+        return render_template("genre.html",user_id=user_id)
+    else:
+        # フォームからジャンルを取得し、データベースに追加
+        genre = request.form['genre']
+        update_data = {"genre":genre}
+        user_doc = user_doc_ref.document(user_id)
+        user_doc.update(update_data)
+        return redirect(f'/{user_id}/{genre}/question')
+
 
 
 # アンケート回答を受信
-@app.route('/<user_id>/question', methods = ['GET','POST'])
-def question(user_id):
+@app.route('/<user_id>/<genre>/question', methods = ['GET','POST'])
+def question(user_id,genre):
     if request.method == 'GET':
-        return render_template("question.html",user_id=user_id)
+        return render_template("question"+ genre + '.html',user_id=user_id,genre=genre)
     else:
-        mangaAnswer = []
+        #長さ20*８のリストを作成し、０で初期化する
+        mangaAnswer = [0] *160
+        genre=int(genre)
+        first_index = 20 * (genre - 1)
 
         #HTMLフォームからデータを受け取る
-        for i in range(1,21):
+        for i in range(1,6):
             question_key = f'question-{i:02}'
-            answer = request.form.get(question_key)
+            answer = request.form[question_key]
             answer=float(answer)
-            mangaAnswer.append(answer)
+            mangaAnswer[first_index + (i-1)]=answer
             
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
         user_doc = user_doc_ref.document(user_id)
@@ -462,4 +487,4 @@ def add_manga(user_id):
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=5002)
