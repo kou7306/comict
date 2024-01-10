@@ -481,7 +481,7 @@ def add_manga(user_id):
 
         # ユーザーデータの取得
         user_data = user_doc.get().to_dict()
-        favorite_titles = user_data.get('favorite_manga', [])  # favorite_mangaが存在しない場合は空のリストを使う
+        favorite_titles = user_data.get('favorite_manga', [])  #favorite_mangaが存在しない場合は空のリストを使う
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
 
 if __name__ == '__main__':
