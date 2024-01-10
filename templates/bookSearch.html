@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="../static/javascript/bookSearch.js"></script>
+{% endblock %}
+{% block content%}
+    <div>
+        <h2>作品を検索する</h2>
+        <input type="text" id="searchInput" placeholder="検索キーワードを入力">
+        <button type="button" onclick="searchBooks()">検索</button>
+        <p id="message"></p>
+        <ul id="searchResults"></ul>
+    </div>
+
+{% endblock %}
+
