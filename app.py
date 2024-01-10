@@ -104,7 +104,7 @@ def matching(mangaAnswer,user_id):
         index.add(np.array(all_user_vector, dtype=np.float32))
         
         # 最近傍のベクトルを検索
-        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=5)
+        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=1)
         
         # 結果の値だけを取り出す
         nearest_values_users = [all_users[i] for i in indices[0]]
@@ -116,8 +116,6 @@ def matching(mangaAnswer,user_id):
         for user in nearest_values_users:
             # usernameが一致するレビューデータをすべて取り出す
             review_query_result = review_doc_ref.where('username', '==', user["username"]).stream()
-            print(user_query_result)
-            print(review_query_result)
             user_query_result = user_doc_ref.where('username', '==', user["username"]).stream()
             for doc in review_query_result:
                 review_query_results.append(doc.id)
@@ -250,7 +248,7 @@ def userAdd():
                 user_doc.set(user_format)
 
                 flash("ユーザー登録が完了しました")
-                return redirect(f"/{user_id}/question")
+                return redirect(f"/{user_id}/genre")
             except:
                 flash("ユーザー登録に失敗しました")
                 return redirect("/")
