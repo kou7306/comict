@@ -1,13 +1,21 @@
-# Use an official Python runtime as a parent image
-FROM python:3.7-slim
+# Use the official Python image
+FROM python:3.8-slim
 
-# Set the working directory in the container to /app
+# Set the working directory
 WORKDIR /app
 
-# Add the current directory contents into the container at /app
-COPY . /app
+# Copy the requirements file to the working directory
+COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
+# Install any dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy the rest of the application code to the working directory
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Run the application
 CMD ["python", "app.py"]
+
