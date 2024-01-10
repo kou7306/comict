@@ -7,6 +7,8 @@ WORKDIR /app
 # Copy the requirements file to the working directory
 COPY requirements.txt .
 
+RUN pip install --upgrade pip
+
 # Install any dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -16,6 +18,5 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 8080
 
-# Run the application
-CMD ["python", "app.py"]
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]
 
