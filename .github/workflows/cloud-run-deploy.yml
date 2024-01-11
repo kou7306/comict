@@ -34,6 +34,12 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ github.sha }} .
         docker push ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ github.sha }}
 
+    - name: Set up Google Cloud Auth
+      run: |
+        gcloud auth login
+        gcloud config set account kouta.131206@gmail.com
+        # ACCOUNTには、認証したいGoogle Cloudアカウントのメールアドレスを指定してください。
+
     - name: Deploy to Cloud Run
       run: |
         gcloud run deploy your-service-name \
