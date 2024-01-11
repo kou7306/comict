@@ -36,8 +36,7 @@ jobs:
 
     - name: Set up Google Cloud Auth
       run: |
-        gcloud auth login
-        gcloud config set account kouta.131206@gmail.com
+        gcloud login
         # ACCOUNTには、認証したいGoogle Cloudアカウントのメールアドレスを指定してください。
 
     - name: Deploy to Cloud Run
