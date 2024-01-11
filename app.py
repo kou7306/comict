@@ -502,19 +502,27 @@ def search_books(search_term):
     
     return results, num_results
 
+PER_PAGE = 10
+
 @app.route('/<user_id>/bookSearch', methods=['POST', 'GET'])
 def BookSearch(user_id):
     if request.method == 'POST':
         search_term = request.form.get('searchInput').strip().lower()
+        page = request.args.get('page', 1)
         
         if search_term:
             results, num_results = search_books(search_term)
             if num_results == 0:
                 results = []
             
+            start = (page - 1) * PER_PAGE
+            end = start + PER_PAGE
+            results = results[start:end]
+            
             response = {
                 "results": results,
-                "num_results": num_results
+                "num_results": num_results,
+                "user_id": user_id
             }
             
             return jsonify(response)

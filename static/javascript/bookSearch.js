@@ -1,15 +1,27 @@
-function searchBooks() {
+let page = 1;
+
+window.addEventListener('scroll', () => {
+    if (this.scrollTop + this.clientHeight >= (this.scrollHeight) * 0.8) {
+        searchBooks(page);
+        page++;
+    }
+});
+
+function searchBooks(page) {
     const searchTerm = document.getElementById('searchInput').value.trim().toLowerCase();
 
     if (searchTerm !== '') {
         $.ajax({
             type: 'POST',
             url: '/<user_id>/bookSearch',
-            data: { searchInput: searchTerm},
-            success: function(data) {
+            data: { 
+                searchInput: searchTerm,
+                page: page
+            },
+            success: (data) => {
                 displaySearchResults(data);
             },
-            error: function(error) {
+            error: (error) => {
                 console.error('検索エラー:', error);
             }
         });
@@ -22,6 +34,7 @@ function displaySearchResults(response) {
 
     const results = response.results;
     const numResults = response.num_results;
+    const user_id = response.user_id
 
     const resultsList = document.getElementById('searchResults');
         resultsList.innerHTML = '';
@@ -31,7 +44,12 @@ function displaySearchResults(response) {
         } else {
             results.forEach(result => {
                 const listItem = document.createElement('li');
-                listItem.textContent = result.title;
+                const link = document.createElement('a');
+
+                link.href = `/${user_id}/${result.title}/detail`;
+                link.textContent = result.title;
+                
+                listItem.appendChild(link);
                 resultsList.appendChild(listItem);
             });
         }
