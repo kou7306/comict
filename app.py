@@ -484,5 +484,44 @@ def add_manga(user_id):
         favorite_titles = user_data.get('favorite_manga', [])  #favorite_mangaが存在しない場合は空のリストを使う
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
 
+# 作品検索機能
+def search_books(search_term):
+    # Firestoreクエリを作成
+    docs = db.collection('comics').where('title', '>=', search_term).where('title', '<=', search_term + '\uf8ff') \
+            .stream()
+            
+    docs2 = db.collection('comics').where('author', '>=', search_term).where('author', '<=', search_term + '\uf8ff') \
+            .stream()
+     
+    # クエリ結果をリストに変換
+    results = [doc.to_dict() for doc in docs]
+    results += [doc.to_dict() for doc in docs2]
+    
+    # 検索結果の件数を取得
+    num_results = len(results)
+    
+    return results, num_results
+
+@app.route('/<user_id>/bookSearch', methods=['POST', 'GET'])
+def BookSearch(user_id):
+    if request.method == 'POST':
+        search_term = request.form.get('searchInput').strip().lower()
+        
+        if search_term:
+            results, num_results = search_books(search_term)
+            if num_results == 0:
+                results = []
+            
+            response = {
+                "results": results,
+                "num_results": num_results
+            }
+            
+            return jsonify(response)
+        else:
+            return jsonify({"error": "検索ワードを入力してください"})
+    else:
+        return render_template('bookSearch.html')
+
 if __name__ == '__main__':
     app.run(debug=True,port=8080)
