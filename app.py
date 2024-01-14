@@ -7,22 +7,17 @@ from firebase_admin import credentials,firestore
 from bs4 import BeautifulSoup
 import requests
 import os
-from views.review import review_bp
+
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
 # firebase_admin_key_path = os.environ'FIREBASE_ADMIN_KEY_PATH')
 app = Flask(__name__)
+
 # Firebase Admin SDK を初期化
+cred = credentials.Certificate('key.json')
 
-# FirestoreクライアントをFlaskアプリケーションオブジェクトに設定
-
-ctx = app.app_context()
-ctx.push()
-
-
-# Blueprintの登録
-
-app.register_blueprint(review_bp)
+firebase_admin.initialize_app(cred)
+db = firestore.client()
 user_doc_ref = db.collection('user')
 
 all_user = user_doc_ref.stream()
@@ -351,30 +346,29 @@ def question(user_id,genre):
        
 
 # レビュー投稿
-# @app.route('/<user_id>/review',methods=['GET','POST'])
-# def review(user_id):
-#     if request.method == 'GET':
-#         return render_template("review.html",user_id=user_id)
-#     else:
-#         # formから取得
-#         work_name = request.form['work_name']
-#         rating = request.form['rating']
-#         comment = request.form['comment_text']
-#         # Firestoreから指定したuser_idに対応するユーザーネームを取得
-#         user_doc = user_doc_ref.document(user_id)
-#         user=user_doc.get()
+@app.route('/<user_id>/review',methods=['GET','POST'])
+def review(user_id):
+    if request.method == 'GET':
+        return render_template("review.html",user_id=user_id)
+    else:
+        # formから取得
+        work_name = request.form['work_name']
+        rating = request.form['rating']
+        comment = request.form['comment_text']
+        # Firestoreから指定したuser_idに対応するユーザーネームを取得
+        user_doc = user_doc_ref.document(user_id)
+        user=user_doc.get()
 
-#         # 入力されたレビューのデータ
-#         review_format["evaluation"]=rating
-#         review_format["mangaTitle"]=work_name
-#         review_format["contents"]=comment
-#         review_format["username"]=user.to_dict()["username"]
-#         review_document=review_doc_ref.document() 
-#         review_document.set(review_format)
-#         return redirect(f"/{user_id}/review")
+        # 入力されたレビューのデータ
+        review_format["evaluation"]=rating
+        review_format["mangaTitle"]=work_name
+        review_format["contents"]=comment
+        review_format["username"]=user.to_dict()["username"]
+        review_document=review_doc_ref.document() 
+        review_document.set(review_format)
+        return redirect(f"/{user_id}/review")
 
 
-app.register_blueprint(review_bp)
 
 
 
@@ -390,7 +384,7 @@ def user_page(user_id):
     query = review_doc_ref.where('username', '==', username).get()
 
     # アンケート結果の取得・表示
-    with open('templates/question.html', 'r', encoding='utf-8') as file:
+    with open('templates/question1.html', 'r', encoding='utf-8') as file:
         html_code = file.read()
     result = user_data.get('mangaAnswer')
 
@@ -413,7 +407,7 @@ def user_page(user_id):
             label_tag = soup.find('label', {'for': input_tag.get('id')})
             if label_tag:
                 temp.append(label_tag.text)
-    for i in range(20):
+    for i in range(5):
         answer.append(temp[i])
 
     #設問と回答をタプル化
