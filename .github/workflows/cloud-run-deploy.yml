@@ -1,48 +1,40 @@
-name: Deploy to Cloud Run
+# name: Deploy to Cloud Run
 
-on:
-  push:
-    branches:
-      - main
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+#     steps:
+#     - name: Checkout Repository
+#       uses: actions/checkout@v2
 
-    - name: Set up Google Cloud SDK
+#     - name: Set up Google Cloud SDK
+#       uses: google-github-actions/setup-gcloud@main 
+#       with:
+#         project_id: ${{ secrets.GCP_PROJECT_ID }}
+#         service_account_key: ${{ secrets.GCP_SA_KEY }}
+#         export_default_credentials: true
 
-      uses: google-github-actions/setup-gcloud@main 
-      with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
-        export_default_credentials: true
+#     - name: Authenticate with Google Cloud
+#       run: gcloud auth configure-docker asia-northeast1-docker.pkg.dev
 
-    - name: Configure Docker
-      uses: docker/setup-buildx-action@v1
+#     - name: Build and Push Docker Image to Artifact Registry
+#       run: |
+#         docker build -t asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy:${{ github.sha }} .
+#         docker push asia-northeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy:${{ github.sha }}
 
-    - name: Login to Docker Hub
-      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
-      env:
-        DOCKER_CLI_ASK_PASS: "0"
+#     # Add additional steps as needed for your deployment process
 
-    - name: Build and Push Docker Image
-      run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ github.sha }} .
-        docker push ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ github.sha }}
 
-    - name: Set up Google Cloud Auth
-      run: |
-        gcloud login
-        # ACCOUNTには、認証したいGoogle Cloudアカウントのメールアドレスを指定してください。
-
-    - name: Deploy to Cloud Run
-      run: |
-        gcloud run deploy your-service-name \
-          --image ${{ secrets.DOCKER_USERNAME }}/your-image-name:${{ github.sha }} \
-          --platform managed \
-          --region your-region \
-          --allow-unauthenticated
+#     - name: Deploy to Cloud Run
+#       run: |
+#         gcloud run deploy your-service-name \
+#           --image=gcr.io/${{ secrets.GCP_PROJECT_ID }}/cloud-run-source-deploy:${{ github.sha }} \
+#           --platform=managed \
+#           --region=your-region \
+#           --allow-unauthenticated # 認証を有効にするかどうかを設定
