@@ -1,3 +1,4 @@
+
 # name: Deploy to Cloud Run
 
 # on:
@@ -38,3 +39,4 @@
 #           --platform=managed \
 #           --region=your-region \
 #           --allow-unauthenticated # 認証を有効にするかどうかを設定
+
