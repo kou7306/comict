@@ -151,14 +151,18 @@ def homepage(user_id):
     user=user_doc_ref.document(user_id).get()
     
     # 漫画の画像取得
+    favolite_book_urls = []
     book_urls=[]
     titles=[]
     for id in user.to_dict()['review_query']:
         review=review_doc_ref.document(id).get()
-        title=review.to_dict()["mangaTitle"]  
-        titles.append(title)
-        image=get_rakuten_book_cover(title)
-        book_urls.append(image)
+        eval=review.to_dict()["evaluation"]
+        # 4以上の評価のものだけ取得
+        if(int(eval)>=4):
+            title=review.to_dict()["mangaTitle"]  
+            titles.append(title)
+            image=get_rakuten_book_cover(title)
+            book_urls.append(image)
     data=list(zip(titles,book_urls))
 
     # フォロワーの情報を取得
@@ -166,7 +170,14 @@ def homepage(user_id):
     for follower in user.to_dict()["follow"]:
         reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
     
-    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data)
+    # お気に入り漫画の画像取得
+    for id in user.to_dict()['user_query']:
+        favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
+    for title in favorite_titles:    
+        image=get_rakuten_book_cover(title)
+        favolite_book_urls.append(image) 
+    print(favolite_book_urls)
+    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref)
 
 
 
