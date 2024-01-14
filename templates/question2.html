@@ -1,0 +1,49 @@
+
+{% extends "base.html" %} {% block extra_css %} 
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/question.css') }}">
+{% endblock %} {% block content%}
+<form action="/{{user_id}}/{{genre}}/question" method="POST">
+  <div class="form-group">
+    <h1>あなたの好みを教えてください</h1>
+    <h2>漫画を選ぶ際、周りの評判を気にしますか？</h2>
+    <input type="range" min="-5" max="5" step="1" name="question-01" id="slider1">
+    <p id="sliderValue1">0</p>
+    
+    <h2>巻数が多い漫画は尻込みしますか？</h2>
+    <input type="range" min="-5" max="5" step="1" name="question-02" id="slider2">
+    <p id="sliderValue2">0</p>
+    
+    <h2>巻数が多い漫画は尻込みしますか？</h2>
+    <input type="range" min="-5" max="5" step="1" name="question-03" id="slider3">
+    <p id="sliderValue3">0</p>
+    
+    <h2>巻数が多い漫画は尻込みしますか？</h2>
+    <input type="range" min="-5" max="5" step="1" name="question-04" id="slider4">
+    <p id="sliderValue4">0</p>
+    
+    <h2>巻数が多い漫画は尻込みしますか？</h2>
+    <input type="range" min="-5" max="5" step="1" name="question-05" id="slider5">
+    <p id="sliderValue5">0</p>
+    
+    <h2>巻数が多い漫画は尻込みしますか？</h2>
+    <input type="range" min="-5" max="5" step="1" name="question-06" id="slider6">
+    <p id="sliderValue6">0</p>
+    
+  <button type="submit" class="btn">送信</button>
+</div>
+</form>
+<script>
+  // スライダー要素と表示する要素を取得
+  var sliders = document.querySelectorAll("input[type='range']");
+  var sliderValueElements = document.querySelectorAll("p[id^='sliderValue']");
+
+  // 各スライダーにイベントリスナーを追加
+  sliders.forEach(function(slider, index) {
+      slider.addEventListener("input", function() {
+          // 対応する表示用の要素に反映
+          sliderValueElements[index].textContent = slider.value;
+      });
+  });
+</script>
+
+{% endblock %}
