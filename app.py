@@ -10,12 +10,11 @@ import os
 
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
-# firebase_admin_key_path = os.environ'FIREBASE_ADMIN_KEY_PATH')
+# firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
 app = Flask(__name__)
 
 # Firebase Admin SDK を初期化
-cred = credentials.Certificate('key.json')
-
+cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 user_doc_ref = db.collection('user')
@@ -539,7 +538,7 @@ def BookSearch(user_id):
         else:
             return jsonify({"error": "検索ワードを入力してください"})
     else:
-        return render_template('bookSearch.html')
+        return render_template('bookSearch.html',user_id=user_id)
 
 if __name__ == '__main__':
     app.run(debug=True,port=8080)
