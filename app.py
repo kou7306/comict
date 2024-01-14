@@ -10,10 +10,10 @@ import os
 
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
-# firebase_admin_key_path = os.environ'FIREBASE_ADMIN_KEY_PATH')
+firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
 
 # Firebase Admin SDK を初期化
-cred = credentials.Certificate('key.json')
+cred = credentials.Certificate(firebase_admin_key_path)
 
 firebase_admin.initialize_app(cred)
 db = firestore.client()
