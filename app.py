@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, session, url_for, flash, get_flashed_messages
+from flask import Flask, render_template, request, jsonify, redirect, session, current_app,url_for, flash, get_flashed_messages
 import pyrebase
 import faiss
 import numpy as np
@@ -11,13 +11,13 @@ import os
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
 # firebase_admin_key_path = os.environ'FIREBASE_ADMIN_KEY_PATH')
+app = Flask(__name__)
 
 # Firebase Admin SDK を初期化
 cred = credentials.Certificate('key.json')
 
 firebase_admin.initialize_app(cred)
 db = firestore.client()
-
 user_doc_ref = db.collection('user')
 
 all_user = user_doc_ref.stream()
@@ -48,7 +48,6 @@ review_format={
     "username":None,
 }
 
-app = Flask(__name__)
 config = {
     "apiKey": "AIzaSyBPva6sGWXi6kjmk8mjWWVCGEKKEBIfTIY",
     "authDomain": "giikucamp12.firebaseapp.com",
@@ -385,7 +384,7 @@ def user_page(user_id):
     query = review_doc_ref.where('username', '==', username).get()
 
     # アンケート結果の取得・表示
-    with open('templates/question.html', 'r', encoding='utf-8') as file:
+    with open('templates/question1.html', 'r', encoding='utf-8') as file:
         html_code = file.read()
     result = user_data.get('mangaAnswer')
 
@@ -408,7 +407,7 @@ def user_page(user_id):
             label_tag = soup.find('label', {'for': input_tag.get('id')})
             if label_tag:
                 temp.append(label_tag.text)
-    for i in range(20):
+    for i in range(5):
         answer.append(temp[i])
 
     #設問と回答をタプル化
