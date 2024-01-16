@@ -1,6 +1,6 @@
-
 {% extends "base.html" %} {% block extra_css %} 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/question.css') }}">
+
 {% endblock %} {% block content%}
 <form action="/{{user_id}}/{{genre}}/question" method="POST">
   <div class="form-group">
