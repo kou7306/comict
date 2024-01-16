@@ -18,10 +18,13 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
-
-      - name: Set up Firebase credentials
-        run: echo "${{ secrets.FIREBASE_KEY }}" > key.json
-
+      - name: create-json
+        id: create-json
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "key.json"
+          json: ${{ secrets.FIREBASE_KEY }}
+          dir: "./"
       - id: "auth"
         uses: "google-github-actions/auth@v0"
         with:
