@@ -19,34 +19,9 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v2
 
-次に、ワークフローにFirebaseの秘密鍵を取り込むステップを追加します。Firebaseの秘密鍵をファイルとして取り込むことができます。以下は変更例です。
-
-yaml
-Copy code
-name: Deploy
-
-on:
-  push:
-    branches:
-      - main
-
-env:
-  SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
-  PORT: ${{ secrets.PORT }}
-  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-  GCP_REGION: ${{ secrets.GCP_REGION }}
-  IMAGE: asia.gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
-
-jobs:
-  deploy-to-cloud-run:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-
       - name: Set up Firebase credentials
-        run: echo "${{ secrets.FIREBASE_KEY }}" > key.json
-        
+        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > key.json
+
       - id: "auth"
         uses: "google-github-actions/auth@v0"
         with:
