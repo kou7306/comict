@@ -7,6 +7,9 @@ from firebase_admin import credentials,firestore
 from bs4 import BeautifulSoup
 import requests
 import os
+import wikipedia
+from wiki import get_manga_title
+
 
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
@@ -539,6 +542,17 @@ def BookSearch(user_id):
             return jsonify({"error": "検索ワードを入力してください"})
     else:
         return render_template('bookSearch.html',user_id=user_id)
+
+
+# 漫画の正式タイトルを取得
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query')
+    
+    if query:
+        manga_title = get_manga_title(query)
+        return jsonify({'manga_title': manga_title})
+
 
 if __name__ == '__main__':
     app.run(debug=True,port=8080)
