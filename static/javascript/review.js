@@ -56,6 +56,7 @@ function test(){
 async function search() {
     var query = document.getElementById('searchInput').value;
     searchEnd = false;
+    submitbutton.disabled=true;
     if (query.trim() === '') {
         // 検索クエリが空の場合は処理しない
         return;
@@ -73,7 +74,7 @@ async function search() {
         var selectedTitle = data.manga_title;
         if (selectedTitle == null) {
             // 検索結果が空の場合は処理しない
-            alert('検索結果がありませんでした');
+            alert('作品がありませんでした');
             return;
         }
 
