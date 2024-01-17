@@ -11,18 +11,11 @@
             <div class="row mb-3">
               <label for="work" class="col-sm-2 col-form-label" style="font-size: 1.05em;">作品名</label>
               <div class="col-sm-5">
-                <input type="text" name="work_name" id="work" class="form-control" placeholder="作品名" list="list" oninput="inputFunction()" required>
-                <datalist id="list">
-                  <option value="ミッションインポッシブル">
-                    Mission Impossible
-                  </option>
-                  <option value="オズの魔法使い">
-                    wizard of oz
-                  </option>
-                  <option value="呪術𢌞戦">
-                    Jujutsu 𢌞 battle
-                  </option>
-                </datalist>
+                
+                <input type="text" name="work_name" id="searchInput" class="form-control" placeholder="作品名" onblur="search()" required>
+                
+                <div id="loadingIndicator">検索中...</div>
+                
               </div>
           </div>
             <div class="row mb-3 mt-3">
