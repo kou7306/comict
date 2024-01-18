@@ -26,6 +26,8 @@ all_user = user_doc_ref.stream()
 
 review_doc_ref=db.collection('review')
 
+comics_doc_ref=db.collection('comics')
+
 is_following=False
 
 
@@ -470,6 +472,7 @@ def reviewer(user_id,reviewer_id):
 # 作品詳細ページ
 @app.route('/<user_id>/<title>/detail')
 def detail(user_id,title):
+    # 詳細情報をwikiから取得
     query = review_doc_ref.where('mangaTitle', '==', title).get()
     
     
@@ -553,6 +556,30 @@ def search():
         manga_title = get_manga_title(query)
         return jsonify({'manga_title': manga_title})
 
+
+# ブックマーク機能
+@app.route("/<user_id>/bookmark", methods=["POST"])
+def toggle_bookmark(user_id):
+    data = request.get_json()
+
+    # 漫画のタイトルを取得
+    title = data.get("title")
+
+    # データベースでブックマークの状態をトグル
+    comics_doc = comics_doc_ref.document(title)
+    bookmark = comics_doc.get().to_dict()["bookmark"]
+
+    # ブックマークの状態を取得
+    current_bookmark = comics_doc.get().to_dict().get("bookmark", [])
+
+    # 新しいユーザーIDをブックマークリストに追加
+    if user_id not in current_bookmark:
+        current_bookmark.append(user_id)
+        comics_doc.update({"bookmark": current_bookmark})
+        new_bookmark_value = len(current_bookmark) # ブックマーク数を取得
+    
+
+    return jsonify({"bookmarked": new_bookmark_value})
 
 if __name__ == '__main__':
     app.run(debug=True,port=8080)

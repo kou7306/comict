@@ -30,6 +30,12 @@ def get_manga_title(title):
         else:
             print(f'入力されたタイトル "{title}" に関連する「漫画」のカテゴリは見つかりませんでした。')
             return None
+        
+
+def get_manga_detail():
+    wikipedia.set_lang('ja')
+
+    
 
 # 例として「ワンピース」の漫画のカテゴリと正確なページタイトルを取得
 # get_manga_category_and_title('はがない')
