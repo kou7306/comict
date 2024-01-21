@@ -6,8 +6,10 @@
 
   <main>
     <h1 class="title1">{{title}}</h1>
+    <p><a href={{url}}>リンク </a></p>
     <!-- ブックマークトグルボタン -->
-    <button id="bookmarkToggle" class="btn btn-primary">ブックマーク</button>
+    <button id="bookmarkToggle" class="btn btn-primary" user_id={{user_id}}>ブックマーク</button>
+    <p id="bookmark_num">ブックマーク数：{{bookmark_num}}</p>
     {% for doc in query %}
     <div class="review">
       <p>{{doc.to_dict()["username"]}}</p>

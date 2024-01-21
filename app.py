@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 import requests
 import os
 import wikipedia
-from wiki import get_manga_title
+from wiki import get_manga_title,get_wikipedia_page_details
 
 
 
@@ -362,6 +362,7 @@ def review(user_id):
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
         user_doc = user_doc_ref.document(user_id)
         user=user_doc.get()
+        
 
         # 入力されたレビューのデータ
         review_format["evaluation"]=rating
@@ -370,6 +371,11 @@ def review(user_id):
         review_format["username"]=user.to_dict()["username"]
         review_document=review_doc_ref.document() 
         review_document.set(review_format)
+
+        # 作品データベースに初登録の作品なら追加
+        if(comics_doc_ref.document(work_name).get().to_dict()==None):
+            url=get_wikipedia_page_details(work_name)
+            comics_doc_ref.document(work_name).set({"bookmark":[],"url":url})
         return redirect(f"/{user_id}/review")
 
 
@@ -474,9 +480,11 @@ def reviewer(user_id,reviewer_id):
 def detail(user_id,title):
     # 詳細情報をwikiから取得
     query = review_doc_ref.where('mangaTitle', '==', title).get()
+    url = comics_doc_ref.document(title).get().to_dict()["url"]
+    bookmark_num = len(comics_doc_ref.document(title).get().to_dict()["bookmark"])
     
     
-    return render_template("detail.html",user_id=user_id,title=title,query=query)
+    return render_template("detail.html",user_id=user_id,title=title,query=query,url=url,bookmark_num=bookmark_num)
 
 
 # 好きな作品を追加
@@ -567,17 +575,25 @@ def toggle_bookmark(user_id):
 
     # データベースでブックマークの状態をトグル
     comics_doc = comics_doc_ref.document(title)
-    bookmark = comics_doc.get().to_dict()["bookmark"]
-
+    
     # ブックマークの状態を取得
-    current_bookmark = comics_doc.get().to_dict().get("bookmark", [])
+    comics_data = comics_doc.get()
+    
+    if comics_data.exists:
+        current_bookmark = comics_data.to_dict().get("bookmark", [])
+    else:
+        current_bookmark = []
+
 
     # 新しいユーザーIDをブックマークリストに追加
     if user_id not in current_bookmark:
         current_bookmark.append(user_id)
         comics_doc.update({"bookmark": current_bookmark})
         new_bookmark_value = len(current_bookmark) # ブックマーク数を取得
-    
+    else:
+        current_bookmark.remove(user_id)
+        comics_doc.update({"bookmark": current_bookmark})
+        new_bookmark_value = len(current_bookmark)
 
     return jsonify({"bookmarked": new_bookmark_value})
 

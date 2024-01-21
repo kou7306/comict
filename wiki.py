@@ -1,4 +1,34 @@
 import wikipedia
+import requests
+
+def get_wikipedia_page_details(title):
+    endpoint = "https://ja.wikipedia.org/w/api.php"
+    params = {
+        "action": "query",
+        "format": "json",
+        "titles": title,
+        "prop": "extracts|info|pageimages",
+        "inprop": "url",
+        "exintro": True,
+        "explaintext": True,
+        "piprop": "thumbnail",
+        "pithumbsize": 300  # サムネイルのサイズを指定
+    }
+
+    response = requests.get(endpoint, params=params)
+    data = response.json()
+    
+    page_id = list(data["query"]["pages"].keys())[0]
+    page = data["query"]["pages"][page_id]
+
+    url = page.get("fullurl", "")
+
+    return url
+        
+
+# 使用例
+# get_wikipedia_page_details("One Piece")
+
 
 def get_manga_title(title):
     wikipedia.set_lang('ja')

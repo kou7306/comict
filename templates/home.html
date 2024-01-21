@@ -91,7 +91,7 @@
           <li>
             <p>{{review.to_dict()["username"]}}</p>
             <a href="/{{ user_id }}/{{review.to_dict()['mangaTitle']}}/detail">
-              <p>{{review.to_dict()["mangaTitle"]}}</p>
+              <p>タイトル：{{review.to_dict()["mangaTitle"]}}</p>
             </a>
             <p>評価：{{review.to_dict()["evaluation"]}}</p>
             <p>{{review.to_dict()["contents"]}}</p>
