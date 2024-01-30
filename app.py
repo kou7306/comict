@@ -326,25 +326,9 @@ def question(user_id,genre):
         user_format['user_query']=user_query
         user_format['review_query']=review_query
         user_doc.set(user_format)
-        # 漫画の画像取得
-        book_urls=[]
-        titles=[]
-        for id in review_query:
-            review=review_doc_ref.document(id).get()
-            title=review.to_dict()["mangaTitle"]  
-            titles.append(title)
-            image=get_rakuten_book_cover(title)
-            book_urls.append(image)
-        data=list(zip(titles,book_urls))
-
-        # フォロワーの情報を取得
-        reviewer_queries=[]  
-        for follower in user.to_dict()["follow"]:
-            reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
-
-        username=user.to_dict()["username"]
+     
         
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user_query,review_query=review_query,data=data,username=username)
+        return redirect(f'/{user_id}/home')
 
 
        
