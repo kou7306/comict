@@ -55,7 +55,7 @@
           <div>
             <a href="/{{user_id}}/{{id}}/userpage"><h3>{{user_doc_ref.document(id).get().to_dict()["username"]}}</h3></a>
             {% if user_doc_ref.document(id).get().to_dict()["favorite_manga"] %}
-            <!-- <p><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][0]}}</span><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][1]}}</span></p> -->
+        
             {% endif %}
         </div>    
         </li>
@@ -69,17 +69,17 @@
     <section id="reviewer">
         <h2>フォローしたユーザー</h2>
         <ul class="follow-user">
-          {% for query in reviewer_query %}
-          {% for follow in query %}
+          
+          {% for follow in follow_data %}
           <li>
           <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
-            <a href="/{{user_id}}/{{follow.id}}/userpage"><h3>{{follow.to_dict()["username"]}}</h3></a>
-            <!-- <p><span class="tag">{{follow.to_dict()["favorite_manga"][0]}}</span><span class="tag">{{follow.to_dict()["favorite_manga"][1]}}</span></p> -->
+            <a href="/{{user_id}}/{{follow[1]}}/userpage"><h3>{{follow[0]}}</h3></a>
+            
           </div>    
         </li>
           {% endfor %}
-          {% endfor %}
+   
       </ul>
     </section>
 

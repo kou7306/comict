@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/add_favorite.css') }}">
 {% endblock %} {% block content%}
 
 <main style="padding: 1rem 0;">
@@ -7,10 +8,12 @@
         <form id="add_favorite_form" action="/{{ user_id }}/favoriteAdd" method="POST">
             <label for="favorite_title">好きな作品のタイトル:</label>
             <input type="text" id="favorite_title" name="favorite_title">
-            <input type="submit" value="追加" formaction="/{{ user_id }}/favoriteAdd">
-            <input type="submit" value="更新" formaction="/{{ user_id }}/userpage">
-        </form>
+ 
+            <!-- <input type="submit" value="更新" formaction="/{{ user_id }}/userpage"> -->
 
+        </form>
+        <button value="追加" onclick="search('{{ user_id }}')">追加</button>
+        <div id="loadingIndicator">検索中...</div>
         <h2>現在の好きな作品リスト:</h2>
         <div>
             {% for title in favorite_titles %}
@@ -19,5 +22,5 @@
         </div>
     </body>
 </main>
-
+<script src="../static/javascript/add_favorite.js"></script>
 {% endblock %}
