@@ -1,4 +1,5 @@
-{% extends "base.html" %} {% block extra_css %} 
+{% extends "base.html" %} 
+{% block extra_css %} 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/userpage.css') }}">
 {% endblock %} {% block content%}
 
@@ -17,9 +18,7 @@
         <div class="left">
             <h3>アンケート結果</h2>
             <div class="result">
-                {% for q,ans in combined_list %}
-                <p>{{ q }}: {{ ans }}</p>
-                {% endfor %}
+
             </div>
 
         </div>
@@ -29,6 +28,32 @@
                 <div class="title">{{ title }}</div>
             {% endfor %}
             <h2><a href="/{{user_id}}/favoriteAdd">好きな作品を追加する</a></h2>
+        </div>
+
+        <div class="follow">
+            {% for follow in follow_data %}
+
+            <li>
+                <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+                <div>
+                  <a href="/{{user_id}}/{{follow[1]}}/userpage"><h3>{{follow[0]}}</h3></a>
+                 
+                </div>    
+              </li>
+            {% endfor %}
+
+   
+
+        </div>
+
+        <div class="myreview">
+            <h3>マイレビュー</h2>
+            {% for review in myreview_query %}
+            <div class="review">
+                <h4>{{ review.to_dict()["mangaTitle"] }}</h4>
+                <p>{{ review.to_dict()["review"] }}</p>
+            </div>
+            {% endfor %}
         </div>
 
     </main>
