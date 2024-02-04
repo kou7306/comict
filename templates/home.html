@@ -26,6 +26,16 @@
               </div>             
               {% endif %}
               {% endfor %}
+              
+              {% if favolite_book_urls !=[] %}
+              {% for url in favolite_book_urls %}
+              <div class="swiper-slide">
+                <img class="image-placeholder" src="{{ url }}" alt="">
+              </div>
+              
+              
+              {% endfor %}
+              {% endif %}
           </div>
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>
@@ -45,7 +55,7 @@
           <div>
             <a href="/{{user_id}}/{{id}}/userpage"><h3>{{user_doc_ref.document(id).get().to_dict()["username"]}}</h3></a>
             {% if user_doc_ref.document(id).get().to_dict()["favorite_manga"] %}
-            <p><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][0]}}</span><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][1]}}</span></p>
+            <!-- <p><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][0]}}</span><span class="tag">{{user_doc_ref.document(id).get().to_dict()["favorite_manga"][1]}}</span></p> -->
             {% endif %}
         </div>    
         </li>
@@ -65,10 +75,28 @@
           <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
             <a href="/{{user_id}}/{{follow.id}}/userpage"><h3>{{follow.to_dict()["username"]}}</h3></a>
-            <p><span class="tag">{{follow.to_dict()["favorite_manga"][0]}}</span><span class="tag">{{follow.to_dict()["favorite_manga"][1]}}</span></p>
+            <!-- <p><span class="tag">{{follow.to_dict()["favorite_manga"][0]}}</span><span class="tag">{{follow.to_dict()["favorite_manga"][1]}}</span></p> -->
           </div>    
         </li>
           {% endfor %}
+          {% endfor %}
+      </ul>
+    </section>
+
+    <section id="timeline">
+        <h2>タイムライン</h2>
+        <ul class="timeline">
+          {% for review in review_doc_ref.stream() %}
+          
+          <li>
+            <p>{{review.to_dict()["username"]}}</p>
+            <a href="/{{ user_id }}/{{review.to_dict()['mangaTitle']}}/detail">
+              <p>タイトル：{{review.to_dict()["mangaTitle"]}}</p>
+            </a>
+            <p>評価：{{review.to_dict()["evaluation"]}}</p>
+            <p>{{review.to_dict()["contents"]}}</p>
+          </li>
+          
           {% endfor %}
       </ul>
     </section>

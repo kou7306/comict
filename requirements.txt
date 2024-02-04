@@ -7,3 +7,5 @@ firebase_admin
 pyrebase4
 beautifulsoup4
 requests
+wikipedia==1.4.0
+Wikipedia-API==0.6.0

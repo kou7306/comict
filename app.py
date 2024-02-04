@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, redirect, session, url_for, flash, get_flashed_messages
+from flask import Flask, render_template, request, jsonify, redirect, session, current_app,url_for, flash, get_flashed_messages
 import pyrebase
 import faiss
 import numpy as np
@@ -7,22 +7,29 @@ from firebase_admin import credentials,firestore
 from bs4 import BeautifulSoup
 import requests
 import os
+import wikipedia
+from wiki import get_manga_title,get_wikipedia_page_details
+
 
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
-firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
+
+
+# firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
+app = Flask(__name__)
 
 # Firebase Admin SDK を初期化
-cred = credentials.Certificate(firebase_admin_key_path)
+cred = credentials.Certificate("key.json")
 
 firebase_admin.initialize_app(cred)
 db = firestore.client()
-
 user_doc_ref = db.collection('user')
 
 all_user = user_doc_ref.stream()
 
 review_doc_ref=db.collection('review')
+
+comics_doc_ref=db.collection('comics')
 
 is_following=False
 
@@ -48,7 +55,6 @@ review_format={
     "username":None,
 }
 
-app = Flask(__name__)
 config = {
     "apiKey": "AIzaSyBPva6sGWXi6kjmk8mjWWVCGEKKEBIfTIY",
     "authDomain": "giikucamp12.firebaseapp.com",
@@ -151,14 +157,18 @@ def homepage(user_id):
     user=user_doc_ref.document(user_id).get()
     
     # 漫画の画像取得
+    favolite_book_urls = []
     book_urls=[]
     titles=[]
     for id in user.to_dict()['review_query']:
         review=review_doc_ref.document(id).get()
-        title=review.to_dict()["mangaTitle"]  
-        titles.append(title)
-        image=get_rakuten_book_cover(title)
-        book_urls.append(image)
+        eval=review.to_dict()["evaluation"]
+        # 4以上の評価のものだけ取得
+        if(int(eval)>=4):
+            title=review.to_dict()["mangaTitle"]  
+            titles.append(title)
+            image=get_rakuten_book_cover(title)
+            book_urls.append(image)
     data=list(zip(titles,book_urls))
 
     # フォロワーの情報を取得
@@ -166,7 +176,14 @@ def homepage(user_id):
     for follower in user.to_dict()["follow"]:
         reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
     
-    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data)
+    # お気に入り漫画の画像取得
+    for id in user.to_dict()['user_query']:
+        favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
+    for title in favorite_titles:    
+        image=get_rakuten_book_cover(title)
+        favolite_book_urls.append(image) 
+    print(favolite_book_urls)
+    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref)
 
 
 
@@ -286,13 +303,13 @@ def question(user_id,genre):
     if request.method == 'GET':
         return render_template("question"+ genre + '.html',user_id=user_id,genre=genre)
     else:
-        #長さ20*８のリストを作成し、０で初期化する
-        mangaAnswer = [0] *160
+        #長さ20*7のリストを作成し、0で初期化する
+        mangaAnswer = [0] *140
         genre=int(genre)
         first_index = 20 * (genre - 1)
 
         #HTMLフォームからデータを受け取る
-        for i in range(1,6):
+        for i in range(1,20):
             question_key = f'question-{i:02}'
             answer = request.form[question_key]
             answer=float(answer)
@@ -312,25 +329,9 @@ def question(user_id,genre):
         user_format['user_query']=user_query
         user_format['review_query']=review_query
         user_doc.set(user_format)
-        # 漫画の画像取得
-        book_urls=[]
-        titles=[]
-        for id in review_query:
-            review=review_doc_ref.document(id).get()
-            title=review.to_dict()["mangaTitle"]  
-            titles.append(title)
-            image=get_rakuten_book_cover(title)
-            book_urls.append(image)
-        data=list(zip(titles,book_urls))
-
-        # フォロワーの情報を取得
-        reviewer_queries=[]  
-        for follower in user.to_dict()["follow"]:
-            reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
-
-        username=user.to_dict()["username"]
+     
         
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user_query,review_query=review_query,data=data,username=username)
+        return redirect(f'/{user_id}/home')
 
 
        
@@ -348,6 +349,7 @@ def review(user_id):
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
         user_doc = user_doc_ref.document(user_id)
         user=user_doc.get()
+        
 
         # 入力されたレビューのデータ
         review_format["evaluation"]=rating
@@ -356,6 +358,11 @@ def review(user_id):
         review_format["username"]=user.to_dict()["username"]
         review_document=review_doc_ref.document() 
         review_document.set(review_format)
+
+        # 作品データベースに初登録の作品なら追加
+        if(comics_doc_ref.document(work_name).get().to_dict()==None):
+            url=get_wikipedia_page_details(work_name)
+            comics_doc_ref.document(work_name).set({"bookmark":[],"url":url})
         return redirect(f"/{user_id}/review")
 
 
@@ -374,7 +381,7 @@ def user_page(user_id):
     query = review_doc_ref.where('username', '==', username).get()
 
     # アンケート結果の取得・表示
-    with open('templates/question.html', 'r', encoding='utf-8') as file:
+    with open('templates/question1.html', 'r', encoding='utf-8') as file:
         html_code = file.read()
     result = user_data.get('mangaAnswer')
 
@@ -397,7 +404,7 @@ def user_page(user_id):
             label_tag = soup.find('label', {'for': input_tag.get('id')})
             if label_tag:
                 temp.append(label_tag.text)
-    for i in range(20):
+    for i in range(5):
         answer.append(temp[i])
 
     #設問と回答をタプル化
@@ -458,10 +465,13 @@ def reviewer(user_id,reviewer_id):
 # 作品詳細ページ
 @app.route('/<user_id>/<title>/detail')
 def detail(user_id,title):
+    # 詳細情報をwikiから取得
     query = review_doc_ref.where('mangaTitle', '==', title).get()
+    url = comics_doc_ref.document(title).get().to_dict()["url"]
+    bookmark_num = len(comics_doc_ref.document(title).get().to_dict()["bookmark"])
     
     
-    return render_template("detail.html",user_id=user_id,title=title,query=query)
+    return render_template("detail.html",user_id=user_id,title=title,query=query,url=url,bookmark_num=bookmark_num)
 
 
 # 好きな作品を追加
@@ -529,7 +539,50 @@ def BookSearch(user_id):
         else:
             return jsonify({"error": "検索ワードを入力してください"})
     else:
-        return render_template('bookSearch.html')
+        return render_template('bookSearch.html',user_id=user_id)
+
+
+# 漫画の正式タイトルを取得
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query')
+    
+    if query:
+        manga_title = get_manga_title(query)
+        return jsonify({'manga_title': manga_title})
+
+
+# ブックマーク機能
+@app.route("/<user_id>/bookmark", methods=["POST"])
+def toggle_bookmark(user_id):
+    data = request.get_json()
+
+    # 漫画のタイトルを取得
+    title = data.get("title")
+
+    # データベースでブックマークの状態をトグル
+    comics_doc = comics_doc_ref.document(title)
+    
+    # ブックマークの状態を取得
+    comics_data = comics_doc.get()
+    
+    if comics_data.exists:
+        current_bookmark = comics_data.to_dict().get("bookmark", [])
+    else:
+        current_bookmark = []
+
+
+    # 新しいユーザーIDをブックマークリストに追加
+    if user_id not in current_bookmark:
+        current_bookmark.append(user_id)
+        comics_doc.update({"bookmark": current_bookmark})
+        new_bookmark_value = len(current_bookmark) # ブックマーク数を取得
+    else:
+        current_bookmark.remove(user_id)
+        comics_doc.update({"bookmark": current_bookmark})
+        new_bookmark_value = len(current_bookmark)
+
+    return jsonify({"bookmarked": new_bookmark_value})
 
 if __name__ == '__main__':
     app.run(debug=True,port=8080)

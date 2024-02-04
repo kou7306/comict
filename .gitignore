@@ -66,5 +66,3 @@ node_modules/
 .env
 
 app.yaml
-
-key.json
