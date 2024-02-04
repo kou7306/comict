@@ -300,13 +300,13 @@ def question(user_id,genre):
     if request.method == 'GET':
         return render_template("question"+ genre + '.html',user_id=user_id,genre=genre)
     else:
-        #長さ20*８のリストを作成し、０で初期化する
-        mangaAnswer = [0] *160
+        #長さ20*7のリストを作成し、0で初期化する
+        mangaAnswer = [0] *140
         genre=int(genre)
         first_index = 20 * (genre - 1)
 
         #HTMLフォームからデータを受け取る
-        for i in range(1,6):
+        for i in range(1,20):
             question_key = f'question-{i:02}'
             answer = request.form[question_key]
             answer=float(answer)
