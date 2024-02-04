@@ -13,11 +13,14 @@ from wiki import get_manga_title,get_wikipedia_page_details
 
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
+
+
 # firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
 app = Flask(__name__)
 
 # Firebase Admin SDK を初期化
 cred = credentials.Certificate("key.json")
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 user_doc_ref = db.collection('user')
