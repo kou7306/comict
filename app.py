@@ -42,6 +42,7 @@ user_format={
     "follow":[],
     "user_query":[],
     "review_query":[],
+    "genre":None,   
 }
 
 # レビューデータベースに入れるときのデータの型
@@ -96,10 +97,18 @@ def matching(mangaAnswer,user_id):
     # データベースにあるすべてのユーザーデータを取得
     all_user_vector = []
     all_users = []
+    all_user = user_doc_ref.stream()
+    
+    if(all_user == []):
+        print("データがありません")
     for user in all_user:
+        print(user.to_dict()["mangaAnswer"])
         if(user.id!=user_id): # 自分以外
+            
+            print('データ',user.to_dict()["mangaAnswer"])
             all_user_vector.append(user.to_dict()["mangaAnswer"])
             all_users.append(user.to_dict())
+    
     if(all_user_vector != []):
         # Faissインデックスの作成
         dimension = len(all_user_vector[0])  # ベクトルの次元数
@@ -316,7 +325,7 @@ def question(user_id,genre):
         return render_template("question"+ genre + '.html',user_id=user_id,genre=genre)
     else:
         #長さ20*８のリストを作成し、０で初期化する
-        mangaAnswer = [0] *160
+        mangaAnswer = [0.0] *160
         genre=int(genre)
         first_index = 20 * (genre - 1)
 
@@ -331,16 +340,13 @@ def question(user_id,genre):
         user_doc = user_doc_ref.document(user_id)
         user=user_doc.get()
         # データベースにデータを格納
-        user_format['gender']=user.to_dict()["gender"]
-        user_format['mangaAnswer']=mangaAnswer
-        user_format['username']=user.to_dict()["username"]
 
-
+        user_doc.update({'gender':  user.to_dict()["gender"],'mangaAnswer':mangaAnswer,'username':user.to_dict()["username"]})
         # マッチング
         review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
-        user_format['user_query']=user_query
-        user_format['review_query']=review_query
-        user_doc.set(user_format)
+       
+        update_data = {"user_query":  user_query,"review_query":review_query}
+        user_doc.update(update_data)
      
         
         return redirect(f'/{user_id}/home')
@@ -615,3 +621,5 @@ def toggle_bookmark(user_id):
 
 if __name__ == '__main__':
     app.run(debug=True,port=8080)
+
+# /fm8MhfrbKdJ5narcJvTm/home testへのURL
