@@ -157,34 +157,44 @@ def homepage(user_id):
     favolite_book_urls = []
     book_urls=[]
     titles=[]
-    for id in user.to_dict()['review_query']:
-        review=review_doc_ref.document(id).get()
-        eval=review.to_dict()["evaluation"]
-        # 4以上の評価のものだけ取得
-        if(int(eval)>=4):
-            title=review.to_dict()["mangaTitle"]  
-            titles.append(title)
-            image=get_rakuten_book_cover(title)
-            book_urls.append(image)
-    data=list(zip(titles,book_urls))
+    if user.to_dict()['review_query'] != None:
+        for id in user.to_dict()['review_query']:
+            review=review_doc_ref.document(id).get()
+            eval=review.to_dict()["evaluation"]
+            # 4以上の評価のものだけ取得
+            if(int(eval)>=4):
+                title=review.to_dict()["mangaTitle"]  
+                titles.append(title)
+                image=get_rakuten_book_cover(title)
+                book_urls.append(image)
+        data=list(zip(titles,book_urls))
+    else:    
+        data = []
 
     # フォロワーの情報を取得
     follow_data = []
-    for follow_id in user.to_dict()["follow"]:
-        if follow_id != "":
-            print(follow_id)
-            follow_doc = user_doc_ref.document(follow_id).get()
-            if follow_doc.exists:
-                follow_name = follow_doc.to_dict()["username"]
-                follow_data.append((follow_name, follow_id))
-            print(follow_data)
+    
+    if user.to_dict()["follow"] != None:
+        for follow_id in user.to_dict()["follow"]:
+            if follow_id != "":
+                print(follow_id)
+                follow_doc = user_doc_ref.document(follow_id).get()
+                if follow_doc.exists:
+                    follow_name = follow_doc.to_dict()["username"]
+                    follow_data.append((follow_name, follow_id))
+                print(follow_data)
+    else:
+        follow_data = []
     # お気に入り漫画の画像取得
-    for id in user.to_dict()['user_query']:
-        favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
-    for title in favorite_titles:    
-        image=get_rakuten_book_cover(title)
-        favolite_book_urls.append(image) 
-    print(favolite_book_urls)
+    if user.to_dict()['user_query'] != None:
+        for id in user.to_dict()['user_query']:
+            favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
+            for title in favorite_titles:    
+                image=get_rakuten_book_cover(title)
+                favolite_book_urls.append(image) 
+    else:
+        favolite_book_urls = []
+    
     return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref)
 
 
@@ -578,6 +588,8 @@ def toggle_bookmark(user_id):
     title = data.get("title")
 
     # データベースでブックマークの状態をトグル
+
+    # これ漫画がデータベースにないとだめ　修正
     comics_doc = comics_doc_ref.document(title)
     
     # ブックマークの状態を取得
