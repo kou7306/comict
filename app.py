@@ -13,11 +13,14 @@ from wiki import get_manga_title,get_wikipedia_page_details
 
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
+
+
 # firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
 app = Flask(__name__)
 
 # Firebase Admin SDK を初期化
 cred = credentials.Certificate("key.json")
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 user_doc_ref = db.collection('user')
@@ -324,13 +327,15 @@ def question(user_id,genre):
     if request.method == 'GET':
         return render_template("question"+ genre + '.html',user_id=user_id,genre=genre)
     else:
+
         #長さ20*８のリストを作成し、０で初期化する
         mangaAnswer = [0.0] *160
+
         genre=int(genre)
         first_index = 20 * (genre - 1)
 
         #HTMLフォームからデータを受け取る
-        for i in range(1,6):
+        for i in range(1,20):
             question_key = f'question-{i:02}'
             answer = request.form[question_key]
             answer=float(answer)
