@@ -1,4 +1,5 @@
 let page = 1;
+searchEnd = false;
 
 window.addEventListener('scroll', () => {
     let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
@@ -13,14 +14,14 @@ window.addEventListener('scroll', () => {
 
 let currentResults = [];
 
-function searchBooks(page) {
+async function searchBooks(page,searchTerm) {
     const searchType = document.getElementById('searchType').value;
-    const searchTerm = document.getElementById('searchInput').value.trim();
+    
     const sortOption = document.querySelector('select[name="sortOption"]').value;
 
 
 
-    if (searchTerm !== '') {
+    if (searchTerm !== '' && searchEnd) {
         $.ajax({
             type: 'POST',
             url: '/<user_id>/bookSearch',
@@ -80,5 +81,55 @@ function displaySearchResults(response, append=false) {
         messageEl.textContent = '検索結果がありません';
     } else {
         messageEl.textContent = `${numResults}件の検索結果`;
+    }
+}
+
+// 記録ができているかアラートで確認
+function test(){
+    window.alert("作品名は「"+workName.value+"」、評価は「"+rate+"」、コメントは「"+comment.value+"」です");
+}
+
+
+
+//　作品名を一意に
+async function search(page) {
+    const query = document.getElementById('searchInput').value.trim();
+    searchEnd = false;
+
+    if (query.trim() === '') {
+        // 検索クエリが空の場合は処理しない
+        return;
+    }
+
+    try {
+        // ローディング表示
+        document.getElementById('loadingIndicator').style.display = 'block';
+
+
+        const response = await fetch('/search?query=' + query);
+        const data = await response.json();
+
+        var selectedTitle = data.manga_title;
+        if (selectedTitle == null) {
+            // 検索結果が空の場合は処理しない
+            alert('作品がありませんでした');
+            return;
+        }
+
+        // 選択された作品名を検索欄に入力
+        document.getElementById('searchInput').value = "";
+
+  
+        searchEnd = true;
+        searchBooks(page, selectedTitle);
+            
+
+    } catch (error) {
+        console.error('エラーが発生しました:', error);
+        alert('エラーが発生しました');
+    } finally {
+        // ローディング非表示
+        document.getElementById('loadingIndicator').style.display = 'none';
+
     }
 }

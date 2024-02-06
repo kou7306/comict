@@ -602,6 +602,8 @@ def search_books(search_type, search_input, sort_option, page):
         
     return results, len(results)
 
+
+# 作品検索
 @app.route('/<user_id>/bookSearch', methods=['POST', 'GET'])
 def BookSearch(user_id):
     if request.method == 'POST':
