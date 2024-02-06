@@ -5,17 +5,27 @@
     padding: 0;
     box-sizing: border-box;
     font-family: "Poppins", sans-serif;
+    color: #fff;
 
 }
 body {
-    background-image: url('../images/back1.jpg');
+    background-color: #0f0f0f;
     background-size: cover;
     background-repeat: no-repeat;
     z-index: -999;
     padding: 130px 0 0;
+    
 
 }
 
+a {
+    text-decoration: none;
+ 
+}
+
+a:hover {
+    color: #3B82F6;
+}
 .navbar{
     height: 100px;
 }
@@ -29,6 +39,7 @@ body {
     justify-content: space-between;
     margin: 0 30px;
     width: 100%;
+    color: #fff;
 }
 
 .navbar-nav{
