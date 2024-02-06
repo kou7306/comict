@@ -385,7 +385,7 @@ def review(user_id):
         # 作品データベースに初登録の作品なら追加
         if(comics_doc_ref.document(work_name).get().to_dict()==None):
             url=get_wikipedia_page_details(work_name)
-            comics_doc_ref.document(work_name).set({"bookmark":[],"url":url})
+            comics_doc_ref.document(work_name).set({"title": work_name,"bookmark":[],"url":url})
         return redirect(f"/{user_id}/review")
 
 
@@ -532,40 +532,51 @@ def add_manga(user_id):
         favorite_titles = user_data.get('favorite_manga', [])  #favorite_mangaが存在しない場合は空のリストを使う
         return jsonify({'favoriteTitles': favorite_titles})
 
-# 作品検索機能
-def search_books(search_term):
-    # Firestoreクエリを作成
-    docs = db.collection('comics').where('title', '>=', search_term).where('title', '<=', search_term + '\uf8ff') \
-            .stream()
-            
-    docs2 = db.collection('comics').where('author', '>=', search_term).where('author', '<=', search_term + '\uf8ff') \
-            .stream()
-     
-    # クエリ結果をリストに変換
-    results = [doc.to_dict() for doc in docs]
-    results += [doc.to_dict() for doc in docs2]
-    
-    # 検索結果の件数を取得
-    num_results = len(results)
-    
-    return results, num_results
-
 PER_PAGE = 10
+
+# 作品検索機能
+def search_books(search_type, search_input, sort_option, page):
+        
+    # Firestoreクエリを作成
+    if search_type == "title":
+        query = comics_doc_ref.where('title', '>=', search_input).where('title', '<=', search_input + '\uf8ff')
+
+    elif search_type == "author":
+        query = comics_doc_ref.where('author', '>=', search_input).where('author', '<=', search_input + '\uf8ff')
+    
+    
+    start_index = (page - 1) * PER_PAGE
+    query = query.offset(start_index).limit(PER_PAGE)
+    
+    docs = query.stream()
+    
+    # クエリ結果をリストに変換
+    results = [{'id': doc.id, **doc.to_dict()} for doc in docs]
+    
+    # ソート処理
+    if sort_option == "b_asc":
+        results = sorted(results, key=lambda x: len(x['bookmark']))
+    elif sort_option == "b_desc":
+        results = sorted(results, key=lambda x: len(x['bookmark']), reverse=True)
+    elif sort_option == "r_asc":
+        results = sorted(results, key=lambda x: len(x['reviews']))
+    elif sort_option == "r_desc":
+        results = sorted(results, key=lambda x: len(x['reviews']), reverse=True)
+        
+    return results, len(results)
 
 @app.route('/<user_id>/bookSearch', methods=['POST', 'GET'])
 def BookSearch(user_id):
     if request.method == 'POST':
-        search_term = request.form.get('searchInput').strip().lower()
+        search_type = request.form.get('searchType')
+        search_input = request.form.get('searchInput').strip().lower()
+        sort_option = request.form.get('sortOption')
         page = request.args.get('page', 1)
         
-        if search_term:
-            results, num_results = search_books(search_term)
+        if search_input:
+            results, num_results = search_books(search_type, search_input, sort_option, page)
             if num_results == 0:
                 results = []
-            
-            start = (page - 1) * PER_PAGE
-            end = start + PER_PAGE
-            results = results[start:end]
             
             response = {
                 "results": results,

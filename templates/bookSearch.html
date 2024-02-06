@@ -7,11 +7,22 @@
 {% block content%}
     <div>
         <h2>作品を検索する</h2>
+        <select id="searchType" onChange="searchBooks()">
+            <option value="title">タイトル</option>
+            <option value="author">著者名</option>
+        </select>
         <input type="text" id="searchInput" placeholder="検索キーワードを入力">
         <button type="button" onclick="searchBooks()">検索</button>
+        <select name="sortOption" onChange="searchBooks()">
+            <option value="b_desc">ブックマーク数で降順</option>
+            <option value="b_asc">ブックマーク数で昇順</option>
+            <option value="r_desc">レビュー数で降順</option>
+            <option value="r_asc">レビュー数で昇順</option>
+            <option value="l_desc">いいね数で降順</option>
+            <option value="l_asc">いいね数で昇順</option>
+        </select>
         <p id="message"></p>
         <ul id="searchResults"></ul>
     </div>
-
 {% endblock %}
 
