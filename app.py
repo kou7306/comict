@@ -607,11 +607,13 @@ def search_books(search_type, search_input, sort_option, page):
 @app.route('/<user_id>/bookSearch', methods=['POST', 'GET'])
 def BookSearch(user_id):
     if request.method == 'POST':
+
         search_type = request.form.get('searchType')
 
         search_input = request.form.get('searchInput').strip()
         sort_option = request.form.get('sortOption')
         page = request.args.get('page', 1)
+        print(search_input)
 
         search_input = request.form.get('searchInput').strip().lower()
         sort_option = request.form.get('sortOption')
