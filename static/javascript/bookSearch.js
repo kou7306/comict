@@ -17,7 +17,8 @@ function searchBooks(page) {
     const searchType = document.getElementById('searchType').value;
     const searchTerm = document.getElementById('searchInput').value.trim();
     const sortOption = document.querySelector('select[name="sortOption"]').value;
-    console.log(searchType, searchTerm, sortOption, page);
+
+
 
     if (searchTerm !== '') {
         $.ajax({
@@ -61,7 +62,7 @@ function displaySearchResults(response, append=false) {
     if ('error' in results) {
         alert(results.error);
     } else {
-        console.log(results);
+
         results.forEach(result => {
             const listItem = document.createElement('li');
             const link = document.createElement('a');
