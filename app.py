@@ -148,7 +148,7 @@ def matching(mangaAnswer,user_id):
 def accesTest(user_id):
     if 'user' in session:
         user=user_doc_ref.document(user_id).get()
-        if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(160)]):
+        if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(140)]):
             return redirect(f"/{user_id}/genre")
         else:
             return redirect(f"/{user_id}/home")
@@ -201,9 +201,10 @@ def homepage(user_id):
     if user.to_dict()['user_query'] != None:
         for id in user.to_dict()['user_query']:
             favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
-            for title in favorite_titles:    
-                image=get_rakuten_book_cover(title)
-                favolite_book_urls.append(image) 
+            if favorite_titles != None:
+                for title in favorite_titles:    
+                    image=get_rakuten_book_cover(title)
+                    favolite_book_urls.append(image) 
     else:
         favolite_book_urls = []
     
@@ -284,7 +285,7 @@ def userAdd():
                 user_doc=user_doc_ref.document(user_id)
                 user_format["username"]=username
                 # デフォルトで外れ値を指定しておく
-                user_format["mangaAnswer"]= [99.0 for x in range(160)]
+                user_format["mangaAnswer"]= [99.0 for x in range(140)]
                 user_format["gender"]=gender
                 user_doc.set(user_format)
 
@@ -329,7 +330,7 @@ def question(user_id,genre):
     else:
 
         #長さ20*８のリストを作成し、０で初期化する
-        mangaAnswer = [0.0] *160
+        mangaAnswer = [0.0] *140
 
         genre=int(genre)
         first_index = 20 * (genre - 1)
@@ -385,7 +386,9 @@ def review(user_id):
         # 作品データベースに初登録の作品なら追加
         if(comics_doc_ref.document(work_name).get().to_dict()==None):
             url=get_wikipedia_page_details(work_name)
-            comics_doc_ref.document(work_name).set({"title": work_name,"bookmark":[],"url":url})
+
+            comics_doc_ref.document(work_name).set({"title": work_name,"bookmark":[],"url":url,"reviews":[],"author":None})
+
         return redirect(f"/{user_id}/review")
 
 
@@ -564,10 +567,15 @@ def search_books(search_type, search_input, sort_option, page):
 def BookSearch(user_id):
     if request.method == 'POST':
         search_type = request.form.get('searchType')
+
+        search_input = request.form.get('searchInput').strip()
+        sort_option = request.form.get('sortOption')
+        page = request.args.get('page', 1)
+
         search_input = request.form.get('searchInput').strip().lower()
         sort_option = request.form.get('sortOption')
         page = request.args.get('page', 1)
-        
+
         if search_input:
             results, num_results = search_books(search_type, search_input, sort_option, page)
             if num_results == 0:
@@ -606,7 +614,6 @@ def toggle_bookmark(user_id):
 
     # データベースでブックマークの状態をトグル
 
-    # これ漫画がデータベースにないとだめ　修正
     comics_doc = comics_doc_ref.document(title)
     
     # ブックマークの状態を取得
