@@ -13,11 +13,14 @@ from wiki import get_manga_title,get_wikipedia_page_details
 
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
+
+
 # firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
 app = Flask(__name__)
 
 # Firebase Admin SDK を初期化
 cred = credentials.Certificate("key.json")
+
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 user_doc_ref = db.collection('user')
@@ -42,6 +45,7 @@ user_format={
     "follow":[],
     "user_query":[],
     "review_query":[],
+    "genre":None,   
 }
 
 # レビューデータベースに入れるときのデータの型
@@ -96,10 +100,18 @@ def matching(mangaAnswer,user_id):
     # データベースにあるすべてのユーザーデータを取得
     all_user_vector = []
     all_users = []
+    all_user = user_doc_ref.stream()
+    
+    if(all_user == []):
+        print("データがありません")
     for user in all_user:
+        print(user.to_dict()["mangaAnswer"])
         if(user.id!=user_id): # 自分以外
+            
+            print('データ',user.to_dict()["mangaAnswer"])
             all_user_vector.append(user.to_dict()["mangaAnswer"])
             all_users.append(user.to_dict())
+    
     if(all_user_vector != []):
         # Faissインデックスの作成
         dimension = len(all_user_vector[0])  # ベクトルの次元数
@@ -136,7 +148,7 @@ def matching(mangaAnswer,user_id):
 def accesTest(user_id):
     if 'user' in session:
         user=user_doc_ref.document(user_id).get()
-        if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(160)]):
+        if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(140)]):
             return redirect(f"/{user_id}/genre")
         else:
             return redirect(f"/{user_id}/home")
@@ -157,30 +169,46 @@ def homepage(user_id):
     favolite_book_urls = []
     book_urls=[]
     titles=[]
-    for id in user.to_dict()['review_query']:
-        review=review_doc_ref.document(id).get()
-        eval=review.to_dict()["evaluation"]
-        # 4以上の評価のものだけ取得
-        if(int(eval)>=4):
-            title=review.to_dict()["mangaTitle"]  
-            titles.append(title)
-            image=get_rakuten_book_cover(title)
-            book_urls.append(image)
-    data=list(zip(titles,book_urls))
+    if user.to_dict()['review_query'] != None:
+        for id in user.to_dict()['review_query']:
+            review=review_doc_ref.document(id).get()
+            eval=review.to_dict()["evaluation"]
+            # 4以上の評価のものだけ取得
+            if(int(eval)>=4):
+                title=review.to_dict()["mangaTitle"]  
+                titles.append(title)
+                image=get_rakuten_book_cover(title)
+                book_urls.append(image)
+        data=list(zip(titles,book_urls))
+    else:    
+        data = []
 
     # フォロワーの情報を取得
-    reviewer_queries=[]  
-    for follower in user.to_dict()["follow"]:
-        reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
+    follow_data = []
     
+    if user.to_dict()["follow"] != None:
+        for follow_id in user.to_dict()["follow"]:
+            if follow_id != "":
+                print(follow_id)
+                follow_doc = user_doc_ref.document(follow_id).get()
+                if follow_doc.exists:
+                    follow_name = follow_doc.to_dict()["username"]
+                    follow_data.append((follow_name, follow_id))
+                print(follow_data)
+    else:
+        follow_data = []
     # お気に入り漫画の画像取得
-    for id in user.to_dict()['user_query']:
-        favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
-    for title in favorite_titles:    
-        image=get_rakuten_book_cover(title)
-        favolite_book_urls.append(image) 
-    print(favolite_book_urls)
-    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref)
+    if user.to_dict()['user_query'] != None:
+        for id in user.to_dict()['user_query']:
+            favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
+            if favorite_titles != None:
+                for title in favorite_titles:    
+                    image=get_rakuten_book_cover(title)
+                    favolite_book_urls.append(image) 
+    else:
+        favolite_book_urls = []
+    
+    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref)
 
 
 
@@ -257,7 +285,7 @@ def userAdd():
                 user_doc=user_doc_ref.document(user_id)
                 user_format["username"]=username
                 # デフォルトで外れ値を指定しておく
-                user_format["mangaAnswer"]= [99.0 for x in range(160)]
+                user_format["mangaAnswer"]= [99.0 for x in range(140)]
                 user_format["gender"]=gender
                 user_doc.set(user_format)
 
@@ -300,13 +328,15 @@ def question(user_id,genre):
     if request.method == 'GET':
         return render_template("question"+ genre + '.html',user_id=user_id,genre=genre)
     else:
+
         #長さ20*８のリストを作成し、０で初期化する
-        mangaAnswer = [0] *160
+        mangaAnswer = [0.0] *140
+
         genre=int(genre)
         first_index = 20 * (genre - 1)
 
         #HTMLフォームからデータを受け取る
-        for i in range(1,6):
+        for i in range(1,20):
             question_key = f'question-{i:02}'
             answer = request.form[question_key]
             answer=float(answer)
@@ -316,35 +346,16 @@ def question(user_id,genre):
         user_doc = user_doc_ref.document(user_id)
         user=user_doc.get()
         # データベースにデータを格納
-        user_format['gender']=user.to_dict()["gender"]
-        user_format['mangaAnswer']=mangaAnswer
-        user_format['username']=user.to_dict()["username"]
 
-
+        user_doc.update({'gender':  user.to_dict()["gender"],'mangaAnswer':mangaAnswer,'username':user.to_dict()["username"]})
         # マッチング
         review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
-        user_format['user_query']=user_query
-        user_format['review_query']=review_query
-        user_doc.set(user_format)
-        # 漫画の画像取得
-        book_urls=[]
-        titles=[]
-        for id in review_query:
-            review=review_doc_ref.document(id).get()
-            title=review.to_dict()["mangaTitle"]  
-            titles.append(title)
-            image=get_rakuten_book_cover(title)
-            book_urls.append(image)
-        data=list(zip(titles,book_urls))
-
-        # フォロワーの情報を取得
-        reviewer_queries=[]  
-        for follower in user.to_dict()["follow"]:
-            reviewer_queries.append(user_doc_ref.where('username', '==', follower).get())
-
-        username=user.to_dict()["username"]
+       
+        update_data = {"user_query":  user_query,"review_query":review_query}
+        user_doc.update(update_data)
+     
         
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,reviewer_query=reviewer_queries,user_query=user_query,review_query=review_query,data=data,username=username)
+        return redirect(f'/{user_id}/home')
 
 
        
@@ -375,14 +386,14 @@ def review(user_id):
         # 作品データベースに初登録の作品なら追加
         if(comics_doc_ref.document(work_name).get().to_dict()==None):
             url=get_wikipedia_page_details(work_name)
-            comics_doc_ref.document(work_name).set({"title": work_name,"bookmark":[],"url":url})
+            comics_doc_ref.document(work_name).set({"title": work_name,"bookmark":[],"url":url,"reviews":[],"author":None})
         return redirect(f"/{user_id}/review")
 
 
 
 
 
-
+# ユーザーページ
 @app.route('/<user_id>/userpage', methods=['GET', 'POST'])
 def user_page(user_id):   
 
@@ -393,40 +404,53 @@ def user_page(user_id):
     # 特定のユーザーネームに一致するドキュメントを取得
     query = review_doc_ref.where('username', '==', username).get()
 
-    # アンケート結果の取得・表示
-    with open('templates/question1.html', 'r', encoding='utf-8') as file:
-        html_code = file.read()
-    result = user_data.get('mangaAnswer')
+    # アンケート結果の取得・表示 ここの修正が必要
+    # with open('templates/question1.html', 'r', encoding='utf-8') as file:
+    #     html_code = file.read()
+    # result = user_data.get('mangaAnswer')
 
-    #アンケートの設問と回答を格納する配列
-    question, answer = [], []
-    soup = BeautifulSoup(html_code, 'html.parser')
+    # #アンケートの設問と回答を格納する配列
+    # question, answer = [], []
+    # soup = BeautifulSoup(html_code, 'html.parser')
 
-    #アンケートの設問を取得
-    h2_elems = soup.find_all('h2')
-    for h2 in h2_elems:
-        question.append(h2.text)
+    # #アンケートの設問を取得
+    # h2_elems = soup.find_all('h2')
+    # for h2 in h2_elems:
+    #     question.append(h2.text)
 
-    #アンケートの回答を取得
-    temp = []
-    for value_to_find in result:
-        value_to_find=int(value_to_find)
-        value_to_find=str(value_to_find)
-        input_tags = soup.find_all('input', {'value': value_to_find})
-        for input_tag in input_tags:
-            label_tag = soup.find('label', {'for': input_tag.get('id')})
-            if label_tag:
-                temp.append(label_tag.text)
-    for i in range(5):
-        answer.append(temp[i])
+    # #アンケートの回答を取得
+    # temp = []
+    # for value_to_find in result:
+    #     value_to_find=int(value_to_find)
+    #     value_to_find=str(value_to_find)
+    #     input_tags = soup.find_all('input', {'value': value_to_find})
+    #     for input_tag in input_tags:
+    #         label_tag = soup.find('label', {'for': input_tag.get('id')})
+    #         if label_tag:
+    #             temp.append(label_tag.text)
+    # for i in range(5):
+    #     answer.append(temp[i])
 
-    #設問と回答をタプル化
-    combined_list = zip(question, answer)
+    # #設問と回答をタプル化
+    # combined_list = zip(question, answer)
 
-    #好きな作品のリストをデータベースから取得
-    favorite_titles = user.to_dict()["favorite_manga"]
+    #ブックマークをデータベースから取得
+    favorite_titles = user_data["favorite_manga"]
 
-    return render_template("userpage.html", query=query,username=username, user_id=user_id, result=result, combined_list=combined_list, favorite_titles=favorite_titles)
+    # フォローしたユーザーのIDを取得
+    follow_data = []
+    for follow_id in user_data["follow"]:
+        follow_doc = user_doc_ref.document(follow_id).get()
+        if follow_doc.exists:
+            follow_name = follow_doc.to_dict()["username"]
+            follow_data.append((follow_name, follow_id))
+ 
+ 
+
+ 
+
+
+    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id, result="a", combined_list="a", favorite_titles=favorite_titles,follow_data=follow_data)
 
 
   
@@ -456,18 +480,18 @@ def reviewer(user_id,reviewer_id):
         # フォロー状態をトグル
         is_following = not is_following
         # レビュワーの情報をとってくる
-        reviewer_doc = user_doc_ref.document(reviewer_id).get()
-        reviewername=reviewer_doc.to_dict()["username"]
+        # reviewer_doc = user_doc_ref.document(reviewer_id).get()
+        # reviewername=reviewer_doc.to_dict()["username"]
         user_doc = user_doc_ref.document(user_id)
         user_data = user_doc.get().to_dict()
         current_follow = user_data.get("follow", [])
         if(is_following):
-
-            current_follow.append(reviewername)
+            print("reviewer_id",reviewer_id)
+            current_follow.append(reviewer_id)
         else:
-            current_follow.remove(reviewername)
+            current_follow.remove(reviewer_id)
         # 更新するデータを作成
-        update_data = {"follow": current_follow}
+        update_data = {"follow":  current_follow}
         # ドキュメントを更新
         user_doc.update(update_data)
 
@@ -492,11 +516,13 @@ def detail(user_id,title):
 def add_manga(user_id):
     user_doc = user_doc_ref.document(user_id)
     user=user_doc.get()
-    favorite_titles =user.to_dict()["favorite_manga"]
+    favorite_titles = user.to_dict().get("favorite_manga", [])
     if request.method == 'GET':
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
     elif request.method == 'POST':
-        manga_title = request.form['favorite_title'] # 'favorite_title'から取得
+        data = request.get_json()
+        manga_title = data.get('title') 
+        print(manga_title)
         # ドキュメントの更新
         user_doc.update({
             'favorite_manga': firestore.ArrayUnion([manga_title])
@@ -505,7 +531,7 @@ def add_manga(user_id):
         # ユーザーデータの取得
         user_data = user_doc.get().to_dict()
         favorite_titles = user_data.get('favorite_manga', [])  #favorite_mangaが存在しない場合は空のリストを使う
-        return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles) 
+        return jsonify({'favoriteTitles': favorite_titles})
 
 PER_PAGE = 10
 
@@ -544,10 +570,11 @@ def search_books(search_type, search_input, sort_option, page):
 def BookSearch(user_id):
     if request.method == 'POST':
         search_type = request.form.get('searchType')
-        search_input = request.form.get('searchInput').strip().lower()
+        search_input = request.form.get('searchInput').strip()
         sort_option = request.form.get('sortOption')
         page = request.args.get('page', 1)
         
+        print(search_input)
         if search_input:
             results, num_results = search_books(search_type, search_input, sort_option, page)
             if num_results == 0:
@@ -585,6 +612,7 @@ def toggle_bookmark(user_id):
     title = data.get("title")
 
     # データベースでブックマークの状態をトグル
+
     comics_doc = comics_doc_ref.document(title)
     
     # ブックマークの状態を取得
@@ -610,3 +638,5 @@ def toggle_bookmark(user_id):
 
 if __name__ == '__main__':
     app.run(debug=True,port=8080)
+
+# /fm8MhfrbKdJ5narcJvTm/home testへのURL

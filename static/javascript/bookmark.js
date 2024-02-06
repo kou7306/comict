@@ -54,14 +54,14 @@ document.addEventListener("DOMContentLoaded", function () {
 // ブックマークトグルボタンの状態を更新する関数
 function updateBookmarkButtonState(isBookmarked) {
     const button = document.getElementById("bookmarkToggle");
-    button.textContent = isBookmarked ? "ブックマーク解除" : "ブックマーク";
+    button.textContent = isBookmarked ? "ブックマーク" : "ブックマーク解除";
     // 必要に応じて、ボタンのスタイルなども変更できます
 }
 
 document.addEventListener("DOMContentLoaded", function () {
     // ローカルストレージから現在のブックマークの状態を取得
     const currentBookmarkState = localStorage.getItem("bookmarkState") === "true";
-
+    console.log(currentBookmarkState);
     // ブックマークトグルボタンの状態を更新
     updateBookmarkButtonState(currentBookmarkState);
 });
