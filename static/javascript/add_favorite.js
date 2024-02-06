@@ -88,3 +88,33 @@ async function search(user_id) {
     }
 }
 
+
+// ブックマークの削除
+function delete_manga(user_id,title){
+   
+    // POSTリクエストのオプションを設定
+    const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json', // コンテントタイプをJSONに設定
+            // 必要に応じて他のヘッダーを追加
+        },
+        body: JSON.stringify({
+            title: title,
+            // 他に送りたいデータがあればここに追加
+        }),
+        credentials: 'same-origin' // CSRF対策
+    };
+
+    // fetch APIを使用してリクエストを送信
+    url = "/" + user_id + "/favoriteDelete";   
+    fetch(url, options)
+        .then(response => response.json()) // レスポンスのJSONを解析
+        .then(data => {
+            location.reload(); // ページをリロードで更新
+        })
+        .catch(error => {
+            console.error('Error:', error); // エラーをコンソールに表示
+        });
+
+  }

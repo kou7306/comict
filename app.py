@@ -367,7 +367,7 @@ def review(user_id):
         return render_template("review.html",user_id=user_id)
     else:
         # formから取得
-        work_name = request.form['work_name']
+        manga_title = request.form['work_name']
         rating = request.form['rating']
         comment = request.form['comment_text']
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
@@ -377,17 +377,28 @@ def review(user_id):
 
         # 入力されたレビューのデータ
         review_format["evaluation"]=rating
-        review_format["mangaTitle"]=work_name
+        review_format["mangaTitle"]=manga_title
         review_format["contents"]=comment
         review_format["username"]=user.to_dict()["username"]
         review_document=review_doc_ref.document() 
         review_document.set(review_format)
+        review_document_id = review_document.id
 
         # 作品データベースに初登録の作品なら追加
-        if(comics_doc_ref.document(work_name).get().to_dict()==None):
-            url=get_wikipedia_page_details(work_name)
+        # `comics`コレクションから`title`が`manga_title`と等しいドキュメントを検索
+        query = comics_doc_ref.where('title', '==', manga_title).stream()
 
-            comics_doc_ref.document(work_name).set({"title": work_name,"bookmark":[],"url":url,"reviews":[],"author":None})
+
+        # 検索結果がない場合の処理を追加
+        if not any(query):
+            url=get_wikipedia_page_details(manga_title)
+
+            comics_doc_ref.document(manga_title).set({"title": manga_title,"bookmark":[],"url":url,"reviews":[review_document_id],"author":None})
+        # 作品データベースに登録されている場合
+        else:
+            # 作品データベースの`reviews`フィールドに`id`を追加
+            comics_doc_ref.document(manga_title).update({"reviews": firestore.ArrayUnion([review_document_id])})
+            
 
         return redirect(f"/{user_id}/review")
 
@@ -520,15 +531,43 @@ def add_manga(user_id):
         data = request.get_json()
         manga_title = data.get('title') 
         print(manga_title)
-        # ドキュメントの更新
+        # ユーザードキュメントの更新
         user_doc.update({
             'favorite_manga': firestore.ArrayUnion([manga_title])
         })
 
+        #　漫画テーブルの更新
+        # `comics`コレクションから`title`が`manga_title`と等しいドキュメントを検索
+        query = comics_doc_ref.where('title', '==', manga_title).stream()
+
+
+        # 検索結果がない場合の処理を追加
+        if not any(query):
+            url=get_wikipedia_page_details(manga_title)
+
+            comics_doc_ref.document(manga_title).set({"title": manga_title,"bookmark":[],"url":url,"reviews":[],"author":None})
+
         # ユーザーデータの取得
-        user_data = user_doc.get().to_dict()
-        favorite_titles = user_data.get('favorite_manga', [])  #favorite_mangaが存在しない場合は空のリストを使う
+        favorite_titles.append(manga_title)
         return jsonify({'favoriteTitles': favorite_titles})
+    
+# 好きな作品を削除
+@app.route('/<user_id>/favoriteDelete', methods=['POST'])
+def delete_manga(user_id):
+    user_doc = user_doc_ref.document(user_id)
+    user=user_doc.get()
+    favorite_titles = user.to_dict().get("favorite_manga", [])
+
+    data = request.get_json()
+    manga_title = data.get('title') 
+    if favorite_titles != []:
+        favorite_titles.remove(manga_title)
+    # ユーザードキュメントの更新
+    user_doc.update({
+        'favorite_manga': favorite_titles
+    })
+
+    return jsonify({'favoriteTitles': favorite_titles})
 
 PER_PAGE = 10
 
