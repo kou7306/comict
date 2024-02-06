@@ -17,7 +17,11 @@
         <h2>現在の好きな作品リスト:</h2>
         <div>
             {% for title in favorite_titles %}
+            <div class="container">
                 <div class="title">{{ title }}</div>
+                <button value="削除" onclick="delete_manga('{{ user_id }}','{{title}}')">削除</button>
+            </div>
+        
             {% endfor %}
         </div>
     </body>
