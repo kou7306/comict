@@ -6,17 +6,17 @@
 
 
 
-
-    <section class="manga container">
-      <h2>あなたにおすすめの漫画</h2>
+  <div class="mx-20">
+    <section class="w-full my-8">
+      <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
       <div class="swiper mySwiper">
           <div class="swiper-wrapper">
             {% if data != [] %}
               {% for title, url in data %}
               {% if url != "no" %}
-              <div class="swiper-slide">
+              <div class="swiper-slide bg-center bg-cover">
                   <a href="/{{ user_id }}/{{ title }}/detail">
-                      <img class="image-placeholder" src="{{ url }}" alt="">
+                      <img class="block w-full h-full" src="{{ url }}" alt="">
                   </a>
               </div>
               {% else %}
@@ -46,22 +46,22 @@
 
     
 
-    <section id="user">
-        <h2>あなたの属性に近いユーザー</h2>
-        <ul class="near-user">
+    <section class="my-20" id="user">
+        <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
+        <ul class="flex flex-wrap list-none">
           {% if user_query != None %}
           {% for id in user_query %}
           {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
-          <li>
+          <li class="w-2/12 text-center box-border m-2">
 
-          <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
-          <div>
-            <a href="/{{user_id}}/{{id}}/userpage"><h3>{{user_doc_ref.document(id).get().to_dict()["username"]}}</h3></a>
+            <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+            <div>
+              <a href="/{{user_id}}/{{id}}/userpage"><h3>{{user_doc_ref.document(id).get().to_dict()["username"]}}</h3></a>
 
 
-        </div>    
-        </li>
-    
+          </div>    
+          </li>
+      
         {% endif %}
           {% endfor %}
           {% endif %}
@@ -69,13 +69,13 @@
       </ul>
     </section>
 
-    <section id="reviewer">
-        <h2>フォローしたユーザー</h2>
-        <ul class="follow-user">
+    <section class="my-20" id="reviewer">
+        <h2 class="text-3xl" >フォローしたユーザー</h2>
+        <ul class="flex flex-wrap list-none">
           
           {% for follow in follow_data %}
-          <li>
-          <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+          <li class="w-2/12 text-center box-border m-2">
+          <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
             <a href="/{{user_id}}/{{follow[1]}}/userpage"><h3>{{follow[0]}}</h3></a>
             
@@ -87,11 +87,11 @@
     </section>
 
     <section id="timeline">
-        <h2>タイムライン</h2>
-        <ul class="timeline">
+        <h2 class="text-3xl">タイムライン</h2>
+        <ul>
           {% for review in review_doc_ref.stream() %}
           
-          <li>
+          <li class="my-4 p-4 bg-gray-800">
             <p>{{review.to_dict()["username"]}}</p>
             <a href="/{{ user_id }}/{{review.to_dict()['mangaTitle']}}/detail">
               <p>タイトル：{{review.to_dict()["mangaTitle"]}}</p>
@@ -103,6 +103,7 @@
           {% endfor %}
       </ul>
     </section>
+  </div>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="../static/javascript/home.js"></script>
 {% endblock %}
