@@ -33,6 +33,7 @@ async function searchBooks(page,searchTerm) {
             },
             success: (data) => {
                 const appendResults = page > 1;
+                console.log(data);
                 displaySearchResults(data, appendResults);
                 if (appendResults) {
                     currentResults.results = currentResults.results.concat(data.results);
