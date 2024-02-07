@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+{% extends "base.html" %} {% block extra_css %} 
+
+
+{% endblock %} {% block content%}
     <form action="/{{user_id}}/genre" method="POST">
         <div id="genre_selelct" class="radio-box">
             <h2>一番好きなジャンルはなんですか</h2>
@@ -45,5 +41,4 @@
             <button type="submit" class="btn">送信</button>
         </div>   
     </form>
-</body>
-</html>
+    {% endblock %}

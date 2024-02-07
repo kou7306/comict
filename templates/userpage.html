@@ -49,11 +49,12 @@
         </div>
 
         <div class="myreview">
-            <h3>マイレビュー</h2>
+            <h2>マイレビュー</h2>
             {% for review in myreview_query %}
             <div class="review">
                 <h4>{{ review.to_dict()["mangaTitle"] }}</h4>
-                <p>{{ review.to_dict()["review"] }}</p>
+                <p>{{ review.to_dict()["evaluation"] }}</p>
+                <p>{{ review.to_dict()["contents"] }}</p>
             </div>
             {% endfor %}
         </div>
