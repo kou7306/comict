@@ -442,6 +442,10 @@ def user_page(user_id):
     #設問と回答をタプル化
     combined_list = zip(question, answer)
 
+    #選択したジャンルを取得
+    genre_list = ["バトル", "スポーツ", "恋愛", "ミステリー", "コメディ", "SF", "歴史"]
+    genre_choice = genre_list[int(genre_value)-1]
+
     #ブックマークをデータベースから取得
     favorite_titles = user_data["favorite_manga"]
 
@@ -458,7 +462,7 @@ def user_page(user_id):
  
 
 
-    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=combined_list)
+    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=combined_list, genre_choice=genre_choice)
 
 
   
@@ -677,6 +681,6 @@ def toggle_bookmark(user_id):
     return jsonify({"bookmarked": new_bookmark_value})
 
 if __name__ == '__main__':
-    app.run(debug=True,port=8080)
+    app.run(debug=False,port=8080)
 
 # /fm8MhfrbKdJ5narcJvTm/home testへのURL
