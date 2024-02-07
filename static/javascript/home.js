@@ -23,3 +23,4 @@ var swiper = new Swiper('.mySwiper', {
 function showAlert() {
     alert('ボタンがクリックされました！');
 }
+
