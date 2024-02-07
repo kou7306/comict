@@ -482,6 +482,7 @@ def reviewer(user_id,reviewer_id):
         # レビュワーの情報をとってくる
         reviewer_doc = user_doc_ref.document(reviewer_id).get()
         reviewername=reviewer_doc.to_dict()["username"]
+        review_data=reviewer_doc.to_dict()
         # 特定のユーザーネームに一致するレビュー情報を取得
         query = review_doc_ref.where('username', '==', reviewername).get()
 
@@ -490,9 +491,38 @@ def reviewer(user_id,reviewer_id):
         # 'follow' フィールド中に 'reviewername' が含まれているか確認
         is_following = any(user == reviewername for user in user_doc.get().to_dict()['follow'])
 
+        #アンケート結果の取得・表示
+        rev_genre_value=review_data.get("genre")
+        rev_start_question = 20 * (int(rev_genre_value) - 1)
+        rev_end_question = rev_start_question + 20
+
+        rev_html_file_path=f"templates/question{rev_genre_value}.html"
+        with open(rev_html_file_path, 'r', encoding='utf-8') as file:
+            rev_html_code = file.read()
+        result = review_data.get('mangaAnswer')
+
+        #アンケートの設問を格納する配列
+        rev_question = []
+        soup = BeautifulSoup(rev_html_code, 'html.parser')
+
+        #アンケートの設問を取得
+        rev_h2_elems = soup.find_all('h2')
+        for h2 in rev_h2_elems:
+            rev_question.append(h2.text)
+    
+        #アンケートの回答を取得
+        rev_answer = result[rev_start_question:rev_end_question]
+
+        #設問と回答をタプル化
+        rev_combined_list = zip(rev_question, rev_answer)
+
+        #選択したジャンルを取得
+        genre_list = ["バトル", "スポーツ", "恋愛", "ミステリー", "コメディ", "SF", "歴史"]
+        rev_genre_choice = genre_list[int(rev_genre_value)-1]
+
 
         favorite_titles = reviewer_doc.to_dict().get('favorite_manga', [])  # favorite_titlesが存在しない場合は空のリストを使う
-        return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_titles=favorite_titles)
+        return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_titles=favorite_titles,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice)
     else:
         data = request.get_json()
         is_following = data.get('is_following')

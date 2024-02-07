@@ -31,6 +31,16 @@
             </div>
             {% endfor %}
         </div>
+
+        <div>
+            <h3>アンケート結果</h2>
+            <div class="result">
+                <h3>選択ジャンル : {{ rev_genre_choice }}</h3>
+                {% for q,ans in rev_combined_list %}
+                <p>{{ q }}: {{ ans }}</p>
+                {% endfor %}
+            </div>
+        </div>
     <script>
         const followButton = document.getElementById('followButton');
         
