@@ -34,7 +34,7 @@ def index():
 
             # ドキュメントが存在すればそのIDを返す
             for doc in result:            
-                return redirect(f'/{doc.id}/accesTest')
+                return redirect(f'/{doc.id}/home')
             flash("ユーザー名が登録されていません")
             return redirect("/")
         except:
@@ -91,8 +91,24 @@ def userAdd():
     else:
         return render_template("userAdd.html")
 
+# logout
 @auth_bp.route("/logout")
 def logput():
     session.pop('user', None)
     flash("ログアウトしました")
     return redirect('/')
+
+# パスワード再設定
+@auth_bp.route("/reset", methods=['POST', 'GET'])
+def reset():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        try:
+            auth.send_password_reset_email(email)
+            flash("パスワード再設定メールを送信しました")
+            return redirect("/")
+        except:
+            flash("パスワード再設定メールの送信に失敗しました")
+            return redirect("/")
+    else:
+        return render_template("reset.html")
