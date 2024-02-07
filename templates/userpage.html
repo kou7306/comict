@@ -18,6 +18,7 @@
         <div class="left">
             <h3>アンケート結果</h2>
             <div class="result">
+                <h3>選択ジャンル : {{ genre_choice }}</h3>
                 {% for q,ans in combined_list %}
                 <p>{{ q }}: {{ ans }}</p>
                 {% endfor %}
