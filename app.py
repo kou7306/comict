@@ -1,28 +1,25 @@
 from flask import Flask, render_template, request, jsonify, redirect, session, current_app,url_for, flash, get_flashed_messages
-import pyrebase
 import faiss
 import numpy as np
+import pyrebase
 import firebase_admin
-from firebase_admin import credentials,firestore
+from firebase_admin import credentials, firestore
 from bs4 import BeautifulSoup
 import requests
 import os
 import wikipedia
 from wiki import get_manga_title,get_wikipedia_page_details
+from firebaseSetUp import auth, db
+from auth import auth_bp
 
-
+app = Flask(__name__)
+app.register_blueprint(auth_bp)
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
 
 
 # firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
-app = Flask(__name__)
 
-# Firebase Admin SDK を初期化
-cred = credentials.Certificate("key.json")
-
-firebase_admin.initialize_app(cred)
-db = firestore.client()
 user_doc_ref = db.collection('user')
 
 all_user = user_doc_ref.stream()
@@ -55,20 +52,6 @@ review_format={
     "contents":None,
     "username":None,
 }
-
-config = {
-    "apiKey": "AIzaSyBPva6sGWXi6kjmk8mjWWVCGEKKEBIfTIY",
-    "authDomain": "giikucamp12.firebaseapp.com",
-    "projectId": "giikucamp12",
-    "storageBucket": "giikucamp12.appspot.com",
-    "messagingSenderId": "755980381836",
-    "appId": "1:755980381836:web:acdae710db8366cc4095a9",
-    "measurementId": "G-00EVCKC0JQ",
-    "databaseURL": ""
-}
-
-firebase = pyrebase.initialize_app(config)
-auth = firebase.auth()
 
 app.secret_key = "secret"
 
@@ -233,88 +216,6 @@ def reset():
     else:
         return render_template("reset.html")
     
-
-
-# login
-@app.route("/", methods=['POST', 'GET'])
-def index():
-    if request.method == 'POST':
-        username=request.form.get('username')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        
-        try:
-            auth.sign_in_with_email_and_password(email, password)
-            session['user'] = email
-            # usernameが一致する最初のドキュメントを取得
-            query = user_doc_ref.where('username', '==', username).limit(1)
-            result = query.stream()
-
-            # ドキュメントが存在すればそのIDを返す
-            for doc in result:            
-                return redirect(f'/{doc.id}/accesTest')
-            flash("ユーザー名が登録されていません")
-            return redirect("/")
-        except:
-                flash("ログインに失敗しました")
-                return redirect("/")  
-    else:
-        messages = get_flashed_messages()
-        return render_template("login.html", messages=messages)
-
-# ユーザーネームの重複を確認する関数
-def is_username_duplicate(username):
-    # usersコレクションからユーザーネームが一致するドキュメントをクエリ
-    query = user_doc_ref.where('username', '==', username)
-    
-    # クエリを実行して結果を取得
-    query_result = query.stream()
-
-    # クエリ結果が空でない場合は重複していると判断
-    return any(query_result)
-
-# ユーザー登録
-@app.route("/userAdd", methods=['POST', 'GET'])
-def userAdd():
-    if request.method == 'POST':
-        username=request.form.get('username')
-        gender=request.form.get('gender')
-        email = request.form.get('email')
-        password = request.form.get('password')
-        # usernameが重複していない場合
-        if not is_username_duplicate(username):
-            try:
-                auth.create_user_with_email_and_password(email, password)
-                
-                # userのidを取得
-                user_id=user_doc_ref.document().id
-                # userデータベースに保存
-                user_doc=user_doc_ref.document(user_id)
-                user_format["username"]=username
-                # デフォルトで外れ値を指定しておく
-                user_format["mangaAnswer"]= [99.0 for x in range(140)]
-                user_format["gender"]=gender
-                user_doc.set(user_format)
-                global flag
-                flag=1
-                flash("ユーザー登録が完了しました")
-                return redirect(f"/{user_id}/genre")
-            except:
-                flash("ユーザー登録に失敗しました")
-                return redirect("/")
-            
-        else:
-            flash("ユーザーネームが重複しています")
-            return redirect("/")    
-    else:
-        return render_template("userAdd.html")
-
-@app.route("/logout")
-def logput():
-    session.pop('user', None)
-    flash("ログアウトしました")
-    return redirect('/')
-
 # ジャンル選択
 @app.route("/<user_id>/genre",methods = ['GET',"POST"])
 def genre(user_id):
