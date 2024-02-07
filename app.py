@@ -124,27 +124,6 @@ def matching(mangaAnswer,user_id):
         return review_query_results, user_query_results
     return None,None
 
-
-
-
-@app.route("/<user_id>/accesTest")
-def accesTest(user_id):
-    if 'user' in session:
-        user=user_doc_ref.document(user_id).get()
-        if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(140)]):
-            return redirect(f"/{user_id}/genre")
-        else:
-            global flag
-            flag = 3
-            return redirect(f"/{user_id}/home")
-
-    else:
-        flash("ログインしてください")
-        return redirect("/")
-
-
-
-
 # home
 @app.route('/<user_id>/home')
 def homepage(user_id):
@@ -200,22 +179,6 @@ def homepage(user_id):
     show_intro = flag == 2
     return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro)
 
-
-
-@app.route("/reset", methods=['POST', 'GET'])
-def reset():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        try:
-            auth.send_password_reset_email(email)
-            flash("パスワード再設定メールを送信しました")
-            return redirect("/")
-        except:
-            flash("パスワード再設定メールの送信に失敗しました")
-            return redirect("/")
-    else:
-        return render_template("reset.html")
-    
 # ジャンル選択
 @app.route("/<user_id>/genre",methods = ['GET',"POST"])
 def genre(user_id):

@@ -36,7 +36,7 @@
           <div class="flex items-center justify-between">
             <label for="password" class="block text-sm font-medium leading-6 text-white">Password</label>
             <div class="text-sm">
-              <a href="{{ url_for('reset') }}" class="font-semibold text-blue-600 hover:text-blue-500">パスワードを忘れた方はこちら</a>
+              <a href="{{ url_for('auth.reset') }}" class="font-semibold text-blue-600 hover:text-blue-500">パスワードを忘れた方はこちら</a>
 
             </div>
           </div>
@@ -52,7 +52,7 @@
   
       <p class="mt-10 text-center text-sm text-white">
         アカウントをお持ちでない方は
-        <a href="{{ url_for('userAdd') }}" class="font-semibold leading-6 text-blue-600 hover:text-blue-500">こちら</a>
+        <a href="{{ url_for('auth.userAdd') }}" class="font-semibold leading-6 text-blue-600 hover:text-blue-500">こちら</a>
       </p>
     </div>
   </div>
