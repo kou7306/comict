@@ -1,6 +1,7 @@
 
 {% extends "base.html" %} {% block extra_css %} 
 <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/@sjmc11/tourguidejs/dist/css/tour.min.css">
 {% endblock %} {% block content%}
 
 
@@ -9,7 +10,8 @@
   <div class="mx-20">
     <section class="w-full my-8">
       <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
-      <div class="swiper mySwiper">
+      
+      <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper mySwiper">
           <div class="swiper-wrapper">
             {% if data != [] %}
               {% for title, url in data %}
@@ -48,7 +50,7 @@
 
     <section class="my-20" id="user">
         <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
-        <ul class="flex flex-wrap list-none">
+        <ul data-tg-order='2' data-tg-tour='あなたのアンケートの回答と似ているユーザーです。' class="flex flex-wrap list-none">
           {% if user_query != None %}
           {% for id in user_query %}
           {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
@@ -104,7 +106,21 @@
       </ul>
     </section>
   </div>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="../static/javascript/home.js"></script>
+    <script src="https://unpkg.com/@sjmc11/tourguidejs/dist/tour.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+//       document.addEventListener("DOMContentLoaded", function() {
+//         if ({{ show_intro | tojson }}) {
+//         introJs().start();
+//     }
+//  });
+  if ({{ show_intro | tojson }}) {
+    const tg = new tourguide.TourGuideClient();
+
+    tg.start();
+  }
+    </script>
 {% endblock %}
 

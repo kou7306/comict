@@ -33,7 +33,7 @@ comics_doc_ref=db.collection('comics')
 
 is_following=False
 
-
+flag = 0
 
 
 # ユーザーデータベースにいれるときのデータの型
@@ -151,6 +151,8 @@ def accesTest(user_id):
         if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(140)]):
             return redirect(f"/{user_id}/genre")
         else:
+            global flag
+            flag = 3
             return redirect(f"/{user_id}/home")
 
     else:
@@ -164,6 +166,11 @@ def accesTest(user_id):
 @app.route('/<user_id>/home')
 def homepage(user_id):
     user=user_doc_ref.document(user_id).get()
+    global flag
+   
+    flag+=1
+
+    # flagが2の時イントロダクションを表示
     
     # 漫画の画像取得
     favolite_book_urls = []
@@ -207,8 +214,8 @@ def homepage(user_id):
                     favolite_book_urls.append(image) 
     else:
         favolite_book_urls = []
-    
-    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref)
+    show_intro = flag == 2
+    return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro)
 
 
 
@@ -288,7 +295,8 @@ def userAdd():
                 user_format["mangaAnswer"]= [99.0 for x in range(140)]
                 user_format["gender"]=gender
                 user_doc.set(user_format)
-
+                global flag
+                flag=1
                 flash("ユーザー登録が完了しました")
                 return redirect(f"/{user_id}/genre")
             except:
