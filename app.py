@@ -1,28 +1,25 @@
 from flask import Flask, render_template, request, jsonify, redirect, session, current_app,url_for, flash, get_flashed_messages
-import pyrebase
 import faiss
 import numpy as np
+import pyrebase
 import firebase_admin
-from firebase_admin import credentials,firestore
+from firebase_admin import credentials, firestore
 from bs4 import BeautifulSoup
 import requests
 import os
 import wikipedia
 from wiki import get_manga_title,get_wikipedia_page_details
+from firebaseSetUp import auth, db
+from auth import auth_bp
 
-
+app = Flask(__name__)
+app.register_blueprint(auth_bp)
 
 # # サービス アカウント キー ファイルへのパスを環境変数から取得
 
 
 # firebase_admin_key_path = os.environ.get('FIREBASE_ADMIN_KEY_PATH')
-app = Flask(__name__)
 
-# Firebase Admin SDK を初期化
-cred = credentials.Certificate("key.json")
-
-firebase_admin.initialize_app(cred)
-db = firestore.client()
 user_doc_ref = db.collection('user')
 
 all_user = user_doc_ref.stream()
@@ -55,20 +52,6 @@ review_format={
     "contents":None,
     "username":None,
 }
-
-config = {
-    "apiKey": "AIzaSyBPva6sGWXi6kjmk8mjWWVCGEKKEBIfTIY",
-    "authDomain": "giikucamp12.firebaseapp.com",
-    "projectId": "giikucamp12",
-    "storageBucket": "giikucamp12.appspot.com",
-    "messagingSenderId": "755980381836",
-    "appId": "1:755980381836:web:acdae710db8366cc4095a9",
-    "measurementId": "G-00EVCKC0JQ",
-    "databaseURL": ""
-}
-
-firebase = pyrebase.initialize_app(config)
-auth = firebase.auth()
 
 app.secret_key = "secret"
 
@@ -141,7 +124,7 @@ def matching(mangaAnswer,user_id):
         return review_query_results, user_query_results
     return None,None
 
-
+¥
 
 
 @app.route("/<user_id>/accesTest")
@@ -156,6 +139,7 @@ def accesTest(user_id):
     else:
         flash("ログインしてください")
         return redirect("/")
+
 
 
 
@@ -312,6 +296,7 @@ def logput():
     session.pop('user', None)
     flash("ログアウトしました")
     return redirect('/')
+
 
 # ジャンル選択
 @app.route("/<user_id>/genre",methods = ['GET',"POST"])
