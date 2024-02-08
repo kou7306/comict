@@ -176,7 +176,7 @@ def homepage(user_id):
                     favolite_book_urls.append(image) 
     else:
         favolite_book_urls = []
-    show_intro = flag == 2
+    show_intro = flag == -1
     return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro)
 
 # ジャンル選択
