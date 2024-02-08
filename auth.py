@@ -77,8 +77,7 @@ def userAdd():
                 user_format["mangaAnswer"]= [99.0 for x in range(140)]
                 user_format["gender"]=gender
                 user_doc.set(user_format)
-                global flag
-                flag=-2
+                session['flag'] = -2
                 flash("ユーザー登録が完了しました")
                 return redirect(f"/{user_id}/genre")
             except:
