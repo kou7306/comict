@@ -2,43 +2,43 @@
 
 
 {% endblock %} {% block content%}
-    <form action="/{{user_id}}/genre" method="POST">
+    <form action="/{{user_id}}/genre" method="POST" class="text-center">
         <div id="genre_selelct" class="radio-box">
-            <h2>一番好きなジャンルはなんですか</h2>
-            <div class="radio-button-group">
-              <div class="radio-button">
+            <h2 class="text-4xl">一番好きなジャンルはなんですか</h2>
+            <div class="radio-button-group my-8">
+              <div class="radio-button my-4">
               <input type="radio" id="genre1" class="radio__input" name="genre" value="1" required>
-              <label for="genre">バトル</label>
+              <label class="text-xl" for="genre">バトル</label>
             </div>
-            <div class="radio-button">
+            <div class="radio-button my-4">
               <input type="radio" id="genre2" class="radio__input" name="genre" value="2">
-              <label for="genre">スポーツ</label>
+              <label class="text-xl" for="genre">スポーツ</label>
             </div>
-            <div class="radio-button">
+            <div class="radio-button my-4">
               <input type="radio" id="genre3" class="radio__input" name="genre" value="3">
-              <label for="genre">恋愛</label>
+              <label class="text-xl" for="genre">恋愛</label>
             </div>
-            <div class="radio-button">
+            <div class="radio-button my-4">
               <input type="radio" id="genre4" class="radio__input" name="genre" value="4">
-              <label for="genre">ミステリー</label>
+              <label class="text-xl" for="genre">ミステリー</label>
             </div>
-            <div class="radio-button">
+            <div class="radio-button my-4">
               <input type="radio" id="genre5" class="radio__input" name="genre" value="5">
-              <label for="genre">コメディ</label>
+              <label class="text-xl"for="genre">コメディ</label>
             </div>
-            <div class="radio-button">
+            <div class="radio-button my-4">
                 <input type="radio" id="genre6" class="radio__input" name="genre" value="6">
-                <label for="genre">SF</label>
+                <label class="text-xl" for="genre">SF</label>
             </div>
-            <div class="radio-button">
+            <div class="radio-button my-4">
                 <input type="radio" id="genre7" class="radio__input" name="genre" value="7">
-                <label for="genre">歴史</label>
+                <label class="text-xl" for="genre">歴史</label>
             </div>
         </div>
     
 
         </div>
-            <button type="submit" class="btn">送信</button>
+        <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 my-4 w-3/12">決定</button>
         </div>   
     </form>
     {% endblock %}
