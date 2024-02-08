@@ -151,8 +151,6 @@ def accesTest(user_id):
         if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(140)]):
             return redirect(f"/{user_id}/genre")
         else:
-            global flag
-            flag = 3
             return redirect(f"/{user_id}/home")
 
     else:
@@ -214,7 +212,7 @@ def homepage(user_id):
                     favolite_book_urls.append(image) 
     else:
         favolite_book_urls = []
-    show_intro = flag == 2
+    show_intro = flag == -1
     return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro)
 
 
@@ -296,7 +294,7 @@ def userAdd():
                 user_format["gender"]=gender
                 user_doc.set(user_format)
                 global flag
-                flag=1
+                flag=-2
                 flash("ユーザー登録が完了しました")
                 return redirect(f"/{user_id}/genre")
             except:
