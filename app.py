@@ -124,6 +124,26 @@ def matching(mangaAnswer,user_id):
         return review_query_results, user_query_results
     return None,None
 
+¥
+
+
+@app.route("/<user_id>/accesTest")
+def accesTest(user_id):
+    if 'user' in session:
+        user=user_doc_ref.document(user_id).get()
+        if(user.to_dict()["mangaAnswer"]==[99.0 for x in range(140)]):
+            return redirect(f"/{user_id}/genre")
+        else:
+            return redirect(f"/{user_id}/home")
+
+    else:
+        flash("ログインしてください")
+        return redirect("/")
+
+
+
+
+
 # home
 @app.route('/<user_id>/home')
 def homepage(user_id):
@@ -176,8 +196,107 @@ def homepage(user_id):
                     favolite_book_urls.append(image) 
     else:
         favolite_book_urls = []
-    show_intro = flag == 2
+    show_intro = flag == -1
     return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro)
+
+
+
+@app.route("/reset", methods=['POST', 'GET'])
+def reset():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        try:
+            auth.send_password_reset_email(email)
+            flash("パスワード再設定メールを送信しました")
+            return redirect("/")
+        except:
+            flash("パスワード再設定メールの送信に失敗しました")
+            return redirect("/")
+    else:
+        return render_template("reset.html")
+    
+
+
+# login
+@app.route("/", methods=['POST', 'GET'])
+def index():
+    if request.method == 'POST':
+        username=request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        
+        try:
+            auth.sign_in_with_email_and_password(email, password)
+            session['user'] = email
+            # usernameが一致する最初のドキュメントを取得
+            query = user_doc_ref.where('username', '==', username).limit(1)
+            result = query.stream()
+
+            # ドキュメントが存在すればそのIDを返す
+            for doc in result:            
+                return redirect(f'/{doc.id}/accesTest')
+            flash("ユーザー名が登録されていません")
+            return redirect("/")
+        except:
+                flash("ログインに失敗しました")
+                return redirect("/")  
+    else:
+        messages = get_flashed_messages()
+        return render_template("login.html", messages=messages)
+
+# ユーザーネームの重複を確認する関数
+def is_username_duplicate(username):
+    # usersコレクションからユーザーネームが一致するドキュメントをクエリ
+    query = user_doc_ref.where('username', '==', username)
+    
+    # クエリを実行して結果を取得
+    query_result = query.stream()
+
+    # クエリ結果が空でない場合は重複していると判断
+    return any(query_result)
+
+# ユーザー登録
+@app.route("/userAdd", methods=['POST', 'GET'])
+def userAdd():
+    if request.method == 'POST':
+        username=request.form.get('username')
+        gender=request.form.get('gender')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        # usernameが重複していない場合
+        if not is_username_duplicate(username):
+            try:
+                auth.create_user_with_email_and_password(email, password)
+                
+                # userのidを取得
+                user_id=user_doc_ref.document().id
+                # userデータベースに保存
+                user_doc=user_doc_ref.document(user_id)
+                user_format["username"]=username
+                # デフォルトで外れ値を指定しておく
+                user_format["mangaAnswer"]= [99.0 for x in range(140)]
+                user_format["gender"]=gender
+                user_doc.set(user_format)
+                global flag
+                flag=-2
+                flash("ユーザー登録が完了しました")
+                return redirect(f"/{user_id}/genre")
+            except:
+                flash("ユーザー登録に失敗しました")
+                return redirect("/")
+            
+        else:
+            flash("ユーザーネームが重複しています")
+            return redirect("/")    
+    else:
+        return render_template("userAdd.html")
+
+@app.route("/logout")
+def logput():
+    session.pop('user', None)
+    flash("ログアウトしました")
+    return redirect('/')
+
 
 # ジャンル選択
 @app.route("/<user_id>/genre",methods = ['GET',"POST"])
