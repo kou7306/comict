@@ -585,6 +585,6 @@ def toggle_bookmark(user_id):
     return jsonify({"bookmarked": new_bookmark_value})
 
 if __name__ == '__main__':
-    app.run(debug=False,port=8080)
+    app.run(debug=True,port=8080)
 
 # /fm8MhfrbKdJ5narcJvTm/home testへのURL

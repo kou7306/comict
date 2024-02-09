@@ -1,28 +1,26 @@
+  /* スピナーアニメーションのキーフレームを定義 */
+  @keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 
-.margin-screen {
-    margin: 0 auto;
-}
+  /* スピナーのスタイル */
+  .spinner {
+    border: 6px solid #f3f3f3; /* ボーダーカラー */
+    border-top: 6px solid #3498db; /* ボーダートップカラー */
+    border-radius: 50%; /* 円形のボーダー */
+    width: 50px; /* スピナーの幅 */
+    height: 50px; /* スピナーの高さ */
+    animation: spinner 1s linear infinite; /* アニメーションを適用 */
+    margin: 50px auto; /* 中央に配置 */
+  }
 
-.star{
-    background-color: white;
-    border: 0px;
-}
-label{
-    white-space: no-wrap;
-}
-.review{
-    border-bottom:1px solid gray;
-    padding:5px;
-    padding-bottom:20px;
-    padding-top:10px;
-    margin-top:15px;
-}
-body{
-    background-image: url('../images/back1.jpg');
-    background-size: cover;
-    height: 100vh;
-}
-
+  
 #loadingIndicator {
     display: none;
-}
+} 
+/* ボタンが非活性の場合のスタイル */
+#submitbutton:disabled {
+    background-color: gray; /* 背景色をグレーに変更 */
+    color: white; /* テキストの色を白に変更 */
+  }
