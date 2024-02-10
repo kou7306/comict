@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages,jsonify
 from firebaseSetUp import auth, db
-from wiki import get_manga_title,get_wikipedia_page_details
+from funcs.wiki import get_manga_title,get_wikipedia_page_details
 
 
 getTitle_bp = Blueprint('getTitle', __name__)

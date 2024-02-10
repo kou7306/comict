@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages
 from firebaseSetUp import auth, db
-from wiki import get_manga_title,get_wikipedia_page_details
+from funcs.wiki import get_manga_title,get_wikipedia_page_details
 from firebase_admin import credentials, firestore
 
 review_bp = Blueprint('review', __name__)

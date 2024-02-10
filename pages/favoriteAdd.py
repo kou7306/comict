@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages,jsonify
 from firebaseSetUp import auth, db
 from firebase_admin import credentials, firestore
-from wiki import get_manga_title,get_wikipedia_page_details
+from funcs.wiki import get_manga_title,get_wikipedia_page_details
 
 favoriteAdd_bp = Blueprint('favoriteAdd', __name__)
 user_doc_ref = db.collection('user')
