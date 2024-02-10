@@ -11,13 +11,14 @@ comics_doc_ref=db.collection('comics')
 @favoriteAdd_bp.route('/favoriteAdd', methods=['GET', 'POST'])
 def add_manga():
     user_id = session.get('user_id')
-    if not user_doc_ref.document(user_id).get().exists:
-        return redirect("/login")
+
     logged_in = True   
     user_doc = user_doc_ref.document(user_id)
     user=user_doc.get()
     favorite_titles = user.to_dict().get("favorite_manga", [])
     if request.method == 'GET':
+        if not user_id is None and not user_doc_ref.document(user_id).get().exists:
+            return redirect("/login")
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles,logged_in=logged_in) 
     elif request.method == 'POST':
         data = request.get_json()

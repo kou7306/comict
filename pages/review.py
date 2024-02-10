@@ -11,18 +11,18 @@ user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 
 
-
-
-
 # レビュー投稿
 @review_bp.route('/review')
 def review():
     if request.method == 'GET':
-        if not user_doc_ref.document(user_id).get().exists:
-            return redirect("/login")
         user_id = session.get('user_id')
+        if not user_id is None and not user_doc_ref.document(user_id).get().exists:
+            return redirect("/login")
+       
         if user_id:
             logged_in = True
+        else:
+            logged_in = False
         sort_option = request.args.get('sort_option')
         reviews = db.collection('review').stream()
         reviews = review_sort(sort_option, reviews)

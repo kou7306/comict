@@ -22,8 +22,7 @@ user_format={
 def index():
     # セッションからユーザーIDを取得（未ログインの場合はNoneが返る）
     user_id = session.get('user_id')
-    if not user_doc_ref.document(user_id).get().exists:
-        return redirect('/login')
+
     return redirect('/home')
     
 
@@ -32,7 +31,7 @@ def index():
 def home():
     # セッションからユーザーIDを取得（未ログインの場合はNoneが返る）
     user_id = session.get('user_id')
-    if not user_doc_ref.document(user_id).get().exists:
+    if not user_id is None and not user_doc_ref.document(user_id).get().exists:
         return redirect('/login') 
     # ユーザーIDの有無に応じて、テンプレートに渡す変数を設定
     if user_id:
