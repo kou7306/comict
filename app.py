@@ -44,12 +44,6 @@ app.register_blueprint(bookmark_bp)
 
 
 
-
-# all_user = user_doc_ref.stream()
-
-
-
-
 app.secret_key = "secret"
 
 if __name__ == '__main__':
