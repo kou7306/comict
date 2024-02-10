@@ -14,7 +14,7 @@
             <option value="author">著者名</option>
         </select>
         <input type="text" id="searchInput" placeholder="検索キーワードを入力">
-        <button type="button" onclick="search()">検索</button>
+        <button type="button" onclick="search('{{ user_id }}')">検索</button>
         <select name="sortOption" onChange="searchBooks()">
             <option value="b_desc">ブックマーク数で降順</option>
             <option value="b_asc">ブックマーク数で昇順</option>
