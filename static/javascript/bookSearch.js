@@ -14,17 +14,16 @@ window.addEventListener('scroll', () => {
 
 let currentResults = [];
 
-async function searchBooks(page,searchTerm) {
+async function searchBooks(user_id,page,searchTerm) {
     const searchType = document.getElementById('searchType').value;
     
     const sortOption = document.querySelector('select[name="sortOption"]').value;
-
-
+  
 
     if (searchTerm !== '' && searchEnd) {
         $.ajax({
             type: 'POST',
-            url: '/<user_id>/bookSearch',
+            url: `/${user_id}/bookSearch`,
             data: { 
                 searchType: searchType,
                 searchInput: searchTerm,
@@ -93,7 +92,7 @@ function test(){
 
 
 //　作品名を一意に
-async function search(page) {
+async function search(user_id,page) {
     const query = document.getElementById('searchInput').value.trim();
     searchEnd = false;
 
@@ -122,7 +121,7 @@ async function search(page) {
 
   
         searchEnd = true;
-        searchBooks(page, selectedTitle);
+        searchBooks(user_id,page, selectedTitle);
             
 
     } catch (error) {
