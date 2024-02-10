@@ -20,7 +20,6 @@ async function searchBooks(user_id,page,searchTerm) {
     const sortOption = document.querySelector('select[name="sortOption"]').value;
   
 
-
     if (searchTerm !== '' && searchEnd) {
         $.ajax({
             type: 'POST',
