@@ -1,17 +1,27 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages
 from firebaseSetUp import auth, db
+from funcs.wiki import get_manga_title,get_wikipedia_page_details
+from firebase_admin import credentials, firestore
+from datetime import datetime
+from funcs.review_sort import review_sort
 
 review_bp = Blueprint('review', __name__)   
 
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 
-@review_bp.route('/review', methods = ['GET','POST'])
+
+
+
+
+# レビュー投稿
+@review_bp.route('/review')
 def review():
     if request.method == 'GET':
         user_id = session.get('user_id')
         if user_id:
             logged_in = True
-        else:
-            logged_in = False
-        return render_template("review.html",logged_in=logged_in)
+        sort_option = request.args.get('sort_option')
+        reviews = db.collection('review').stream()
+        reviews = review_sort(sort_option, reviews)
+        return render_template("review.html",user_id=user_id, reviews=reviews, sort_option=sort_option,logged_in=logged_in,user_doc_ref=user_doc_ref)
