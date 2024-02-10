@@ -17,10 +17,10 @@ def matching(mangaAnswer,user_id):
     if(all_user == []):
         print("データがありません")
     for user in all_user:
-        print(user.to_dict()["mangaAnswer"])
+
         if(user.id!=user_id): # 自分以外
             
-            print('データ',user.to_dict()["mangaAnswer"])
+
             all_user_vector.append(user.to_dict()["mangaAnswer"])
             all_users.append(user.to_dict())
     

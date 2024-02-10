@@ -1,18 +1,10 @@
 from flask import Flask, render_template, request, jsonify, redirect, session, current_app,url_for, flash, get_flashed_messages
-import faiss
-import numpy as np
-import pyrebase
-import firebase_admin
-from firebase_admin import credentials, firestore
-from bs4 import BeautifulSoup
-import requests
-import os
-import wikipedia
-from wiki import get_manga_title,get_wikipedia_page_details
+
+
+
 from firebaseSetUp import auth, db
 from pages.auth import auth_bp
 from pages.home import home_bp
-from funcs.get_book import get_rakuten_book_cover
 from pages.genre import genre_bp
 from pages.question import question_bp
 from pages.review import review_bp
