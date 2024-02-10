@@ -18,7 +18,7 @@ user_format={
 
 # login
 @auth_bp.route("/login", methods=['POST', 'GET'])
-def index():
+def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
