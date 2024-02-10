@@ -7,12 +7,16 @@ review_doc_ref=db.collection('review')
 comics_doc_ref=db.collection('comics')
 
 # 作品詳細ページ
-@detail_bp.route('/<user_id>/<title>/detail')
-def detail(user_id,title):
+@detail_bp.route('/<title>/detail')
+def detail(title):
     # 詳細情報をwikiから取得
     query = review_doc_ref.where('mangaTitle', '==', title).get()
     url = comics_doc_ref.document(title).get().to_dict()["url"]
     bookmark_num = len(comics_doc_ref.document(title).get().to_dict()["bookmark"])
+    user_id = session.get('user_id')
+    if user_id:
+        logged_in = True
+    else:
+        logged_in = False    
     
-    
-    return render_template("detail.html",user_id=user_id,title=title,query=query,url=url,bookmark_num=bookmark_num)
+    return render_template("detail.html",title=title,query=query,url=url,bookmark_num=bookmark_num,logged_in=logged_in)

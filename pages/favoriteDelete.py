@@ -5,8 +5,9 @@ favoriteDelete_bp = Blueprint('favoriteDelete', __name__)
 user_doc_ref = db.collection('user')
 
 # 好きな作品を削除
-@favoriteDelete_bp.route('/<user_id>/favoriteDelete', methods=['POST'])
-def delete_manga(user_id):
+@favoriteDelete_bp.route('/favoriteDelete', methods=['POST'])
+def delete_manga():
+    user_id = session.get('user_id')
     user_doc = user_doc_ref.document(user_id)
     user=user_doc.get()
     favorite_titles = user.to_dict().get("favorite_manga", [])

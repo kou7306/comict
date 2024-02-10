@@ -9,9 +9,18 @@ user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 
 # ユーザーページ
-@userpage_bp .route('/<user_id>/userpage', methods=['GET', 'POST'])
-def user_page(user_id):   
-
+@userpage_bp .route('/userpage', methods=['GET', 'POST'])
+def user_page():   
+    user_id = session.get('user_id')
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect("/login")
+    if not user_id:
+        return redirect('/login')
+    user_id = session.get('user_id')
+    if user_id:
+        logged_in = True
+    else:
+        logged_in = False   
     user_doc = user_doc_ref.document(user_id)
     user=user_doc.get()
     user_data=user.to_dict()
@@ -64,6 +73,6 @@ def user_page(user_id):
  
 
 
-    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=combined_list, genre_choice=genre_choice)
+    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=combined_list, genre_choice=genre_choice, logged_in=logged_in)
 
 

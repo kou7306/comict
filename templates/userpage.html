@@ -30,7 +30,7 @@
             {% for title in favorite_titles %}
                 <div class="title">{{ title }}</div>
             {% endfor %}
-            <h2><a href="/{{user_id}}/favoriteAdd">お気に入り作品を編集する</a></h2>
+            <h2><a href="/favoriteAdd">お気に入り作品を編集する</a></h2>
         </div>
 
         <div class="follow">
@@ -39,7 +39,7 @@
             <li>
                 <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
                 <div>
-                  <a href="/{{user_id}}/{{follow[1]}}/userpage"><h3>{{follow[0]}}</h3></a>
+                  <a href="/{{follow[1]}}/userpage"><h3>{{follow[0]}}</h3></a>
                  
                 </div>    
               </li>
