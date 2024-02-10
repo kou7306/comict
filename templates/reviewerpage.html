@@ -60,7 +60,7 @@
             }
         
             // サーバーにPOSTリクエストを送信
-            fetch('/{{user_id}}/{{reviewer_id}}/userpage', {
+            fetch('/{{reviewer_id}}/userpage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,13 +70,19 @@
             .then(response => response.json())
             .then(data => {
                 console.log('成功:', data);
-                is_following=data.isFollowing
-                // フォロー状態に応じて表示を変更
-                if (is_following) {  
-                    followButton.textContent = 'フォロー解除';
-                } else {
-                    followButton.textContent = 'フォロー';
+                if (data.isFollowing==-1) {
+                    window.location.href = '/login';
                 }
+                else{
+                    is_following=data.isFollowing
+                    // フォロー状態に応じて表示を変更
+                    if (is_following) {  
+                        followButton.textContent = 'フォロー解除';
+                    } else {
+                        followButton.textContent = 'フォロー';
+                    }
+                }
+
             })
             .catch((error) => {
                 console.error('エラー:', error);

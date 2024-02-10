@@ -6,10 +6,16 @@ question_bp = Blueprint('question', __name__)
 user_doc_ref = db.collection('user')
 
 # アンケート回答を受信
-@question_bp.route('/<user_id>/<genre>/question', methods = ['GET','POST'])
-def question(user_id,genre):
+@question_bp.route('/<genre>/question', methods = ['GET','POST'])
+def question(genre):
+    user_id = session.get('user_id')
     if request.method == 'GET':
-        return render_template("question"+ genre + '.html',user_id=user_id,genre=genre)
+        user_id = session.get('user_id')
+        if user_id:
+            logged_in = True
+        else:
+            logged_in = False
+        return render_template("question"+ genre + '.html',user_id=user_id,genre=genre,logged_in=logged_in)
     else:
 
         #長さ20*８のリストを作成し、０で初期化する
@@ -38,4 +44,4 @@ def question(user_id,genre):
         user_doc.update(update_data)
      
         
-        return redirect(f'/{user_id}/home')
+        return redirect('/home')

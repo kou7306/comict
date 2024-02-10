@@ -18,7 +18,7 @@ user_format={
 }
 
 # login
-@auth_bp.route("/", methods=['POST', 'GET'])
+@auth_bp.route("/login", methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
         username=request.form.get('username')
@@ -26,20 +26,25 @@ def index():
         password = request.form.get('password')
         
         try:
-            auth.sign_in_with_email_and_password(email, password)
+            user = auth.sign_in_with_email_and_password(email, password)
             session['user'] = email
+            # ユーザーの UID を取得
+            user_id = user['localId']
+            print('user' + user_id)
+            # userのidをセッションに保存
+            session['user_id'] = user_id
             # usernameが一致する最初のドキュメントを取得
             query = user_doc_ref.where('username', '==', username).limit(1)
             result = query.stream()
 
             # ドキュメントが存在すればそのIDを返す
             for doc in result:            
-                return redirect(f'/{doc.id}/home')
+                return redirect('/')
             flash("ユーザー名が登録されていません")
-            return redirect("/")
+            return redirect("/login")
         except:
                 flash("ログインに失敗しました")
-                return redirect("/")  
+                return redirect("/login")  
     else:
         messages = get_flashed_messages()
         return render_template("login.html", messages=messages)
@@ -66,10 +71,10 @@ def userAdd():
         # usernameが重複していない場合
         if not is_username_duplicate(username):
             try:
-                auth.create_user_with_email_and_password(email, password)
-                
-                # userのidを取得
-                user_id=user_doc_ref.document().id
+                user = auth.create_user_with_email_and_password(email, password)
+                user_id = user['localId']  
+                # userのidをセッションに保存
+                session['user_id'] = user_id 
                 # userデータベースに保存
                 user_doc=user_doc_ref.document(user_id)
                 user_format["username"]=username
@@ -79,14 +84,14 @@ def userAdd():
                 user_doc.set(user_format)
                 session['flag'] = -2
                 flash("ユーザー登録が完了しました")
-                return redirect(f"/{user_id}/genre")
+                return redirect(f"/genre")
             except:
                 flash("ユーザー登録に失敗しました")
-                return redirect("/")
+                return redirect("/login")
             
         else:
             flash("ユーザーネームが重複しています")
-            return redirect("/")    
+            return redirect("/login")    
     else:
         return render_template("userAdd.html")
 
@@ -94,6 +99,7 @@ def userAdd():
 @auth_bp.route("/logout")
 def logput():
     session.pop('user', None)
+    session.pop('user_id', None)
     flash("ログアウトしました")
     return redirect('/')
 

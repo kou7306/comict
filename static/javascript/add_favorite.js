@@ -17,7 +17,7 @@ function inputFunction(user_id,title){
     };
 
     // fetch APIを使用してリクエストを送信
-    url = "/" + user_id + "/favoriteAdd";   
+    url = "/favoriteAdd";   
     fetch(url, options)
         .then(response => response.json()) // レスポンスのJSONを解析
         .then(data => {
@@ -107,7 +107,7 @@ function delete_manga(user_id,title){
     };
 
     // fetch APIを使用してリクエストを送信
-    url = "/" + user_id + "/favoriteDelete";   
+    url =  "/favoriteDelete";   
     fetch(url, options)
         .then(response => response.json()) // レスポンスのJSONを解析
         .then(data => {

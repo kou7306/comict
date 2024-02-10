@@ -2,10 +2,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     // ブックマークトグルボタンのクリックイベント
     document.getElementById("bookmarkToggle").addEventListener("click", function () {
-        const user_id = this.getAttribute("user_id");
         // ローカルストレージから現在のブックマークの状態を取得
         const currentBookmarkState = localStorage.getItem("bookmarkState") === "true";
-        const newBookmarkState = !currentBookmarkState;
+    
         var bookmarkNumElement = document.getElementById('bookmark_num');
         // HTML要素を取得
         var h1Element = document.querySelector('.title1');
@@ -13,19 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // テキスト内容を取得
         var titleText = h1Element.textContent || h1Element.innerText;
 
-        // 結果をコンソールに出力
-        console.log(titleText);
 
-        // ローカルストレージに新しいブックマークの状態を保存
-        localStorage.setItem("bookmarkState", newBookmarkState);
-
-        // ブックマークトグルボタンの状態を更新
-        updateBookmarkButtonState(newBookmarkState);
 
 
         
         // サーバーにブックマークデータを送信
-        fetch(`/${user_id}/bookmark`, {
+        fetch(`/bookmark`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -36,12 +28,29 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => response.json())
         .then(data => {
-            
-            // ブックマーク数を更新
+            // ログインしていない場合はログインページにリダイレクト
+            console.log(data.bookmarked);
+            if (data.bookmarked == -1) {
+                window.location.href = '/login';
+            }
+            else{
 
-            console.log("Bookmark toggled:", data);
-            bookmarkNumElement.textContent = `ブックマーク数：${data.bookmarked}`;
+                // ブックマークの状態を反転
+                const newBookmarkState = !currentBookmarkState;
+                // ローカルストレージに新しいブックマークの状態を保存
+                localStorage.setItem("bookmarkState", newBookmarkState);
+
+                // ブックマークトグルボタンの状態を更新
+                updateBookmarkButtonState(newBookmarkState);
+
+                // ブックマーク数を更新
+
+                console.log("Bookmark toggled:", data);
+                bookmarkNumElement.textContent = `ブックマーク数：${data.bookmarked}`;
     
+            }
+
+  
         })
         .catch(error => {
             console.error("Error toggling bookmark:", error);

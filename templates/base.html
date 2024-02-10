@@ -24,31 +24,42 @@
      <header class="bg-gray-800 fixed top-0 w-full z-10 shadow-md">
       <nav class="container mx-auto flex items-center justify-between p-4">
           <div class="text-white">
-              <a class="text-xl font-bold no-underline hover:text-white" href="/{{user_id}}/home">
+              <a class="text-xl font-bold no-underline hover:text-white" href="/">
                   Comict
               </a>
           </div>
           <div class="flex items-center">
               <ul class="flex space-x-4">
                   <li>
-                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/{{user_id}}/home">ホーム</a>
+                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/">ホーム</a>
                   </li>
                   <li>
-                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/{{user_id}}/userpage">マイページ</a>
+                    <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/genre">アンケート</a>
+                </li>
+                  {% if logged_in %}
+                  <li>
+                    <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/logout">ログアウト</a>
+                  </li>
+                  {% else %}           
+                  <li>
+                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/login">ログイン</a>
+                  </li>
+                  {% endif %}
+                  <li>
+                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/review">レビュー</a>
                   </li>
                   <li>
-                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/{{user_id}}/review">レビュー投稿</a>
+                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/comic">漫画</a>
                   </li>
                   <li>
-                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/{{user_id}}/genre">個性の更新</a>
-                  </li>
-                  <li>
-                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/{{user_id}}/bookSearch">作品の検索</a>
-                  </li>
+                    <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/userpage">マイページ</a>
+                </li>
               </ul>
           </div>
       </nav>
   </header>
+
+ 
   <!-- 他のコンテンツ -->
   
     {% block content %}{% endblock %}

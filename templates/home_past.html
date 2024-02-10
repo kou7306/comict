@@ -6,7 +6,6 @@
 {% endblock %} {% block content%}
 
 
-{% if logged_in %}
 
 
   <div class="mx-20">
@@ -19,13 +18,13 @@
               {% for title, url in data %}
               {% if url != "no" %}
               <div class="swiper-slide bg-center bg-cover">
-                  <a href="/{{ title }}/detail" >
+                  <a href="/{{ user_id }}/{{ title }}/detail" >
                       <img class="block w-full h-full" src="{{ url }}" alt="">
                   </a>
               </div>
               {% else %}
               <div class="swiper-slide">
-                <a href="/{{ title }}/detail">
+                <a href="/{{ user_id }}/{{ title }}/detail">
                     <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
                 </a>
               </div>             
@@ -60,7 +59,7 @@
 
             <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
             <div>
-              <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+              <a href="/{{user_id}}/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
 
 
           </div>    
@@ -81,7 +80,7 @@
           <li class="w-2/12 text-center box-border m-2">
           <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
           <div>
-            <a href="/{{follow[1]}}/userpage" class="hover:text-blue-500">{{follow[0]}}</a>
+            <a href="/{{user_id}}/{{follow[1]}}/userpage" class="hover:text-blue-500">{{follow[0]}}</a>
             
           </div>    
         </li>
@@ -89,7 +88,6 @@
    
       </ul>
     </section>
-{% endif %}
 
     <section id="timeline">
         <h2 class="text-3xl">タイムライン</h2>
@@ -97,8 +95,8 @@
           {% for review in review_doc_ref.stream() %}
           
           <li class="my-4 p-4 bg-gray-800">
-            <p><a href="/{{review.to_dict()['user_id']}}/userpage">{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</a></p>
-            <a href="/{{review.to_dict()['mangaTitle']}}/detail" class="hover:text-blue-500">
+            <p>{{review.to_dict()["username"]}}</p>
+            <a href="/{{ user_id }}/{{review.to_dict()['mangaTitle']}}/detail" class="hover:text-blue-500">
               タイトル：{{review.to_dict()["mangaTitle"]}}
             </a>
             <p>評価：{{review.to_dict()["evaluation"]}}</p>
@@ -114,7 +112,16 @@
     <script src="../static/javascript/home.js"></script>
     <script src="https://unpkg.com/@sjmc11/tourguidejs/dist/tour.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+//       document.addEventListener("DOMContentLoaded", function() {
+//         if ({{ show_intro | tojson }}) {
+//         introJs().start();
+//     }
+//  });
+  if ({{ show_intro | tojson }}) {
+    const tg = new tourguide.TourGuideClient();
 
+    tg.start();
+  }
     </script>
 {% endblock %}
 
