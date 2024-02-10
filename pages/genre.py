@@ -7,6 +7,8 @@ user_doc_ref = db.collection('user')
 @genre_bp.route("/genre",methods = ['GET',"POST"])
 def genre():
     user_id = session.get('user_id')
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect("/login")
     # ログインしてない場合
     if not user_id:
         return redirect('/login')

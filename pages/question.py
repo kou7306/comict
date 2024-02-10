@@ -11,6 +11,8 @@ def question(genre):
     user_id = session.get('user_id')
     if request.method == 'GET':
         user_id = session.get('user_id')
+        if not user_doc_ref.document(user_id).get().exists:
+            return redirect('/login') 
         if user_id:
             logged_in = True
         else:

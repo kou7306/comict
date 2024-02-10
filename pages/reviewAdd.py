@@ -20,6 +20,8 @@ review_format={
 @reviewAdd_bp.route('/reviewAdd',methods=['GET','POST'])
 def review():
     user_id = session.get('user_id')
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect('/login') 
     if request.method == 'GET':
         if user_id:
             logged_in = True

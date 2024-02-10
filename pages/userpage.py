@@ -12,6 +12,8 @@ review_doc_ref=db.collection('review')
 @userpage_bp .route('/userpage', methods=['GET', 'POST'])
 def user_page():   
     user_id = session.get('user_id')
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect("/login")
     if not user_id:
         return redirect('/login')
     user_id = session.get('user_id')

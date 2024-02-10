@@ -18,6 +18,8 @@ review_doc_ref=db.collection('review')
 @review_bp.route('/review')
 def review():
     if request.method == 'GET':
+        if not user_doc_ref.document(user_id).get().exists:
+            return redirect("/login")
         user_id = session.get('user_id')
         if user_id:
             logged_in = True

@@ -15,6 +15,8 @@ is_following=False
 @reviewerpage_bp.route('/<reviewer_id>/userpage', methods = ['GET','POST'])
 def reviewer(reviewer_id):
     user_id = session.get('user_id')
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect("/login")
     if request.method == 'GET':
         user_id = session.get('user_id')
         if user_id:

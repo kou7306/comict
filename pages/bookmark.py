@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, session, flash,
 from firebaseSetUp import auth, db
 
 bookmark_bp = Blueprint('bookmark', __name__)
-
+user_doc_ref = db.collection('user')
 comics_doc_ref=db.collection('comics')
 
 # ブックマーク機能
@@ -10,7 +10,8 @@ comics_doc_ref=db.collection('comics')
 def toggle_bookmark():
     data = request.get_json()
     user_id = session.get("user_id")
-
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect("/login")
     # 漫画のタイトルを取得
     title = data.get("title")
     if not user_id:

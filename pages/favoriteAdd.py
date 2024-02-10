@@ -11,6 +11,8 @@ comics_doc_ref=db.collection('comics')
 @favoriteAdd_bp.route('/favoriteAdd', methods=['GET', 'POST'])
 def add_manga():
     user_id = session.get('user_id')
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect("/login")
     logged_in = True   
     user_doc = user_doc_ref.document(user_id)
     user=user_doc.get()

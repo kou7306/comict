@@ -20,14 +20,20 @@ user_format={
 
 @home_bp.route('/', methods=['POST', 'GET'])
 def index():
+    # セッションからユーザーIDを取得（未ログインの場合はNoneが返る）
+    user_id = session.get('user_id')
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect('/login')
     return redirect('/home')
+    
 
 
 @home_bp.route('/home', methods=['POST', 'GET'])
 def home():
     # セッションからユーザーIDを取得（未ログインの場合はNoneが返る）
     user_id = session.get('user_id')
-    
+    if not user_doc_ref.document(user_id).get().exists:
+        return redirect('/login') 
     # ユーザーIDの有無に応じて、テンプレートに渡す変数を設定
     if user_id:
         logged_in = True
