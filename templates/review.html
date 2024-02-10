@@ -2,7 +2,7 @@
 <link href="../static/css/review.css" rel="stylesheet">
 {% endblock %} {% block content%}
 
-  <main class="mb-12 mx-auto px-12 py-12 bg-gray-800 w-3/4">
+<main class="mb-12 mx-auto px-12 py-12 bg-gray-800 w-3/4">
     <!-- 本文スタート -->
   <!-- レビュー記録フォーム -->
     <form action="/{{user_id}}/review" method="POST">
@@ -43,46 +43,30 @@
               
         </div>
     </form>
-
-<!-- レビュー一覧 -->
-
-    <!-- <div class="container review">
-        <div>
-            hogehoge
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-            <i class="fa-solid fa-star" style="color:gray"></i>
-            <i class="fa-solid fa-star" style="color:gray"></i>
-            <i class="fa-solid fa-star" style="color:gray"></i>
-        </div>
-        <div>面白かったけど、○○の部分がよく分からない</div>
-    </div> 
-    <div class="container review">
-        <div>
-            nyonyonyo
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-            <i class="fa-solid fa-star" style="color:gray"></i>
-            <i class="fa-solid fa-star" style="color:gray"></i>
-            <i class="fa-solid fa-star" style="color:gray"></i>
-            <i class="fa-solid fa-star" style="color:gray"></i>
-        </div>
-        <div>よく分からない</div>
-    </div>
-
-    <div class="container review">
-        <div>
-            sakura
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-            <i class="fa-solid fa-star" style="color:#ffcd00"></i>
-        </div>
-        <div>とてもタメになりました！！最高です！！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！サイコゥ！</div>
-    </div> -->
-    <!-- 本文エンド -->
-  </main>
-
+</main>
+<section id="review" class="mb-12 mx-auto px-12 py-12 bg-gray-800 w-3/4">
+    <h2 class="text-3xl">レビュー一覧</h2>
+    <form method="get">
+      <select name="sort_option" onchange="this.form.submit()">
+          <option value="evaluation_desc" {{ 'selected' if sort_option == 'evaluation_desc' else '' }}>評価の高い順</option>
+          <option value="evaluation_asc" {{ 'selected' if sort_option == 'evaluation_asc' else '' }}>評価の低い順</option>
+          <option value="newest" {{ 'selected' if sort_option == 'newest' else '' }}>新しい順</option>
+          <option value="oldest" {{ 'selected' if sort_option == 'oldest' else '' }}>古い順</option>
+      </select>
+  </form>
+    <ul>
+      {% for review in reviews %}
+      <li class="my-4 p-4 bg-gray-700">
+        <a href="/{{ user_id }}/{{ review.get("mangaTitle") }}/detail" class="hover:text-blue-500">
+          タイトル：{{ review.get("mangaTitle") }}
+        </a>
+        <p>{{ review.get("username") }}</p>
+        <p>評価：{{ review.get("evaluation") }}</p>
+        <p>{{ review.get("contents") }}</p>
+      </li>
+      {% endfor %}
+  </ul>
+</section>
 
 
 

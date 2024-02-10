@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, session, flash,
 from firebaseSetUp import auth, db
 from funcs.wiki import get_manga_title,get_wikipedia_page_details
 from firebase_admin import credentials, firestore
+from datetime import datetime
+from funcs.review_sort import review_sort
 
 review_bp = Blueprint('review', __name__)
 user_doc_ref = db.collection('user')
@@ -14,13 +16,17 @@ review_format={
     "evaluation":None,
     "contents":None,
     "username":None,
+    "created_at":None
 }
 
 # レビュー投稿
 @review_bp.route('/<user_id>/review',methods=['GET','POST'])
 def review(user_id):
     if request.method == 'GET':
-        return render_template("review.html",user_id=user_id)
+        sort_option = request.args.get('sort_option')
+        reviews = db.collection('review').stream()
+        reviews = review_sort(sort_option, reviews)
+        return render_template("review.html",user_id=user_id, reviews=reviews, sort_option=sort_option)
     else:
         # formから取得
         manga_title = request.form['work_name']
@@ -36,6 +42,7 @@ def review(user_id):
         review_format["mangaTitle"]=manga_title
         review_format["contents"]=comment
         review_format["username"]=user.to_dict()["username"]
+        review_format["created_at"]= datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         review_document=review_doc_ref.document() 
         review_document.set(review_format)
         review_document_id = review_document.id
