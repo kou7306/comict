@@ -36,15 +36,7 @@
                   <li>
                     <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/genre">アンケート</a>
                 </li>
-                  {% if logged_in %}
-                  <li>
-                    <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/logout">ログアウト</a>
-                  </li>
-                  {% else %}           
-                  <li>
-                      <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/login">ログイン</a>
-                  </li>
-                  {% endif %}
+
                   <li>
                       <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/review">レビュー</a>
                   </li>
@@ -54,6 +46,16 @@
                   <li>
                     <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/userpage">マイページ</a>
                 </li>
+
+                {% if logged_in %}
+                <li>
+                  <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/logout">ログアウト</a>
+                </li>
+                {% else %}           
+                <li>
+                    <a class="text-white py-2 px-3 hover:bg-gray-700 rounded transition-colors duration-300" href="/login">ログイン</a>
+                </li>
+                {% endif %}
               </ul>
           </div>
       </nav>
