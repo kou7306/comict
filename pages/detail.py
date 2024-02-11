@@ -52,8 +52,5 @@ def detail(title):
             "like_count": like_count,
             "user_liked": user_liked
         })
-        print("review:", reviews)
-    
-    logged_in = bool(user_id)
-    
+        
     return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, reviews=reviews, logged_in=logged_in, bookmarked=bookmarked)
