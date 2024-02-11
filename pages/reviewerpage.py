@@ -33,7 +33,7 @@ def reviewer(reviewer_id):
             # そのユーザーをフォローしてるか
             user_doc = user_doc_ref.document(user_id)
             # 'follow' フィールド中に 'reviewername' が含まれているか確認
-            is_following = any(user == reviewername for user in user_doc.get().to_dict()['follow'])
+            is_following = any(user == reviewer_id for user in user_doc.get().to_dict()['follow'])
         else:
             is_following = False
 
@@ -67,7 +67,7 @@ def reviewer(reviewer_id):
         rev_genre_choice = genre_list[int(rev_genre_value)-1]
 
 
-        favorite_titles = reviewer_doc.to_dict().get('favorite_manga', [])  # favorite_titlesが存在しない場合は空のリストを使う
+        favorite_titles = reviewer_doc.to_dict().get('bokmark', [])  # favorite_titlesが存在しない場合は空のリストを使う
         return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_titles=favorite_titles,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in)
     else:
         data = request.get_json()
