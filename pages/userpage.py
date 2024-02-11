@@ -58,7 +58,7 @@ def user_page():
     genre_choice = genre_list[int(genre_value)-1]
 
     #ブックマークをデータベースから取得
-    favorite_titles = user_data["favorite_manga"]
+    favorite_titles = user_data["bookmark"]
 
     # フォローしたユーザーのIDを取得
     follow_data = []
