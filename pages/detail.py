@@ -22,6 +22,22 @@ def detail(title):
         url = "#"
         bookmark_num = 0
         
+    if not user_id is None and not user_doc_ref.document(user_id).get().exists:
+        return redirect("/login")
+    
+    if user_id:
+        logged_in = True
+        current_bookmark = comic_data["bookmark"]
+        # bookmarkに自分のIDが含まれているか
+        if user_id in current_bookmark:
+            bookmarked = True
+        else:
+            bookmarked = False
+    else:
+        logged_in = False
+        bookmarked = False
+        
+        
     reviews = []
     for doc in query:
         doc_id = doc.id
@@ -40,4 +56,4 @@ def detail(title):
     
     logged_in = bool(user_id)
     
-    return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, reviews=reviews, logged_in=logged_in)
+    return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, reviews=reviews, logged_in=logged_in, bookmarked=bookmarked)
