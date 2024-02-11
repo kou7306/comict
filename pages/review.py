@@ -11,7 +11,7 @@ user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 
 
-# レビュー投稿
+# レビュー一覧
 @review_bp.route('/review')
 def review():
     if request.method == 'GET':

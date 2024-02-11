@@ -19,6 +19,7 @@ from pages.getTitle import getTitle_bp
 from pages.bookmark import bookmark_bp
 from pages.comic import comic_bp
 from pages.reviewAdd import reviewAdd_bp
+from pages.reviewLikes import reviewLikes_bp
 
 
 app = Flask(__name__)
@@ -36,7 +37,8 @@ app.register_blueprint(bookSearch_bp)
 app.register_blueprint(getTitle_bp)
 app.register_blueprint(bookmark_bp)
 app.register_blueprint(comic_bp)
-app.register_blueprint(reviewAdd_bp)    
+app.register_blueprint(reviewAdd_bp)  
+app.register_blueprint(reviewLikes_bp)  
 
 
 
