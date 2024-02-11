@@ -6,7 +6,9 @@
 
   <main>
     <h1 class="titleName">{{title}}</h1>
-    <p><a href={{url}}>リンク </a></p>
+    {% if url != "#" %}
+    <p><a href={{url}}>wikipedia</a></p>
+    {% endif %}
 
     <!-- ブックマークトグルボタン -->
     {% if bookmarked %}
@@ -16,15 +18,24 @@
     {% endif %}
 
     <p id="bookmark_num">ブックマーク数：{{bookmark_num}}</p>
-    {% for doc in query %}
-    <div class="review">
-      <p>{{doc.to_dict()["username"]}}</p>
-      <p>評価：{{doc.to_dict()["evaluation"]}}</p>
-      <p>{{doc.to_dict()["contents"]}}</p>
+
+    <h2>レビュー</h2>
+    {% if reviews %}
+    <div id="reviewContainer">
+      {% for review in reviews %}
+      <div class="review">
+        <p>ユーザー名: {{ review.data.username }}</p>
+        <p>評価: {{ review.data.evaluation }}</p>
+        <p>{{ review.data.contents }}</p>
+        <p id="likeCount-{{ review.id }}">いいね数: {{ review.like_count }}</p>
+        <button id="likeButton-{{ review.id }}" onclick="toggleLike('{{ review.id }}')">いいね</button>
+      </div>
+      {% endfor %}
     </div>
-    {% endfor %}
+    {% else %}
+    <p>レビューはありません</p>
+    {% endif %}
   </main>
-
-
-    <script src="../../static/javascript/bookmark.js"></script>
+  <script src="../../static/javascript/bookmark.js"></script>
+  <script src="../../static/javascript/reviewLike.js"></script>
 {% endblock %}
