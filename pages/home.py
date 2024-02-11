@@ -9,7 +9,7 @@ review_doc_ref=db.collection('review')
 user_format={
     "gender":None,
     "mangaAnswer":[],
-    "favorite_manga":[],
+    "bookmark":[],
     "username":None,
     "follow":[],
     "user_query":[],
@@ -81,8 +81,8 @@ def home():
         # お気に入り漫画の画像取得
         if user.to_dict()['user_query'] != None:
             for id in user.to_dict()['user_query']:
-                favorite_titles = user_doc_ref.document(id).get().to_dict()["favorite_manga"]
-                if favorite_titles != None:
+                if user_doc_ref.document(id).get().to_dict()["bookmark"] != None:
+                    favorite_titles = user_doc_ref.document(id).get().to_dict()["bookmark"]
                     for title in favorite_titles:    
                         image=get_rakuten_book_cover(title)
                         favolite_book_urls.append(image) 

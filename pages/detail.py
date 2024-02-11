@@ -9,7 +9,6 @@ comics_doc_ref=db.collection('comics')
 # 作品詳細ページ
 @detail_bp.route('/<title>/detail')
 def detail(title):
-    # 詳細情報をwikiから取得
     query = review_doc_ref.where('mangaTitle', '==', title).get()
     comics_doc = comics_doc_ref.document(title).get()
     user_id = session.get('user_id')

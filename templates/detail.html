@@ -5,12 +5,18 @@
     
 
   <main>
-    <h1 class="title1">{{title}}</h1>
+    <h1 class="titleName">{{title}}</h1>
     {% if url != "#" %}
     <p><a href={{url}}>wikipedia</a></p>
     {% endif %}
+
     <!-- ブックマークトグルボタン -->
+    {% if bookmarked %}
+    <button id="bookmarkToggle" class="btn btn-primary">ブックマーク解除</button>
+    {% else %}
     <button id="bookmarkToggle" class="btn btn-primary">ブックマーク</button>
+    {% endif %}
+
     <p id="bookmark_num">ブックマーク数：{{bookmark_num}}</p>
 
     <h2>レビュー</h2>

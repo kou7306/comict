@@ -15,7 +15,7 @@ def add_manga():
     logged_in = True   
     user_doc = user_doc_ref.document(user_id)
     user=user_doc.get()
-    favorite_titles = user.to_dict().get("favorite_manga", [])
+    favorite_titles = user.to_dict().get("bookmark", [])
     if request.method == 'GET':
         if not user_id is None and not user_doc_ref.document(user_id).get().exists:
             return redirect("/login")
@@ -26,7 +26,12 @@ def add_manga():
         print(manga_title)
         # ユーザードキュメントの更新
         user_doc.update({
-            'favorite_manga': firestore.ArrayUnion([manga_title])
+            'bookmark': firestore.ArrayUnion([manga_title])
+        })
+
+        # comicsドキュメントのbookmarkを更新
+        comics_doc_ref.document(manga_title).update({
+            'bookmark': firestore.ArrayUnion([user_id])
         })
 
         #　漫画テーブルの更新
