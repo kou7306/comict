@@ -19,9 +19,11 @@ def toggle_likes(review_id):
         likes = review_doc.to_dict().get('likes', [])
         if user_id in likes:
             review_ref.update({'likes': firestore.ArrayRemove([user_id])})
+            review_ref.update({'likes_count': firestore.Increment(-1)})
             return jsonify({'status': 'unliked'}), 200
         else:
             review_ref.update({'likes': firestore.ArrayUnion([user_id])})
+            review_ref.update({'likes_count': firestore.Increment(1)})
             return jsonify({'status': 'liked'}), 200
     else:
         return jsonify({"error": "Review not found"}), 404
