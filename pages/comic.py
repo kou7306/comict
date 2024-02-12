@@ -8,6 +8,7 @@ comic_bp = Blueprint('comic', __name__)
 
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
+suggestion_doc_ref=db.collection('suggestion')
 
 @comic_bp.route('/comic', methods = ['GET','POST'])
 def comic():
@@ -38,7 +39,7 @@ def comic():
                         title=review.to_dict()["mangaTitle"]  
                         titles.append(title)
                         #image=get_rakuten_book_cover(title)
-                        image=get_rakuten_book_cover(title)
+                        image=get_yahoo_book_cover(title)
                         book_urls.append(image)
                 data=list(zip(titles,book_urls))
             else:    
@@ -57,10 +58,10 @@ def comic():
 
 
             # レビュー数が多い漫画の表示
-            sorted_top_comics = most_review_comics(10, 1)  # 上位 10 件の漫画を取得し、期間は過去 30 日間とします
-            top_book_urls =[]
+            top_book_urls = []
+
             # 上位の漫画名のみを取り出す
-            top_comics_names = [comic[0] for comic in sorted_top_comics]
+            top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics']
             for title in top_comics_names:    
                 image=get_rakuten_book_cover(title)
                 top_book_urls.append(image)          

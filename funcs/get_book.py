@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
+
 # 楽天ブックスAPIを叩く関数
 def get_rakuten_book_cover(book_title):
     api_key = '1078500249535096776'
