@@ -20,7 +20,7 @@ def question(genre):
     else:
 
         #長さ20*８のリストを作成し、０で初期化する
-        mangaAnswer = [0.0] *140
+        mangaAnswer = [0.0] *141
 
         genre=int(genre)
         first_index = 20 * (genre - 1)
@@ -31,15 +31,19 @@ def question(genre):
             answer = request.form[question_key]
             answer=float(answer)
             mangaAnswer[first_index + (i-1)]=answer
-            
+        
+        # genre情報を格納
+        mangaAnswer[140] = float(genre)
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
         user_doc = user_doc_ref.document(user_id)
         user=user_doc.get()
         # データベースにデータを格納
 
         user_doc.update({'mangaAnswer':mangaAnswer,'username':user.to_dict()["username"]})
+        print('mangaAnswer')
+        print(mangaAnswer)
         # マッチング
-        review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
+        review_query, user_query =matching(mangaAnswer,user_id)
        
         update_data = {"user_query":  user_query,"review_query":review_query}
         user_doc.update(update_data)

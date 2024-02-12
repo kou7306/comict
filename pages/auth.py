@@ -8,7 +8,7 @@ user_doc_ref = db.collection('user')
 # ユーザーデータベースにいれるときのデータの型
 user_format={
     "mangaAnswer":[],
-    "favorite_manga":[],
+    "bookmark":[],
     "username":None,
     "follow":[],
     "user_query":[],

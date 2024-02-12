@@ -6,7 +6,7 @@ import numpy as np
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 
-all_user = user_doc_ref.stream()
+
 
 # マッチング関数
 def matching(mangaAnswer,user_id):
@@ -24,6 +24,8 @@ def matching(mangaAnswer,user_id):
 
             all_user_vector.append(user.to_dict()["mangaAnswer"])
             all_users.append(user.to_dict())
+    print('all_user_vector')
+    print(all_user_vector)
     
     if(all_user_vector != []):
         # Faissインデックスの作成
@@ -40,6 +42,10 @@ def matching(mangaAnswer,user_id):
         # 対象ユーザーのレビューした情報のIDを取り出す
         review_query_results = []
         user_query_results = []
+
+        print('near')
+
+        print(nearest_values_users)
         
         for user in nearest_values_users:
             # usernameが一致するレビューデータをすべて取り出す
