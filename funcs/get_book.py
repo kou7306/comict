@@ -1,7 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from googleapiclient.discovery import build
+import urllib.request
+from urllib.parse import quote
+import httplib2
+import json
+import os
+from firebaseSetUp import auth, db
+
 
 
 # 楽天ブックスAPIを叩く関数
@@ -25,46 +31,21 @@ def get_rakuten_book_cover(book_title):
     else:
         return "no"
     
-# yahoo image searchから画像をスクレイピングする関数
-def image_scraping(url):
-    # Chrome WebDriverをバックグラウンドで実行するためのオプションを設定
-    #とりあえず可能な限りオプションを追加, headlessのみと時間はそう変わらない, 修正の余地あり
-    options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')                      
-    options.add_argument('--disable-extensions')               
-    options.add_argument('--proxy-server="direct://"')         
-    options.add_argument('--proxy-bypass-list=*')              
-    options.add_argument('--blink-settings=imagesEnabled=false')
-    options.add_argument('--lang=ja')                          
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument("--log-level=3")
-    options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36')
-    options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    options.add_experimental_option('useAutomationExtension', False)
-    options.page_load_strategy = 'eager'
+# custom search APIから画像検索を行う
+def get_google_book_cover(book_title):
+    GOOGLE_API_KEY          = "AIzaSyDi_vx0dITT2IN-dgij7rfGj_6vZt5VhTw"
+    CUSTOM_SEARCH_ENGINE_ID = "3354fe1c38e254ad8"
 
-    # Webドライバーを起動
-    driver = webdriver.Chrome(options=options)
+    search_word=f"{book_title}1巻"
+    url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={CUSTOM_SEARCH_ENGINE_ID}&searchType=image&q={search_word}&num=1"
 
-    # WebページにアクセスしてHTMLデータを取得
-    driver.get(url)
-    html = driver.page_source
-    
-    # BeautifulSoupを使ってHTMLを解析
-    soup = BeautifulSoup(html, 'html.parser')
-    
-    # 画像のURLを取得して保存
-    img_tag = soup.find('img')
-    image_url = img_tag['src']
+    # APIリクエストを送信して検索結果を取得
+    response = requests.get(url)
+    data = response.json()
 
-    # Webドライバーを終了
-    driver.quit()
-
-    return image_url
-
-def get_yahoo_book_cover(book_title):
-    search_url=f"https://search.yahoo.co.jp/image/search?p={book_title}1巻"
-    
-    return image_scraping(search_url)
+    # 最初にヒットした画像のURLを取得して返す
+    if 'items' in data and len(data['items']) > 0:
+        image_url = data['items'][0]['link']
+        return image_url
+    else:
+        return None

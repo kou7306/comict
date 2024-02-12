@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages
 from firebaseSetUp import auth, db
 from funcs.get_book import get_rakuten_book_cover
-from funcs.get_book import get_yahoo_book_cover
+from funcs.get_book import get_google_book_cover
 
 home_bp = Blueprint('home', __name__)
 user_doc_ref = db.collection('user')
@@ -57,7 +57,7 @@ def home():
                     title=review.to_dict()["mangaTitle"]  
                     titles.append(title)
                     #image=get_rakuten_book_cover(title)
-                    image=get_rakuten_book_cover(title)
+                    image=get_google_book_cover(title)
                     book_urls.append(image)
             data=list(zip(titles,book_urls))
         else:    
@@ -83,7 +83,8 @@ def home():
                     favorite_titles = user_doc_ref.document(id).get().to_dict()["bookmark"]
 
                     for title in favorite_titles:    
-                        image=get_rakuten_book_cover(title)
+                        #image=get_rakuten_book_cover(title)
+                        image=get_google_book_cover(title)
                         favolite_book_urls.append(image) 
         else:
             favolite_book_urls = []
