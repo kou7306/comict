@@ -22,7 +22,7 @@
           </p>
           <p>{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</p>
           <p>評価：{{ review.get("evaluation") }}</p>
-          <p>{{ review.get("contents") }}</p>
+          <p style="word-wrap: break-word;">{{ review.get("contents") }}</p>
         </li>
       {% endfor %}
   </ul>
