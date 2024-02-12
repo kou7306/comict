@@ -24,6 +24,7 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+
         
         
         try:
@@ -34,7 +35,7 @@ def login():
             # userのidをセッションに保存
             session['user_id'] = user_id
             if user_doc_ref.document(user_id).get().exists: 
-                if query == None:                      
+                if query == 'None':                      
                     return redirect('/')
                 else:
                     return redirect(f'/{query}')
