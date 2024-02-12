@@ -1,0 +1,68 @@
+
+{% extends "base.html" %} {% block extra_css %} 
+
+
+{% endblock %} {% block content%}
+
+
+{% if logged_in %}
+
+
+  <div class="mx-20">
+    <h1>ユーザー詳細ページ</h1>
+
+
+    
+
+    <section class="my-20" id="user">
+        <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
+        <ul data-tg-order='2' data-tg-tour='あなたのアンケートの回答と似ているユーザーです。' class="flex flex-wrap list-none">
+          {% if user_query != None %}
+          {% for id in user_query %}
+          {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+          <li class="w-2/12 text-center box-border m-2">
+
+            <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+            <div>
+              <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+
+
+          </div>    
+          </li>
+      
+        {% endif %}
+          {% endfor %}
+          {% endif %}
+        
+      </ul>
+    </section>
+
+    <section class="my-20" id="reviewer">
+        <h2 class="text-3xl" >フォローしたユーザー</h2>
+        <ul class="flex flex-wrap list-none">
+          
+          {% for follow in follow_data %}
+          <li class="w-2/12 text-center box-border m-2">
+          <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+          <div>
+            <a href="/{{follow[1]}}/userpage" class="hover:text-blue-500">{{follow[0]}}</a>
+            
+          </div>    
+        </li>
+          {% endfor %}
+   
+      </ul>
+    </section>
+{% endif %}
+
+
+  </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+    <script src="../static/javascript/home.js"></script>
+    <script src="https://unpkg.com/@sjmc11/tourguidejs/dist/tour.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+
+    </script>
+{% endblock %}
+

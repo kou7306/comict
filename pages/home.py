@@ -21,8 +21,6 @@ user_format={
 
 @home_bp.route('/', methods=['POST', 'GET'])
 def index():
-    # セッションからユーザーIDを取得（未ログインの場合はNoneが返る）
-    user_id = session.get('user_id')
 
     return redirect('/home')
     
@@ -39,7 +37,6 @@ def home():
         logged_in = True
     else:
         logged_in = False
-    print(logged_in)
     # loginしている場合
     if logged_in:
         user=user_doc_ref.document(user_id).get()
