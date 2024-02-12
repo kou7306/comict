@@ -69,12 +69,11 @@ def home():
         if user.to_dict()["follow"] != None:
             for follow_id in user.to_dict()["follow"]:
                 if follow_id != "":
-                    print(follow_id)
                     follow_doc = user_doc_ref.document(follow_id).get()
                     if follow_doc.exists:
                         follow_name = follow_doc.to_dict()["username"]
                         follow_data.append((follow_name, follow_id))
-                    print(follow_data)
+       
         else:
             follow_data = []
         # お気に入り漫画の画像取得
@@ -82,11 +81,14 @@ def home():
             for id in user.to_dict()['user_query']:
                 if user_doc_ref.document(id).get().to_dict()["bookmark"] != None:
                     favorite_titles = user_doc_ref.document(id).get().to_dict()["bookmark"]
+
                     for title in favorite_titles:    
                         image=get_rakuten_book_cover(title)
                         favolite_book_urls.append(image) 
         else:
             favolite_book_urls = []
+
+
 
 
 
