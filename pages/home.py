@@ -57,7 +57,7 @@ def home():
                     title=review.to_dict()["mangaTitle"]  
                     titles.append(title)
                     #image=get_rakuten_book_cover(title)
-                    image=get_yahoo_book_cover(title)
+                    image=get_rakuten_book_cover(title)
                     book_urls.append(image)
             data=list(zip(titles,book_urls))
         else:    
