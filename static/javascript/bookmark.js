@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // ログインしていない場合はログインページにリダイレクト
             console.log(data.bookmarknum);
             if (data.bookmarknum == -1) {
-                window.location.href = '/login';
+                window.location.href = '/login?query=bookmark';
             }
             else{
 
