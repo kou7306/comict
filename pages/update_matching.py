@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, session, flash,
 from firebaseSetUp import auth, db
 from funcs.matching import matching
 from funcs.most_review_comics import most_review_comics
+from funcs.most_bookmark_comics import most_bookmark_comics
+from funcs.high_evaluate_comics import high_evaluate_comics
 
 update_matching_bp = Blueprint('update_matching', __name__)
 user_doc_ref = db.collection('user')
@@ -40,6 +42,20 @@ def update_matching():
         suggestion_doc_ref.document("all").update({"most_review_comics": top_comics_names})      
 
     # ブックマークが多い漫画の更新  
+        # 全ての期間
+        all_top_comics = most_bookmark_comics(10)
+        top_comics_names = [comic[0] for comic in all_top_comics]
+        suggestion_doc_ref.document("all").update({"most_bookmark_comics": top_comics_names})
+    
+    # 高評価の漫画の更新
+        # 全ての期間
+        all_top_comics = high_evaluate_comics(10)
+        top_comics_names = [comic[0] for comic in all_top_comics]
+        suggestion_doc_ref.document("all").update({"high_evaluate_comics": top_comics_names})
+
+
+    
+        
 
 
 

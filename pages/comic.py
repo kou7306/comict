@@ -58,13 +58,39 @@ def comic():
 
 
             # レビュー数が多い漫画の表示
-            top_book_urls = []
+            # 全期間
+            all_review_book_urls = []
 
             # 上位の漫画名のみを取り出す
+            top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics']
+            for title in top_comics_names:    
+                image=get_rakuten_book_cover(title)
+                all_review_book_urls.append(image) 
+
+            # 一週間以内
+            week_review_book_urls = []
             top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics']
             for title in top_comics_names:    
                 image=get_rakuten_book_cover(title)
-                top_book_urls.append(image)          
-            return render_template("comic.html",logged_in=logged_in,data=data,favolite_book_urls=favolite_book_urls,top_book_urls=top_book_urls)
+                week_review_book_urls.append(image)
+              
+
+            # ブックマーク数が多い漫画の表示
+            bookmark_book_urls = []
+            top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_bookmark_comics']
+            for title in top_comics_names:    
+                image=get_rakuten_book_cover(title)
+                bookmark_book_urls.append(image)
+
+            # 高評価の漫画の表示
+            high_evaluate_book_urls = []
+            top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics']
+            for title in top_comics_names:    
+                image=get_rakuten_book_cover(title)
+                high_evaluate_book_urls.append(image)
+
+
+                 
+            return render_template("comic.html",logged_in=logged_in,data=data,favolite_book_urls=favolite_book_urls,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)    
         else:
             return render_template('comic.html',logged_in=logged_in)
