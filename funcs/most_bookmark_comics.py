@@ -8,7 +8,7 @@ from firebaseSetUp import db
 review_doc_ref=db.collection('review')
 comics_doc_ref=db.collection('comics')
 
-# レビュー数が多い漫画を取得
+# ブックマーク数が多い漫画を取得
 
 
 def most_bookmark_comics(num):

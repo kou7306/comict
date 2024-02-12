@@ -44,13 +44,15 @@ def update_matching():
     # ブックマークが多い漫画の更新  
         # 全ての期間
         all_top_comics = most_bookmark_comics(10)
-        top_comics_names = [comic[0] for comic in all_top_comics]
+        print(all_top_comics)
+        top_comics_names = [comic["title"] for comic in all_top_comics]
         suggestion_doc_ref.document("all").update({"most_bookmark_comics": top_comics_names})
     
     # 高評価の漫画の更新
         # 全ての期間
         all_top_comics = high_evaluate_comics(10)
-        top_comics_names = [comic[0] for comic in all_top_comics]
+        print(all_top_comics)
+        top_comics_names = [comic["title"] for comic in all_top_comics]
         suggestion_doc_ref.document("all").update({"high_evaluate_comics": top_comics_names})
 
 
