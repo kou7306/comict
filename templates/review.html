@@ -19,16 +19,12 @@
         <a href="/{{ review.get("mangaTitle") }}/detail" class="hover:text-blue-500">
           タイトル：{{ review.get("mangaTitle") }}
         </a>
-        <p><a href="/{{review.to_dict()['user_id']}}/userpage">{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</a></p>
+        <p><a href="/{{review['user_id']}}/userpage">{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</a></p>
         <p>評価：{{ review.get("evaluation") }}</p>
         <p>{{ review.get("contents") }}</p>
       </li>
       {% endfor %}
   </ul>
 </section>
-
-
-
-    
 
 {% endblock %}
