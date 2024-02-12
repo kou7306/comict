@@ -6,6 +6,7 @@ import numpy as np
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 
+all_user = user_doc_ref.stream()
 
 # マッチング関数
 def matching(mangaAnswer,user_id):

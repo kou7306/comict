@@ -37,7 +37,7 @@ def question(genre):
         user=user_doc.get()
         # データベースにデータを格納
 
-        user_doc.update({'gender':  user.to_dict()["gender"],'mangaAnswer':mangaAnswer,'username':user.to_dict()["username"]})
+        user_doc.update({'mangaAnswer':mangaAnswer,'username':user.to_dict()["username"]})
         # マッチング
         review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
        
