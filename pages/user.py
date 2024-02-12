@@ -34,3 +34,5 @@ def user():
         else:
             follow_data = []
         return render_template("user.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],username=user.to_dict()["username"],logged_in=logged_in)        
+    else:
+        return render_template("user.html",logged_in=logged_in)
