@@ -4,6 +4,7 @@ from funcs.wiki import get_manga_title,get_wikipedia_page_details
 from firebase_admin import credentials, firestore
 from datetime import datetime
 from funcs.review_sort import review_sort
+import time
 
 reviewAdd_bp = Blueprint('reviewAdd', __name__)
 user_doc_ref = db.collection('user')
@@ -46,7 +47,7 @@ def review():
         review_format["mangaTitle"]=manga_title
         review_format["contents"]=comment
         review_format["user_id"]=user_id
-        review_format["created_at"]= datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        review_format["created_at"]= time.mktime(datetime.now())
         review_document=review_doc_ref.document() 
         review_document.set(review_format)
         review_document_id = review_document.id
