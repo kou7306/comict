@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages
 from firebaseSetUp import auth, db
 from funcs.get_book import get_rakuten_book_cover
+from funcs.get_book import get_yahoo_book_cover
 
 home_bp = Blueprint('home', __name__)
 user_doc_ref = db.collection('user')
@@ -20,8 +21,6 @@ user_format={
 
 @home_bp.route('/', methods=['POST', 'GET'])
 def index():
-    # セッションからユーザーIDを取得（未ログインの場合はNoneが返る）
-    user_id = session.get('user_id')
 
     return redirect('/home')
     
@@ -38,7 +37,6 @@ def home():
         logged_in = True
     else:
         logged_in = False
-    print(logged_in)
     # loginしている場合
     if logged_in:
         user=user_doc_ref.document(user_id).get()
@@ -58,7 +56,8 @@ def home():
                 if(int(eval)>=4):
                     title=review.to_dict()["mangaTitle"]  
                     titles.append(title)
-                    image=get_rakuten_book_cover(title)
+                    #image=get_rakuten_book_cover(title)
+                    image=get_yahoo_book_cover(title)
                     book_urls.append(image)
             data=list(zip(titles,book_urls))
         else:    

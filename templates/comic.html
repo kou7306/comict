@@ -4,5 +4,45 @@
 {% endblock %} {% block content%}
 
 <h1>漫画一覧</h1>
+<div class="mx-20">
+{% if logged_in %}
+<section class="w-full my-8">
+    <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
+    
+    <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper mySwiper">
+        <div class="swiper-wrapper">
+          {% if data != [] %}
+            {% for title, url in data %}
+            {% if url != "no" %}
+            <div class="swiper-slide bg-center bg-cover">
+                <a href="/{{ title }}/detail" >
+                    <img class="block w-full h-full" src="{{ url }}" alt="">
+                </a>
+            </div>
+            {% else %}
+            <div class="swiper-slide">
+              <a href="/{{ title }}/detail">
+                  <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
+              </a>
+            </div>             
+            {% endif %}
+            {% endfor %}
+            {% endif %}
 
+            {% if favolite_book_urls !=[] %}
+            {% for url in favolite_book_urls %}
+            <div class="swiper-slide">
+              <img class="image-placeholder" src="{{ url }}" alt="">
+            </div>
+            
+            
+            {% endfor %}
+            {% endif %}
+            {% endif %}
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+  </section>
+</div>
 {% endblock %}

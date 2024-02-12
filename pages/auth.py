@@ -8,7 +8,7 @@ user_doc_ref = db.collection('user')
 # ユーザーデータベースにいれるときのデータの型
 user_format={
     "mangaAnswer":[],
-    "favorite_manga":[],
+    "bookmark":[],
     "username":None,
     "follow":[],
     "user_query":[],
@@ -19,9 +19,12 @@ user_format={
 # login
 @auth_bp.route("/login", methods=['POST', 'GET'])
 def login():
+    query = request.args.get('query')
+    print(query)
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        
         
         try:
             user = auth.sign_in_with_email_and_password(email, password)
@@ -30,18 +33,21 @@ def login():
             user_id = user['localId']
             # userのidをセッションに保存
             session['user_id'] = user_id
-            if user_doc_ref.document(user_id).get().exists:            
-                return redirect('/')
+            if user_doc_ref.document(user_id).get().exists: 
+                if query == None:                      
+                    return redirect('/')
+                else:
+                    return redirect(f'/{query}')
             else:
                 flash("ユーザーが存在しません")
-                return redirect('/login')
+                return redirect(f"/login?query={query}")
 
         except:
                 flash("ログインに失敗しました")
-                return redirect("/login")  
+                return redirect(f"/login?query={query}")  
     else:
         messages = get_flashed_messages()
-        return render_template("login.html", messages=messages)
+        return render_template("login.html", messages=messages,query=query)
 
 # ユーザーネームの重複を確認する関数
 def is_username_duplicate(username):
@@ -57,6 +63,7 @@ def is_username_duplicate(username):
 # ユーザー登録
 @auth_bp.route("/userAdd", methods=['POST', 'GET'])
 def userAdd():
+    query = request.args.get('query')
     if request.method == 'POST':
 
         email = request.form.get('email')
@@ -84,6 +91,7 @@ def userAdd():
             
     
     else:
+        
         return render_template("userAdd.html")
 
 # logout
@@ -98,12 +106,13 @@ def logput():
 def reset():
     if request.method == 'POST':
         email = request.form.get('email')
+        query = request.args.get('query')
         try:
             auth.send_password_reset_email(email)
             flash("パスワード再設定メールを送信しました")
-            return redirect("/")
+            return redirect(f"/login?query={query}")
         except:
             flash("パスワード再設定メールの送信に失敗しました")
-            return redirect("/")
+            return redirect(f"/login?query={query}")
     else:
         return render_template("reset.html")

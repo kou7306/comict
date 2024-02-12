@@ -25,7 +25,7 @@ def detail(title):
         bookmarked = False
         
     if not user_id is None and not user_doc_ref.document(user_id).get().exists:
-        return redirect("/login")
+        return redirect(f"/login?query={title}/detail")
     
     logged_in = bool(user_id)
     

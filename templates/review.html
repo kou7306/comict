@@ -15,16 +15,25 @@
   </form>
     <ul>
       {% for review in reviews %}
-      <li class="my-4 p-4 bg-gray-700">
-        <a href="/{{ review.get("mangaTitle") }}/detail" class="hover:text-blue-500">
-          タイトル：{{ review.get("mangaTitle") }}
-        </a>
-        <p><a href="/{{review['user_id']}}/userpage">{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</a></p>
-        <p>評価：{{ review.get("evaluation") }}</p>
-        <p>{{ review.get("contents") }}</p>
-      </li>
+      <a href="/review_detail?review_id={{review.get('id')}}" class="block hover:scale-105">
+        <li class="my-4 p-4 bg-gray-700">
+          <p>
+            タイトル：{{ review.get("mangaTitle") }}
+          </p>
+          <p>{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</p>
+          <p>評価：{{ review.get("evaluation") }}</p>
+          <p>{{ review.get("contents") }}</p>
+        </li>
       {% endfor %}
   </ul>
 </section>
+
+
+
+<a href="/reviewAdd" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+レビュー投稿
+</a>
+
+    
 
 {% endblock %}
