@@ -20,6 +20,7 @@ from pages.bookmark import bookmark_bp
 from pages.comic import comic_bp
 from pages.reviewAdd import reviewAdd_bp
 from pages.reviewLikes import reviewLikes_bp
+from pages.update_matching import update_matching_bp
 
 
 app = Flask(__name__)
@@ -39,7 +40,7 @@ app.register_blueprint(bookmark_bp)
 app.register_blueprint(comic_bp)
 app.register_blueprint(reviewAdd_bp)  
 app.register_blueprint(reviewLikes_bp)  
-
+app.register_blueprint(update_matching_bp)
 
 
 app.secret_key = "secret"
