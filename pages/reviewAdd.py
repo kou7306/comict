@@ -5,6 +5,13 @@ from firebase_admin import credentials, firestore
 from datetime import datetime
 from funcs.review_sort import review_sort
 import time
+from pytz import timezone
+
+# 日本時間のタイムゾーンを取得
+jst = timezone('Asia/Tokyo')
+
+
+
 
 reviewAdd_bp = Blueprint('reviewAdd', __name__)
 user_doc_ref = db.collection('user')
@@ -47,7 +54,7 @@ def review():
         review_format["mangaTitle"]=manga_title
         review_format["contents"]=comment
         review_format["user_id"]=user_id
-        review_format["created_at"]= firestore.SERVER_TIMESTAMP
+        review_format["created_at"]= datetime.now(jst)
         review_format["likes"] = []
         review_format["likes_count"] = 0
         
