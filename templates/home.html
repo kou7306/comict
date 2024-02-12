@@ -105,7 +105,7 @@
             <p>{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</p>
 
             <p>評価：{{review.to_dict()["evaluation"]}}</p>
-            <p>{{review.to_dict()["contents"][:100]}}</p>
+            <p style="word-wrap: break-word;">{{review.to_dict()["contents"][:100]}}</p>
           </li>
         </a>
           {% endfor %}
