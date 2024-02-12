@@ -54,8 +54,76 @@
         <div class="swiper-wrapper">
 
 
-            {% if top_book_urls !=[] %}
-            {% for url in top_book_urls %}
+            {% if all_review_book_urls !=[] %}
+            {% for url in all_review_book_urls %}
+            <div class="swiper-slide">
+              <img class="image-placeholder" src="{{ url }}" alt="">
+            </div>
+            
+            
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+  </section>
+
+  <section class="w-full my-8">
+    <h2 class="mb-8 text-3xl">レビュー数の多い（一週間以内）漫画</h2>
+    
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+
+
+            {% if week_review_book_urls !=[] %}
+            {% for url in week_review_book_urls %}
+            <div class="swiper-slide">
+              <img class="image-placeholder" src="{{ url }}" alt="">
+            </div>
+            
+            
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+  </section>
+
+
+  <section class="w-full my-8">
+    <h2 class="mb-8 text-3xl">レビュー数の多い漫画</h2>
+    
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+
+
+            {% if bookmark_book_urls !=[] %}
+            {% for url in bookmark_book_urls %}
+            <div class="swiper-slide">
+              <img class="image-placeholder" src="{{ url }}" alt="">
+            </div>
+            
+            
+            {% endfor %}
+            {% endif %}
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+  </section>
+
+
+  <section class="w-full my-8">
+    <h2 class="mb-8 text-3xl">レビュー数の多い漫画</h2>
+    
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+
+
+            {% if high_evaluate_book_urls !=[] %}
+            {% for url in high_evaluate_book_urls %}
             <div class="swiper-slide">
               <img class="image-placeholder" src="{{ url }}" alt="">
             </div>
