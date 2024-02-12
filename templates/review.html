@@ -11,6 +11,8 @@
           <option value="evaluation_asc" {{ 'selected' if sort_option == 'evaluation_asc' else '' }}>評価の低い順</option>
           <option value="newest" {{ 'selected' if sort_option == 'newest' else '' }}>新しい順</option>
           <option value="oldest" {{ 'selected' if sort_option == 'oldest' else '' }}>古い順</option>
+          <option value="likes_count_desc" {{ 'selected' if sort_option == 'likes_count_desc' else '' }}>いいねが多い順</option>
+          <option value="likes_count_asc" {{ 'selected' if sort_option == 'likes_count_asc' else '' }}>いいねが少ない順</option>
       </select>
   </form>
     <ul>
@@ -23,6 +25,7 @@
           <p>{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</p>
           <p>評価：{{ review.get("evaluation") }}</p>
           <p style="word-wrap: break-word;">{{ review.get("contents") }}</p>
+          <p>いいね数:{{ review.get("likes_count")}}</p>
         </li>
       {% endfor %}
   </ul>
@@ -33,7 +36,4 @@
 <a href="/reviewAdd" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
 レビュー投稿
 </a>
-
-    
-
 {% endblock %}
