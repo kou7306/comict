@@ -38,6 +38,30 @@
             
             {% endfor %}
             {% endif %}
+            
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+    </div>
+  </section>
+  {% endif %}
+
+
+  <section class="w-full my-8">
+    <h2 class="mb-8 text-3xl">レビュー数の多い漫画</h2>
+    
+    <div class="swiper mySwiper">
+        <div class="swiper-wrapper">
+
+
+            {% if top_book_urls !=[] %}
+            {% for url in top_book_urls %}
+            <div class="swiper-slide">
+              <img class="image-placeholder" src="{{ url }}" alt="">
+            </div>
+            
+            
+            {% endfor %}
             {% endif %}
         </div>
         <div class="swiper-button-prev"></div>
@@ -45,4 +69,6 @@
     </div>
   </section>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+<script src="../static/javascript/home.js"></script>
 {% endblock %}

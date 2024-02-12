@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, session, flash,
 from firebaseSetUp import auth, db
 from funcs.get_book import get_yahoo_book_cover
 from funcs.get_book import get_rakuten_book_cover
+from funcs.most_review_comics import most_review_comics
 
 comic_bp = Blueprint('comic', __name__)   
 
@@ -53,7 +54,16 @@ def comic():
                             favolite_book_urls.append(image) 
             else:
                 favolite_book_urls = []
-            
-            return render_template("comic.html",logged_in=logged_in,data=data,favolite_book_urls=favolite_book_urls)
+
+
+            # レビュー数が多い漫画の表示
+            sorted_top_comics = most_review_comics(10, 1)  # 上位 10 件の漫画を取得し、期間は過去 30 日間とします
+            top_book_urls =[]
+            # 上位の漫画名のみを取り出す
+            top_comics_names = [comic[0] for comic in sorted_top_comics]
+            for title in top_comics_names:    
+                image=get_rakuten_book_cover(title)
+                top_book_urls.append(image)          
+            return render_template("comic.html",logged_in=logged_in,data=data,favolite_book_urls=favolite_book_urls,top_book_urls=top_book_urls)
         else:
             return render_template('comic.html',logged_in=logged_in)
