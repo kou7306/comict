@@ -11,10 +11,10 @@ def genre():
 
     if request.method == 'GET':
         if not user_doc_ref.document(user_id).get().exists:
-            return redirect("/login")
+            return redirect("/login?query=genre")
         # ログインしてない場合
         if not user_id:
-            return redirect('/login')
+            return redirect('/login?query=genre')
         else:
             if user_id:
                 logged_in = True

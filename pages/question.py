@@ -10,7 +10,7 @@ user_doc_ref = db.collection('user')
 def question(genre):
     user_id = session.get('user_id')
     if request.method == 'GET':
-        if not user_doc_ref.document(user_id).get().exists:
+        if not user_id is None and not user_doc_ref.document(user_id).get().exists:
             return redirect('/login') 
         if user_id:
             logged_in = True
