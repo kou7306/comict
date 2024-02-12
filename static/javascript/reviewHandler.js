@@ -8,7 +8,7 @@ function toggleLike(reviewId) {
     })
     .then(response => {
         if (response.status === 401) {
-            window.location.href = "/login";
+            window.location.href = "/login?query=review";
         } else if (!response.ok) {
             throw new Error('Response was not ok');
         }
