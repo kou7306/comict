@@ -95,17 +95,19 @@
         <h2 class="text-3xl">タイムライン</h2>
         <ul>
           {% for review in review_doc_ref.stream() %}
+
           
-          <li class="my-4 p-4 bg-gray-800">
-            <a href="/{{review.to_dict()['mangaTitle']}}/detail" class="hover:text-blue-500">
+          <a href="/review_detail?review_id={{review.id}}" class="block hover:scale-105">
+          <li class="my-4 mx-8 p-4 bg-gray-800">
+            <p>
               タイトル：{{review.to_dict()["mangaTitle"]}}
-            </a>
-            <p><a href="/{{review.to_dict()['user_id']}}/userpage">{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</a></p>
+            </p>
+            <p>{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</p>
 
             <p>評価：{{review.to_dict()["evaluation"]}}</p>
-            <p>{{review.to_dict()["contents"]}}</p>
+            <p>{{review.to_dict()["contents"][:100]}}</p>
           </li>
-          
+        </a>
           {% endfor %}
       </ul>
     </section>

@@ -71,7 +71,7 @@
             .then(data => {
                 console.log('成功:', data);
                 if (data.isFollowing==-1) {
-                    window.location.href = '/login';
+                    window.location.href = '/login?query={{reviewer_id}}/userpage';
                 }
                 else{
                     is_following=data.isFollowing

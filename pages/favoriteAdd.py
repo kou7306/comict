@@ -18,7 +18,7 @@ def add_manga():
     favorite_titles = user.to_dict().get("bookmark", [])
     if request.method == 'GET':
         if not user_id is None and not user_doc_ref.document(user_id).get().exists:
-            return redirect("/login")
+            return redirect("/login?query=favoriteAdd")
         return render_template('favoriteAdd.html', user_id=user_id, favorite_titles=favorite_titles,logged_in=logged_in) 
     elif request.method == 'POST':
         data = request.get_json()

@@ -13,7 +13,7 @@ def comic():
     if request.method == 'GET':
         user_id = session.get('user_id')
         if not user_id is None and not user_doc_ref.document(user_id).get().exists:
-            return redirect("/login")
+            return redirect("/login?query=comic")
         if user_id:
             logged_in = True
         else:

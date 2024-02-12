@@ -13,9 +13,9 @@ review_doc_ref=db.collection('review')
 def user_page():   
     user_id = session.get('user_id')
     if not user_doc_ref.document(user_id).get().exists:
-        return redirect("/login")
+        return redirect("/login?query=userpage")
     if not user_id:
-        return redirect('/login')
+        return redirect('/login?query=userpage')
     user_id = session.get('user_id')
     if user_id:
         logged_in = True

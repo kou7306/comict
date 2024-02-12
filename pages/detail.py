@@ -22,7 +22,7 @@ def detail(title):
         bookmark_num = 0
         
     if not user_id is None and not user_doc_ref.document(user_id).get().exists:
-        return redirect("/login")
+        return redirect(f"/login?query={title}/detail")
     
     if user_id:
         logged_in = True

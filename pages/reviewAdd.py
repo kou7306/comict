@@ -22,15 +22,15 @@ review_format={
 @reviewAdd_bp.route('/reviewAdd',methods=['GET','POST'])
 def review():
     user_id = session.get('user_id')
-    if not user_doc_ref.document(user_id).get().exists:
-        return redirect('/login') 
+    if not user_id is None and not user_doc_ref.document(user_id).get().exists:
+        return redirect('/login?query=reviewAdd') 
     if request.method == 'GET':
         if user_id:
             logged_in = True
             return render_template("reviewAdd.html",user_id=user_id,logged_in=logged_in)
         else:
             logged_in = False
-            return redirect("/login")
+            return redirect("/login?query=reviewAdd")
     else:
         # formから取得
         manga_title = request.form['work_name']
