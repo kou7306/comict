@@ -11,7 +11,7 @@ def get_rakuten_book_cover(book_title):
     params = {
         'format': 'json',
         'applicationId': api_key,
-        'title': f"{book_title}1巻",
+        'title': f"{book_title}",
     }
 
     response = requests.get(base_url, params=params)
