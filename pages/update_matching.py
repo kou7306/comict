@@ -6,11 +6,12 @@ update_matching_bp = Blueprint('update_matching', __name__)
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 comics_doc_ref=db.collection('comics')
-all_user = user_doc_ref.stream()
+
 
 # 定期実行でリクエストされるエンドポイント
 @update_matching_bp.route('/update_matching', methods=["POST"])
 def update_matching():   
+    all_user = user_doc_ref.stream()
     # 全ユーザーのマッチング結果を更新
     for user in all_user:
         user_id = user.id
