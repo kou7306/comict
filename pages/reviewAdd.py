@@ -47,7 +47,7 @@ def review():
         review_format["mangaTitle"]=manga_title
         review_format["contents"]=comment
         review_format["user_id"]=user_id
-        review_format["created_at"]= firestore.Timestamp.now()
+        review_format["created_at"]= datetime.now()
         review_format["likes"] = []
         review_format["likes_count"] = 0
         
