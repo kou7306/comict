@@ -39,7 +39,7 @@ def comic():
                         title=review.to_dict()["mangaTitle"]  
                         titles.append(title)
                         #image=get_rakuten_book_cover(title)
-                        image=get_yahoo_book_cover(title)
+                        image=get_rakuten_book_cover(title)
                         book_urls.append(image)
                 data=list(zip(titles,book_urls))
             else:    
@@ -85,9 +85,13 @@ def comic():
             # 高評価の漫画の表示
             high_evaluate_book_urls = []
             top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics']
+ 
             for title in top_comics_names:    
+                print(title)
                 image=get_rakuten_book_cover(title)
+                print(image)
                 high_evaluate_book_urls.append(image)
+
 
 
                  
