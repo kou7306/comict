@@ -28,6 +28,25 @@ def detail(title):
         return redirect(f"/login?query={title}/detail")
     
     logged_in = bool(user_id)
+
+    # 作品の平均評価を取得
+    reviews=review_doc_ref.stream()
+    reviews_data=[]
+    eval_sum,rev_sum,eval_avg=0,0,0
+
+    for review in reviews:
+        review_data=review.to_dict()
+        reviews_data.append(review_data)
+    
+    for review in reviews_data:
+        review_title=review.get('mangaTitle')
+        if review_title==title:
+            review_eval=review.get('evaluation')
+            eval_sum+=review_eval
+            rev_sum+=1
+    if rev_sum!=0:
+        eval_avg=eval_sum/rev_sum
+    
     
     # if user_id:
     #     logged_in = True
@@ -57,7 +76,7 @@ def detail(title):
     #         "user_liked": user_liked
     #     })
         
-    return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, logged_in=logged_in, bookmarked=bookmarked)
+    return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, logged_in=logged_in, bookmarked=bookmarked,eval_avg=eval_avg,rev_sum=rev_sum)
 
 @detail_bp.route('/review/<title>')
 def get_reviews(title):
