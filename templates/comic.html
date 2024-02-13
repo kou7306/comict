@@ -48,94 +48,35 @@
 
 
   <section class="w-full my-8">
-    <h2 class="mb-8 text-3xl">レビュー数の多い漫画</h2>
-    
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-
-
-            {% if all_review_book_urls !=[] %}
-            {% for url in all_review_book_urls %}
-            <div class="swiper-slide">
-              <img class="image-placeholder" src="{{ url }}" alt="">
-            </div>
-            
-            
-            {% endfor %}
-            {% endif %}
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    </div>
-  </section>
-
-  <section class="w-full my-8">
-    <h2 class="mb-8 text-3xl">レビュー数の多い（一週間以内）漫画</h2>
-    
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-
-
-            {% if week_review_book_urls !=[] %}
-            {% for url in week_review_book_urls %}
-            <div class="swiper-slide">
-              <img class="image-placeholder" src="{{ url }}" alt="">
-            </div>
-            
-            
-            {% endfor %}
-            {% endif %}
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    </div>
-  </section>
-
-
-  <section class="w-full my-8">
-    <h2 class="mb-8 text-3xl">ブックマーク数が多い漫画</h2>
-    
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-
-
-            {% if bookmark_book_urls !=[] %}
-            {% for url in bookmark_book_urls %}
-            <div class="swiper-slide">
-              <img class="image-placeholder" src="{{ url }}" alt="">
-            </div>
-            
-            
-            {% endfor %}
-            {% endif %}
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    </div>
-  </section>
-
-
-  <section class="w-full my-8">
-    <h2 class="mb-8 text-3xl">高評価の漫画</h2>
-    
-    <div class="swiper mySwiper">
-        <div class="swiper-wrapper">
-
-
-            {% if high_evaluate_book_urls !=[] %}
-            {% for url in high_evaluate_book_urls %}
-            <div class="swiper-slide">
-              <img class="image-placeholder" src="{{ url }}" alt="">
-            </div>
-            
-            
-            {% endfor %}
-            {% endif %}
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    </div>
-  </section>
+    <h2 class="text-3xl">漫画一覧</h2>
+    <form method="get">
+      <select name="sort_option" onchange="this.form.submit()">
+          <option value="all_review" {{ 'selected' if sort_option == 'all_review' else '' }}>レビューが多い順</option>
+          <option value="oneweek_review" {{ 'selected' if sort_option == 'oneweek_review' else '' }}>最近レビューが多い順</option>
+          <option value="all_bookmark" {{ 'selected' if sort_option == 'all_bookmark' else '' }}>ブックマークの多い順</option>
+          <option value="all_evaluate" {{ 'selected' if sort_option == 'all_evaluate' else '' }}>評価の高い順</option>
+      </select>
+  </form>
+    <ul>
+      {% if sort_data != [] %}
+      {% for title, url in sort_data %}
+      {% if url != "no" %}
+        <li>
+          <a href="/{{ title }}/detail" >
+              <img class="block w-3/12" src="{{ url }}" alt="">
+          </a>
+        </li>
+      {% else %}
+        <li>
+            <a href="/{{ title }}/detail">
+                <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
+            </a>
+        </li>             
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+  </ul>
+</section>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script src="../static/javascript/home.js"></script>

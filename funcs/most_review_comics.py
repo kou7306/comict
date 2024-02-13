@@ -14,7 +14,7 @@ comics_doc_ref=db.collection('comics')
 # レビュー数が多い漫画を取得
 
 
-def most_review_comics(num, date):
+def most_review_comics(date):
     # 漫画ごとのレビュー数を格納する辞書を作成
     comic_review_count = {}
 
@@ -44,8 +44,8 @@ def most_review_comics(num, date):
     sorted_comic_review_count = sorted(comic_review_count.items(), key=lambda x: x[1], reverse=True)
 
     # 上位の漫画IDとレビュー数を取得
-    top_comics = sorted_comic_review_count[:num]
+    top_comics = sorted_comic_review_count
 
-    print(top_comics)
+   
 
     return top_comics

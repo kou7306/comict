@@ -45,7 +45,7 @@ def home():
     all_review_book_urls = []
 
     # 上位の漫画名のみを取り出す
-    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics']
+    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics'][:10]
     for title in top_comics_names:    
         #image=get_rakuten_book_cover(title)
         doc_ref=comics_doc_ref.document(title)
@@ -58,7 +58,7 @@ def home():
 
     # 一週間以内
     week_review_book_urls = []
-    top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics']
+    top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics'][:10]
     for title in top_comics_names:    
         #image=get_rakuten_book_cover(title)
         doc_ref=comics_doc_ref.document(title)
@@ -72,7 +72,7 @@ def home():
 
     # ブックマーク数が多い漫画の表示
     bookmark_book_urls = []
-    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_bookmark_comics']
+    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_bookmark_comics'][:10]
     for title in top_comics_names:    
         #image=get_rakuten_book_cover(title)
         doc_ref=comics_doc_ref.document(title)
@@ -85,7 +85,7 @@ def home():
 
     # 高評価の漫画の表示
     high_evaluate_book_urls = []
-    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics']
+    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics'][:10]
 
     for title in top_comics_names:    
         #image=get_rakuten_book_cover(title)

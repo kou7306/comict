@@ -4,7 +4,7 @@ from firebaseSetUp import db
 # データベース参照の取得
 review_doc_ref = db.collection('review')
 
-def high_evaluate_comics(num):
+def high_evaluate_comics():
 # 漫画ごとの評価の平均を格納するリスト
     comic_avg_ratings = []
 
@@ -29,4 +29,4 @@ def high_evaluate_comics(num):
         comic["avg_rating"] = avg_rating
         del comic["ratings"]
 
-    return comic_avg_ratings[:num]
+    return comic_avg_ratings
