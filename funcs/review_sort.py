@@ -1,3 +1,4 @@
+from flask import session
 from firebase_admin import firestore
 from firebaseSetUp import db
 from datetime import datetime
@@ -15,6 +16,7 @@ from datetime import datetime
 #         return reviews
 
 def review_sort(sort_option, title=None):
+    user_id = session.get("user_id")
     user_doc_ref = db.collection('user')
     review_doc_ref = db.collection('review')
     query = review_doc_ref
@@ -44,14 +46,20 @@ def review_sort(sort_option, title=None):
         review_data = review.to_dict()
         review_data['id'] = review.id
         
-        user_id = review_data.get('user_id')
-        if user_id:
-            user_doc = user_doc_ref.document(user_id).get()
+        r_user_id = review_data.get('user_id')
+        if r_user_id:
+            user_doc = user_doc_ref.document(r_user_id).get()
             if user_doc.exists:
                 user_data = user_doc.to_dict()
-                username = user_data.get('username')
-                review_data['username'] = username
-                
+                r_username = user_data.get('username')
+                review_data['username'] = r_username
+        
+        likes = review_data.get('likes', [])
+        if user_id in likes:
+            review_data['liked'] = True
+        else:
+            review_data['liked'] = False
+            
         reviews.append(review_data)
     
     return reviews
