@@ -4,7 +4,7 @@ from firebaseSetUp import auth, db
 
 user_bp = Blueprint('user', __name__)
 user_doc_ref = db.collection('user')
-
+suggestion_doc_ref=db.collection('suggestion')
 
 @user_bp.route('/user')
 def user():
@@ -17,6 +17,37 @@ def user():
         logged_in = True
     else:
         logged_in = False
+
+    
+    sort_option = request.args.get('sort_option')
+    print(sort_option)
+    
+    sort_user = []   
+    # レビュー数が多い漫画   
+    if sort_option == "all_review":
+
+            top_user = suggestion_doc_ref.document('all').get().to_dict()['most_review_user']
+            for user in top_user:    
+                sort_user.append(user)
+
+    # 一週間以内のレビューが多い漫画
+    elif sort_option == "oneweek_review":
+
+            top_user = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_user']
+            for user in top_user:    
+                sort_user.append(user)
+        
+    elif sort_option == "follow":
+        top_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user']
+        for user in top_user:    
+            sort_user.append(user)
+    else:
+        top_user = suggestion_doc_ref.document('all').get().to_dict()['most_review_user']
+        for user in top_user:    
+            sort_user.append(user)     
+    
+
+
     if logged_in:
         user=user_doc_ref.document(user_id).get()
         # フォロワーの情報を取得
@@ -33,6 +64,6 @@ def user():
                     print(follow_data)
         else:
             follow_data = []
-        return render_template("user.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],username=user.to_dict()["username"],logged_in=logged_in)        
+        return render_template("user.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],username=user.to_dict()["username"],logged_in=logged_in,sort_option=sort_option,sort_user=sort_user)        
     else:
         return render_template("user.html",logged_in=logged_in)
