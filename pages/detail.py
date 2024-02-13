@@ -63,6 +63,6 @@ def detail(title):
 def get_reviews(title):
     sort_option = request.args.get('sort_option', 'newest')
     reviews = review_sort(sort_option, title)
-    print("reviews:", reviews)
+    # print("reviews:", reviews)
     
     return jsonify(reviews)
