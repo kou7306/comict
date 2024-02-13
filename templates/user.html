@@ -58,7 +58,7 @@
 <section class="w-full my-8">
   <h2 class="text-3xl">ユーザー一覧</h2>
   <form method="get">
-    <select name="sort_option" onchange="this.form.submit()">
+    <select name="sort_option" onchange="this.form.submit()" class="text-black">
         <option value="all_review" {{ 'selected' if sort_option == 'all_review' else '' }}>レビュー投稿が多い順</option>
         <option value="oneweek_review" {{ 'selected' if sort_option == 'oneweek_review' else '' }}>最近レビュー投稿が多い順</option>
         <option value="follow" {{ 'selected' if sort_option == 'follow' else '' }}>フォロワーが多い順</option>

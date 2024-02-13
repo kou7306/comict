@@ -6,7 +6,7 @@
 <section id="review" class="mb-12 mx-auto px-12 py-12 bg-gray-800 w-3/4">
     <h2 class="text-3xl">レビュー一覧</h2>
     <form method="get">
-      <select name="sort_option" onchange="this.form.submit()">
+      <select name="sort_option" onchange="this.form.submit()" class="text-black">
           <option value="evaluation_desc" {{ 'selected' if sort_option == 'evaluation_desc' else '' }}>評価の高い順</option>
           <option value="evaluation_asc" {{ 'selected' if sort_option == 'evaluation_asc' else '' }}>評価の低い順</option>
           <option value="newest" {{ 'selected' if sort_option == 'newest' else '' }}>新しい順</option>
