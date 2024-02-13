@@ -63,18 +63,19 @@ def update_matching():
     
     # フォロワーの多いユーザーの更新
         sort_user = most_follow_user()
-        suggestion_doc_ref.document("all").update({"most_follow_user": sort_user})
+        user_id = [user["user_id"] for user in sort_user]
+        suggestion_doc_ref.document("all").update({"most_follow_user": user_id})
 
     # レビュー数が多いユーザーの更新
         # 全期間
         sort_user = most_review_users(None)
-        sort_user_names = [user[0] for user in sort_user]
-        suggestion_doc_ref.document("all").update({"most_review_users": sort_user_names})
+        sort_user_id = [user[0] for user in sort_user]
+        suggestion_doc_ref.document("all").update({"most_review_users": sort_user_id})
 
         # 一週間以内
         sort_user = most_review_users(7)
-        sort_user_names = [user[0] for user in sort_user]
-        suggestion_doc_ref.document("oneweek").update({"most_review_users": sort_user_names})
+        sort_user_id = [user[0] for user in sort_user]
+        suggestion_doc_ref.document("oneweek").update({"most_review_users": sort_user_id})
 
 
 
