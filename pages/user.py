@@ -43,6 +43,7 @@ def user():
             sort_user.append(user)
     else:
         top_user = suggestion_doc_ref.document('all').get().to_dict()['most_review_user']
+        print(top_user)
         for user in top_user:    
             sort_user.append(user)     
     
@@ -66,4 +67,4 @@ def user():
             follow_data = []
         return render_template("user.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],username=user.to_dict()["username"],logged_in=logged_in,sort_option=sort_option,sort_user=sort_user)        
     else:
-        return render_template("user.html",logged_in=logged_in)
+        return render_template("user.html",logged_in=logged_in,user_doc_ref=user_doc_ref,sort_option=sort_option,sort_user=sort_user)
