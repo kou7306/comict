@@ -28,7 +28,7 @@ def reviewer(reviewer_id):
         reviewername=reviewer_doc.to_dict()["username"]
         review_data=reviewer_doc.to_dict()
         # 特定のユーザーネームに一致するレビュー情報を取得
-        query = review_doc_ref.where('username', '==', reviewername).get()
+        query = review_doc_ref.where('user_id', '==', reviewer_id).get()
         if user_id:
             # そのユーザーをフォローしてるか
             user_doc = user_doc_ref.document(user_id)

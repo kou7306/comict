@@ -10,43 +10,45 @@
 
 
   <div class="mx-20">
-    <section class="w-full my-8">
-      <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
+      <section class="w-full my-8">
+          <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
+          
+          <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper mySwiper">
+              <div class="swiper-wrapper">
+                {% if data != [] %}
+                  {% for title, url in data %}
+                  {% if url != "no" %}
+                  <div class="swiper-slide bg-center bg-cover">
+                      <a href="/{{ title }}/detail" >
+                          <img class="block w-full h-full" src="{{ url }}" alt="">
+                      </a>
+                  </div>
+                  {% else %}
+                  <div class="swiper-slide">
+                    <a href="/{{ title }}/detail">
+                        <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
+                    </a>
+                  </div>             
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
       
-      <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper mySwiper">
-          <div class="swiper-wrapper">
-            {% if data != [] %}
-              {% for title, url in data %}
-              {% if url != "no" %}
-              <div class="swiper-slide bg-center bg-cover">
-                  <a href="/{{ title }}/detail" >
-                      <img class="block w-full h-full" src="{{ url }}" alt="">
-                  </a>
+                  {% if favolite_book_urls !=[] %}
+                  {% for url in favolite_book_urls %}
+                  <div class="swiper-slide">
+                    <img class="image-placeholder" src="{{ url }}" alt="">
+                  </div>
+                  
+                  
+                  {% endfor %}
+                  {% endif %}
+                  
               </div>
-              {% else %}
-              <div class="swiper-slide">
-                <a href="/{{ title }}/detail">
-                    <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
-                </a>
-              </div>             
-              {% endif %}
-              {% endfor %}
-              {% endif %}
-
-              {% if favolite_book_urls !=[] %}
-              {% for url in favolite_book_urls %}
-              <div class="swiper-slide">
-                <img class="image-placeholder" src="{{ url }}" alt="">
-              </div>
-              
-              
-              {% endfor %}
-              {% endif %}
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
           </div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-      </div>
-    </section>
+        </section>
+
 
     
 
@@ -90,6 +92,95 @@
       </ul>
     </section>
 {% endif %}
+    <section class="w-full my-8">
+      <h2 class="mb-8 text-3xl">レビュー数の多い漫画</h2>
+      
+      <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+
+
+              {% if all_review_book_urls !=[] %}
+              {% for url in all_review_book_urls %}
+              <div class="swiper-slide">
+                <img class="image-placeholder" src="{{ url }}" alt="">
+              </div>
+              
+              
+              {% endfor %}
+              {% endif %}
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+      </div>
+    </section>
+
+    <section class="w-full my-8">
+      <h2 class="mb-8 text-3xl">レビュー数の多い（一週間以内）漫画</h2>
+      
+      <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+
+
+              {% if week_review_book_urls !=[] %}
+              {% for url in week_review_book_urls %}
+              <div class="swiper-slide">
+                <img class="image-placeholder" src="{{ url }}" alt="">
+              </div>
+              
+              
+              {% endfor %}
+              {% endif %}
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+      </div>
+    </section>
+
+
+    <section class="w-full my-8">
+      <h2 class="mb-8 text-3xl">ブックマーク数が多い漫画</h2>
+      
+      <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+
+
+              {% if bookmark_book_urls !=[] %}
+              {% for url in bookmark_book_urls %}
+              <div class="swiper-slide">
+                <img class="image-placeholder" src="{{ url }}" alt="">
+              </div>
+              
+              
+              {% endfor %}
+              {% endif %}
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+      </div>
+    </section>
+
+
+    <section class="w-full my-8">
+      <h2 class="mb-8 text-3xl">高評価の漫画</h2>
+      
+      <div class="swiper mySwiper">
+          <div class="swiper-wrapper">
+
+
+              {% if high_evaluate_book_urls !=[] %}
+              {% for url in high_evaluate_book_urls %}
+              <div class="swiper-slide">
+                <img class="image-placeholder" src="{{ url }}" alt="">
+              </div>
+              
+              
+              {% endfor %}
+              {% endif %}
+          </div>
+          <div class="swiper-button-prev"></div>
+          <div class="swiper-button-next"></div>
+      </div>
+    </section>
 
     <section id="timeline">
         <h2 class="text-3xl">タイムライン</h2>
