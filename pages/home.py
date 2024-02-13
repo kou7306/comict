@@ -6,6 +6,8 @@ from funcs.get_book import get_google_book_cover
 home_bp = Blueprint('home', __name__)
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
+comics_doc_ref=db.collection('comics')
+suggestion_doc_ref=db.collection('suggestion')
 # ユーザーデータベースにいれるときのデータの型
 user_format={
     "gender":None,
@@ -37,6 +39,63 @@ def home():
         logged_in = True
     else:
         logged_in = False
+
+    # レビュー数が多い漫画の表示
+    # 全期間
+    all_review_book_urls = []
+
+    # 上位の漫画名のみを取り出す
+    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics']
+    for title in top_comics_names:    
+        #image=get_rakuten_book_cover(title)
+        doc_ref=comics_doc_ref.document(title)
+        comic_data=doc_ref.get().to_dict()
+        if "image" in comic_data:
+            image=comic_data["image"]
+        else:
+            image=get_google_book_cover(title)
+        all_review_book_urls.append(image) 
+
+    # 一週間以内
+    week_review_book_urls = []
+    top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics']
+    for title in top_comics_names:    
+        #image=get_rakuten_book_cover(title)
+        doc_ref=comics_doc_ref.document(title)
+        comic_data=doc_ref.get().to_dict()
+        if "image" in comic_data:
+            image=comic_data["image"]
+        else:
+            image=get_google_book_cover(title)
+        week_review_book_urls.append(image)
+        
+
+    # ブックマーク数が多い漫画の表示
+    bookmark_book_urls = []
+    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_bookmark_comics']
+    for title in top_comics_names:    
+        #image=get_rakuten_book_cover(title)
+        doc_ref=comics_doc_ref.document(title)
+        comic_data=doc_ref.get().to_dict()
+        if "image" in comic_data:
+            image=comic_data["image"]
+        else:
+            image=get_google_book_cover(title)
+        bookmark_book_urls.append(image)
+
+    # 高評価の漫画の表示
+    high_evaluate_book_urls = []
+    top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics']
+
+    for title in top_comics_names:    
+        #image=get_rakuten_book_cover(title)
+        doc_ref=comics_doc_ref.document(title)
+        comic_data=doc_ref.get().to_dict()
+        if "image" in comic_data:
+            image=comic_data["image"]
+        else:
+            image=get_google_book_cover(title)
+        high_evaluate_book_urls.append(image)
     # loginしている場合
     if logged_in:
         user=user_doc_ref.document(user_id).get()
@@ -56,8 +115,12 @@ def home():
                 if(int(eval)>=4):
                     title=review.to_dict()["mangaTitle"]  
                     titles.append(title)
-                    #image=get_rakuten_book_cover(title)
-                    image=get_google_book_cover(title)
+                    doc_ref=comics_doc_ref.document(title)
+                    comic_data=doc_ref.get().to_dict()
+                    if "image" in comic_data:
+                        image=comic_data["image"]
+                    else:
+                        image=get_google_book_cover(title)
                     book_urls.append(image)
             data=list(zip(titles,book_urls))
         else:    
@@ -99,10 +162,10 @@ def home():
         print(user_id)
         show_intro = flag == -2
         session['flag'] = flag + 1
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in)
+        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)
 
     #loginしていない場合
     else:
            # テンプレートにログイン状態（logged_in）を渡す
-        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref)
+        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)
  
