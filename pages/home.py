@@ -43,11 +43,12 @@ def home():
     # レビュー数が多い漫画の表示
     # 全期間
     all_review_book_urls = []
+    all_review_book_title = []
 
     # 上位の漫画名のみを取り出す
     top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics'][:10]
     for title in top_comics_names:    
-        #image=get_rakuten_book_cover(title)
+        all_review_book_title.append(title)
         doc_ref=comics_doc_ref.document(title)
         comic_data=doc_ref.get().to_dict()
         if "image" in comic_data:
@@ -56,11 +57,14 @@ def home():
             image=get_google_book_cover(title)
         all_review_book_urls.append(image) 
 
+    all_review_book = list(zip(all_review_book_title,all_review_book_urls))
+
     # 一週間以内
     week_review_book_urls = []
+    week_review_book_title = []
     top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics'][:10]
     for title in top_comics_names:    
-        #image=get_rakuten_book_cover(title)
+        week_review_book_title.append(title)
         doc_ref=comics_doc_ref.document(title)
         comic_data=doc_ref.get().to_dict()
         if "image" in comic_data:
@@ -68,13 +72,15 @@ def home():
         else:
             image=get_google_book_cover(title)
         week_review_book_urls.append(image)
+    week_review_book = list(zip(week_review_book_title,week_review_book_urls))
         
 
     # ブックマーク数が多い漫画の表示
     bookmark_book_urls = []
+    bookmark_book_title = []
     top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_bookmark_comics'][:10]
     for title in top_comics_names:    
-        #image=get_rakuten_book_cover(title)
+        bookmark_book_title.append(title)
         doc_ref=comics_doc_ref.document(title)
         comic_data=doc_ref.get().to_dict()
         if "image" in comic_data:
@@ -82,13 +88,16 @@ def home():
         else:
             image=get_google_book_cover(title)
         bookmark_book_urls.append(image)
+    bookmark_book = list(zip(bookmark_book_title,bookmark_book_urls))
+
 
     # 高評価の漫画の表示
     high_evaluate_book_urls = []
+    high_evaluate_book_title = []
     top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics'][:10]
 
     for title in top_comics_names:    
-        #image=get_rakuten_book_cover(title)
+        high_evaluate_book_title.append(title)
         doc_ref=comics_doc_ref.document(title)
         comic_data=doc_ref.get().to_dict()
         if "image" in comic_data:
@@ -96,6 +105,23 @@ def home():
         else:
             image=get_google_book_cover(title)
         high_evaluate_book_urls.append(image)
+    high_evaluate_book = list(zip(high_evaluate_book_title,high_evaluate_book_urls))
+
+
+    # ユーザー系
+    # レビュー投稿数が多いユーザーの表示
+    # 全期間
+    all_review_users = suggestion_doc_ref.document('all').get().to_dict()['most_review_users'][:10]
+
+
+    # 一週間以内
+    oneweek_review_users  = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_users'][:10]
+
+
+    # フォロワーが多いユーザーの表示
+    most_follow_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user'][:10]
+
+    
     # loginしている場合
     if logged_in:
         user=user_doc_ref.document(user_id).get()
@@ -162,10 +188,10 @@ def home():
         print(user_id)
         show_intro = flag == -2
         session['flag'] = flag + 1
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)
+        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user)
 
     #loginしていない場合
     else:
            # テンプレートにログイン状態（logged_in）を渡す
-        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)
+        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user)
  

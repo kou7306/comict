@@ -33,8 +33,8 @@
                   {% endfor %}
                   {% endif %}
       
-                  {% if favolite_book_urls !=[] %}
-                  {% for url in favolite_book_urls %}
+                  {% if favolite_book !=[] %}
+                  {% for url in favolite_book %}
                   <div class="swiper-slide">
                     <img class="image-placeholder" src="{{ url }}" alt="">
                   </div>
@@ -99,10 +99,12 @@
           <div class="swiper-wrapper">
 
 
-              {% if all_review_book_urls !=[] %}
-              {% for url in all_review_book_urls %}
+              {% if all_review_book !=[] %}
+              {% for title,url in all_review_book %}
               <div class="swiper-slide">
-                <img class="image-placeholder" src="{{ url }}" alt="">
+                <a href="/{{ title }}/detail" >
+                  <img class="block w-full h-full" src="{{ url }}" alt="">
+              </a>
               </div>
               
               
@@ -121,10 +123,12 @@
           <div class="swiper-wrapper">
 
 
-              {% if week_review_book_urls !=[] %}
-              {% for url in week_review_book_urls %}
+              {% if week_review_book !=[] %}
+              {% for title,url in week_review_book %}
               <div class="swiper-slide">
-                <img class="image-placeholder" src="{{ url }}" alt="">
+                <a href="/{{ title }}/detail" >
+                  <img class="block w-full h-full" src="{{ url }}" alt="">
+                </a>
               </div>
               
               
@@ -144,10 +148,12 @@
           <div class="swiper-wrapper">
 
 
-              {% if bookmark_book_urls !=[] %}
-              {% for url in bookmark_book_urls %}
+              {% if bookmark_book !=[] %}
+              {% for title,url in bookmark_book %}
               <div class="swiper-slide">
-                <img class="image-placeholder" src="{{ url }}" alt="">
+                <a href="/{{ title }}/detail" >
+                  <img class="block w-full h-full" src="{{ url }}" alt="">
+                </a>
               </div>
               
               
@@ -167,10 +173,12 @@
           <div class="swiper-wrapper">
 
 
-              {% if high_evaluate_book_urls !=[] %}
-              {% for url in high_evaluate_book_urls %}
+              {% if high_evaluate_book !=[] %}
+              {% for title,url in high_evaluate_book %}
               <div class="swiper-slide">
-                <img class="image-placeholder" src="{{ url }}" alt="">
+                <a href="/{{ title }}/detail" >
+                  <img class="block w-full h-full" src="{{ url }}" alt="">
+                </a>
               </div>
               
               
@@ -181,6 +189,76 @@
           <div class="swiper-button-next"></div>
       </div>
     </section>
+
+    <section class="my-20" id="user">
+      <h2 class="text-3xl">レビュー投稿数が多いユーザー</h2>
+      <ul class="flex flex-wrap list-none">
+        {% if all_review_users != None %}
+        {% for id in all_review_users %}
+        {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+        <li class="w-2/12 text-center box-border m-2">
+
+          <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+          <div>
+            <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+
+
+        </div>    
+        </li>
+    
+      {% endif %}
+        {% endfor %}
+        {% endif %}
+      
+    </ul>
+  </section>
+
+  <section class="my-20" id="user">
+    <h2 class="text-3xl">レビュー投稿数が多い(直近一週間)ユーザー</h2>
+    <ul class="flex flex-wrap list-none">
+      {% if oneweek_review_users != None %}
+      {% for id in oneweek_review_users %}
+      {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+      <li class="w-2/12 text-center box-border m-2">
+
+        <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+        <div>
+          <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+
+
+      </div>    
+      </li>
+  
+    {% endif %}
+      {% endfor %}
+      {% endif %}
+    
+  </ul>
+</section>
+
+<section class="my-20" id="user">
+  <h2 class="text-3xl">フォロワーが多いユーザー</h2>
+  <ul class="flex flex-wrap list-none">
+    {% if most_follow_user != None %}
+    {% for id in most_follow_user %}
+    {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+    <li class="w-2/12 text-center box-border m-2">
+
+      <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+      <div>
+        <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+
+
+    </div>    
+    </li>
+
+  {% endif %}
+    {% endfor %}
+    {% endif %}
+  
+</ul>
+</section>
+
 
     <section id="timeline">
         <h2 class="text-3xl">タイムライン</h2>
