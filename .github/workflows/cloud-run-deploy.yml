@@ -11,7 +11,7 @@ env:
   GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
   GCP_REGION: ${{ secrets.GCP_REGION }}
   IMAGE: asia.gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.SERVICE_NAME }}:${{ github.sha }}
-
+  GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
 jobs:
   deploy-to-cloud-run:
     runs-on: ubuntu-latest
