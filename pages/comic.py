@@ -22,63 +22,97 @@ def comic():
         else:
             logged_in = False
 
+        
+        sort_option = request.args.get('sort_option')
+        print(sort_option)
+        sort_book_urls = []
+        sort_title = []   
+        # レビュー数が多い漫画   
+        if sort_option == "all_review":
 
-        # レビュー数が多い漫画の表示
-        # 全期間
-        all_review_book_urls = []
+                top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics']
+                for title in top_comics_names:    
+                    sort_title.append(title)
+                    doc_ref=comics_doc_ref.document(title)
+                    comic_data=doc_ref.get().to_dict()
+                    if "image" in comic_data:
+                        image=comic_data["image"]
+                    else:
+                        image=get_google_book_cover(title)
+                    
+                    sort_book_urls.append(image) 
+                sort_data = list(zip(sort_title,sort_book_urls))
 
-        # 上位の漫画名のみを取り出す
-        top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics']
-        for title in top_comics_names:    
-            #image=get_rakuten_book_cover(title)
-            doc_ref=comics_doc_ref.document(title)
-            comic_data=doc_ref.get().to_dict()
-            if "image" in comic_data:
-                image=comic_data["image"]
-            else:
-                image=get_google_book_cover(title)
-            all_review_book_urls.append(image) 
+        # 一週間以内のレビューが多い漫画
+        elif sort_option == "oneweek_review":
 
-        # 一週間以内
-        week_review_book_urls = []
-        top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics']
-        for title in top_comics_names:    
-            #image=get_rakuten_book_cover(title)
-            doc_ref=comics_doc_ref.document(title)
-            comic_data=doc_ref.get().to_dict()
-            if "image" in comic_data:
-                image=comic_data["image"]
-            else:
-                image=get_google_book_cover(title)
-            week_review_book_urls.append(image)
+                top_comics_names = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_comics']
+                for title in top_comics_names:    
+                    sort_title.append(title)
+                    doc_ref=comics_doc_ref.document(title)
+                    comic_data=doc_ref.get().to_dict()
+                    if "image" in comic_data:
+                        image=comic_data["image"]
+                    else:
+                        image=get_google_book_cover(title)
+                    
+                    sort_book_urls.append(image) 
+                sort_data = list(zip(sort_title,sort_book_urls))
+
+        # ブックマークが多い漫画
+        elif sort_option == "all_bookmark":
+
+                top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_bookmark_comics']
+                for title in top_comics_names:    
+                    sort_title.append(title)
+                    doc_ref=comics_doc_ref.document(title)
+                    comic_data=doc_ref.get().to_dict()
+                    if "image" in comic_data:
+                        image=comic_data["image"]
+                    else:
+                        image=get_google_book_cover(title)
+                    
+                    sort_book_urls.append(image) 
+                sort_data = list(zip(sort_title,sort_book_urls))
+
+        # 高評価の漫画
+        elif sort_option == "all_evaluate":
+
+                top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics']
+                for title in top_comics_names:    
+                    sort_title.append(title)
+                    doc_ref=comics_doc_ref.document(title)
+                    comic_data=doc_ref.get().to_dict()
+                    if "image" in comic_data:
+                        image=comic_data["image"]
+                    else:
+                        image=get_google_book_cover(title)
+                    
+                    sort_book_urls.append(image) 
+                sort_data = list(zip(sort_title,sort_book_urls))
             
+        else:
 
-        # ブックマーク数が多い漫画の表示
-        bookmark_book_urls = []
-        top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_bookmark_comics']
-        for title in top_comics_names:    
-            #image=get_rakuten_book_cover(title)
-            doc_ref=comics_doc_ref.document(title)
-            comic_data=doc_ref.get().to_dict()
-            if "image" in comic_data:
-                image=comic_data["image"]
-            else:
-                image=get_google_book_cover(title)
-            bookmark_book_urls.append(image)
+            top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics']
+            
+            for title in top_comics_names:    
+                sort_title.append(title)
+             
+                
+                doc_ref=comics_doc_ref.document(title)
+                comic_data=doc_ref.get().to_dict()
+                if "image" in comic_data:             
+                    image=comic_data["image"]
+                else:
+                    
+                    image=get_google_book_cover(title)
+                    
+                sort_book_urls.append(image) 
+                    
+            sort_data = list(zip(sort_title,sort_book_urls))
+        
 
-        # 高評価の漫画の表示
-        high_evaluate_book_urls = []
-        top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['high_evaluate_comics']
 
-        for title in top_comics_names:    
-            #image=get_rakuten_book_cover(title)
-            doc_ref=comics_doc_ref.document(title)
-            comic_data=doc_ref.get().to_dict()
-            if "image" in comic_data:
-                image=comic_data["image"]
-            else:
-                image=get_google_book_cover(title)
-            high_evaluate_book_urls.append(image)
 
         if logged_in:
             user=user_doc_ref.document(user_id).get()
@@ -130,6 +164,5 @@ def comic():
 
 
                  
-            return render_template("comic.html",logged_in=logged_in,data=data,favolite_book_urls=favolite_book_urls,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)    
-        else:
-            return render_template('comic.html',logged_in=logged_in,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)
+            return render_template("comic.html",logged_in=logged_in,data=data,favolite_book_urls=favolite_book_urls,sort_data=sort_data,sort_option=sort_option)
+        return render_template('comic.html',logged_in=logged_in,sort_data=sort_data,sort_option=sort_option)

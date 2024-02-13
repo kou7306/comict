@@ -11,9 +11,9 @@ comics_doc_ref=db.collection('comics')
 # ブックマーク数が多い漫画を取得
 
 
-def most_bookmark_comics(num):
+def most_bookmark_comics():
 
-
+    
     # 漫画ごとのタイトルとブックマーク数を格納するリスト
     comic_bookmarks = []
 
@@ -27,6 +27,6 @@ def most_bookmark_comics(num):
 
     # ブックマーク数で降順にソート
     sorted_comic_bookmarks = sorted(comic_bookmarks, key=lambda x: x["bookmark_num"], reverse=True)
+    return sorted_comic_bookmarks
 
 
-    return sorted_comic_bookmarks[:num]
