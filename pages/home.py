@@ -96,6 +96,22 @@ def home():
         else:
             image=get_google_book_cover(title)
         high_evaluate_book_urls.append(image)
+
+
+    # ユーザー系
+    # レビュー投稿数が多いユーザーの表示
+    # 全期間
+    all_review_users = suggestion_doc_ref.document('all').get().to_dict()['most_review_users'][:10]
+
+
+    # 一週間以内
+    oneweek_review_users  = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_users'][:10]
+
+
+    # フォロワーが多いユーザーの表示
+    most_follow_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user'][:10]
+
+    
     # loginしている場合
     if logged_in:
         user=user_doc_ref.document(user_id).get()
@@ -167,5 +183,5 @@ def home():
     #loginしていない場合
     else:
            # テンプレートにログイン状態（logged_in）を渡す
-        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls)
+        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book_urls=all_review_book_urls,week_review_book_urls=week_review_book_urls,bookmark_book_urls=bookmark_book_urls,high_evaluate_book_urls=high_evaluate_book_urls,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user)
  

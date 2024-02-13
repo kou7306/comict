@@ -23,30 +23,26 @@ def user():
     print(sort_option)
     
     sort_user = []   
-    # レビュー数が多い漫画   
+    # レビュー投稿数の多いユーザー  
     if sort_option == "all_review":
 
-        top_user = suggestion_doc_ref.document('all').get().to_dict()['most_review_users']
-        for user in top_user:    
-            sort_user.append(user)
+        sort_user = suggestion_doc_ref.document('all').get().to_dict()['most_review_users']
+  
 
     # 一週間以内のレビューが多い漫画
     elif sort_option == "oneweek_review":
 
-        top_user = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_users']
-        for user in top_user:    
-            sort_user.append(user)
+        sort_user = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_users']
+        
 
         
     elif sort_option == "follow":
-        top_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user']
-        for user in top_user:    
-            sort_user.append(user)
+        sort_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user']
+        
+
     else:
-        top_user = suggestion_doc_ref.document('all').get().to_dict()['most_review_users']
-        print(top_user)
-        for user in top_user:    
-            sort_user.append(user)     
+        sort_user = suggestion_doc_ref.document('all').get().to_dict()['most_review_users']
+    
     
 
 
