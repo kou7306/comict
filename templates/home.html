@@ -182,6 +182,76 @@
       </div>
     </section>
 
+    <section class="my-20" id="user">
+      <h2 class="text-3xl">レビュー投稿数が多いユーザー</h2>
+      <ul class="flex flex-wrap list-none">
+        {% if all_review_users != None %}
+        {% for id in all_review_users %}
+        {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+        <li class="w-2/12 text-center box-border m-2">
+
+          <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+          <div>
+            <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+
+
+        </div>    
+        </li>
+    
+      {% endif %}
+        {% endfor %}
+        {% endif %}
+      
+    </ul>
+  </section>
+
+  <section class="my-20" id="user">
+    <h2 class="text-3xl">レビュー投稿数が多い(直近一週間)ユーザー</h2>
+    <ul class="flex flex-wrap list-none">
+      {% if oneweek_review_users != None %}
+      {% for id in oneweek_review_users %}
+      {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+      <li class="w-2/12 text-center box-border m-2">
+
+        <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+        <div>
+          <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+
+
+      </div>    
+      </li>
+  
+    {% endif %}
+      {% endfor %}
+      {% endif %}
+    
+  </ul>
+</section>
+
+<section class="my-20" id="user">
+  <h2 class="text-3xl">フォロワーが多いユーザー</h2>
+  <ul class="flex flex-wrap list-none">
+    {% if most_follow_user != None %}
+    {% for id in most_follow_user %}
+    {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+    <li class="w-2/12 text-center box-border m-2">
+
+      <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+      <div>
+        <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+
+
+    </div>    
+    </li>
+
+  {% endif %}
+    {% endfor %}
+    {% endif %}
+  
+</ul>
+</section>
+
+
     <section id="timeline">
         <h2 class="text-3xl">タイムライン</h2>
         <ul>
