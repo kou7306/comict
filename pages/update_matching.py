@@ -4,6 +4,8 @@ from funcs.matching import matching
 from funcs.most_review_comics import most_review_comics
 from funcs.most_bookmark_comics import most_bookmark_comics
 from funcs.high_evaluate_comics import high_evaluate_comics
+from funcs.most_follow_user import most_follow_user
+from funcs.most_review_user import most_review_users
 
 update_matching_bp = Blueprint('update_matching', __name__)
 user_doc_ref = db.collection('user')
@@ -59,7 +61,20 @@ def update_matching():
 
 
     
-        
+    # フォロワーの多いユーザーの更新
+        sort_user = most_follow_user()
+        suggestion_doc_ref.document("all").update({"most_follow_user": sort_user})
+
+    # レビュー数が多いユーザーの更新
+        # 全期間
+        sort_user = most_review_users(None)
+        sort_user_names = [user[0] for user in sort_user]
+        suggestion_doc_ref.document("all").update({"most_review_users": sort_user_names})
+
+        # 一週間以内
+        sort_user = most_review_users(7)
+        sort_user_names = [user[0] for user in sort_user]
+        suggestion_doc_ref.document("oneweek").update({"most_review_users": sort_user_names})
 
 
 
