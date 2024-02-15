@@ -24,7 +24,10 @@ def review():
         else:
             logged_in = False
         sort_option = request.args.get('sort_option')
-        # reviews = db.collection('review').stream()
-        # reviews = review_sort(sort_option, reviews)
-        reviews = review_sort(sort_option)
-        return render_template("review.html",user_id=user_id, reviews=reviews, sort_option=sort_option,logged_in=logged_in,user_doc_ref=user_doc_ref)
+       
+
+        reviews = review_sort(sort_option,None)
+
+        return render_template("review.html", user_id=user_id, reviews=reviews, sort_option=sort_option, logged_in=logged_in, user_doc_ref=user_doc_ref)
+
+
