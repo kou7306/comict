@@ -23,6 +23,7 @@ from pages.reviewLikes import reviewLikes_bp
 from pages.update_matching import update_matching_bp
 from pages.user import user_bp
 from pages.review_detail import review_detail_bp
+from pages.load_more_data import load_more_data_bp
 
 
 app = Flask(__name__)
@@ -45,6 +46,7 @@ app.register_blueprint(reviewLikes_bp)
 app.register_blueprint(update_matching_bp)
 app.register_blueprint(user_bp)
 app.register_blueprint(review_detail_bp)
+app.register_blueprint(load_more_data_bp)
 
 app.secret_key = "secret"
 

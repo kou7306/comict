@@ -15,7 +15,7 @@
           <option value="likes_count_asc" {{ 'selected' if sort_option == 'likes_count_asc' else '' }}>いいねが少ない順</option>
       </select>
   </form>
-    <ul>
+    <ul id="review-list">
       {% for review in reviews %}
       <a href="/review_detail?review_id={{review.get('id')}}" class="block hover:scale-105">
         <li class="my-4 p-4 bg-gray-700">
@@ -36,4 +36,60 @@
 <a href="/reviewAdd" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
 レビュー投稿
 </a>
+<input type="hidden" id="last-review-id" value="{{reviews[-1].id}}">
+
+<script>
+
+
+window.addEventListener('scroll', function() {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        // スクロールの最後に達した時に新しいデータを読み込む
+        loadMoreData();
+        console.log('load more data');
+    }
+});
+
+function loadMoreData() {
+    let startAfter = document.getElementById('last-review-id').value; // 最後のレビューIDを取得
+    fetch('/load-more-data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ start_after: startAfter, sort_option: "{{sort_option}}" }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+        if (data.length === 0) {
+          return; // data リストが空の場合は処理を中断する
+        }
+        // 取得したデータをリストに追加
+        let startAfter = document.getElementById('last-review-id').value; // 最後のレビューIDを取得
+        if (!startAfter) {
+            return; // 最後のレビューIDが取得できない場合は処理を中断する
+        }
+        data.forEach(review => {
+            let reviewList = document.getElementById('review-list');
+            let li = document.createElement('li');
+            li.innerHTML = `
+                <a href="/review_detail?review_id=${review.id}" class="block hover:scale-105">
+                    <li class="my-4 p-4 bg-gray-700">
+                        <p>タイトル：${review.mangaTitle}</p>
+                        <p>${review.username}</p>
+                        <p>評価：${review.evaluation}</p>
+                        <p style="word-wrap: break-word;">${review.contents}</p>
+                        <p>いいね数：${review.likes_count}</p>
+                    </li>
+                </a>`;
+            reviewList.appendChild(li);
+        });
+        // 最後のレビューIDを更新
+        let lastReviewId = data[data.length - 1].id;
+        document.getElementById('last-review-id').value = lastReviewId;
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+</script>
 {% endblock %}
