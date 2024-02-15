@@ -42,8 +42,9 @@
 
 
 window.addEventListener('scroll', function() {
-  console.log('load more data');
+  
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+        console.log('load more data');
         // スクロールの最後に達した時に新しいデータを読み込む
         loadMoreData();
         
