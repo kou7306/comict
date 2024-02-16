@@ -23,7 +23,9 @@
             タイトル：{{ review.get("mangaTitle") }}
           </p>
           <p>{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</p>
-          <p>評価：{{ review.get("evaluation") }}</p>
+          {% for _ in range(review.get("evaluation")) %}
+          <span class="text-yellow-400">★</span>
+          {% endfor %}
           <p style="word-wrap: break-word;">{{ review.get("contents") }}</p>
           <p>いいね数:{{ review.get("likes_count")}}</p>
         </li>
@@ -81,15 +83,15 @@ function loadMoreData() {
             let reviewList = document.getElementById('review-list');
             let li = document.createElement('li');
             li.innerHTML = `
-                <a href="/review_detail?review_id=${review.id}" class="block hover:scale-105">
-                    <li class="my-4 p-4 bg-gray-700">
-                        <p>タイトル：${review.mangaTitle}</p>
-                        <p>${review.username}</p>
-                        <p>評価：${review.evaluation}</p>
-                        <p style="word-wrap: break-word;">${review.contents}</p>
-                        <p>いいね数：${review.likes_count}</p>
-                    </li>
-                </a>`;
+            <a href="/review_detail?review_id=${review.id}" class="block hover:scale-105">
+              <li class="my-4 p-4 bg-gray-700">
+                <p>タイトル：${review.mangaTitle}</p>
+                <p>${review.username}</p>
+                ${Array(review.evaluation).fill().map(() => '<span class="text-yellow-400">★</span>').join('')}
+                <p style="word-wrap: break-word;">${review.contents}</p>
+                <p>いいね数：${review.likes_count}</p>
+              </li>
+            </a>`;
             reviewList.appendChild(li);
         });
         // 最後のレビューIDを更新

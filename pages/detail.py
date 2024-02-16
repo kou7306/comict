@@ -46,41 +46,15 @@ def detail(title):
             rev_sum+=1
     if rev_sum!=0:
         eval_avg=eval_sum/rev_sum
-    
-    
-    # if user_id:
-    #     logged_in = True
-    #     current_bookmark = comic_data["bookmark"]
-    #     # bookmarkに自分のIDが含まれているか
-    #     if user_id in current_bookmark:
-    #         bookmarked = True
-    #     else:
-    #         bookmarked = False
-    # else:
-    #     logged_in = False
-    #     bookmarked = False
-        
-        
-    # reviews = []
-    # for doc in query:
-    #     doc_id = doc.id
-    #     doc_data = doc.to_dict()
-    #     likes = doc_data.get('likes', [])
-    #     like_count = len(likes)
-    #     user_liked = user_id in likes if user_id else False
 
-    #     reviews.append({
-    #         "id": doc_id, 
-    #         "data": doc_data,
-    #         "like_count": like_count,
-    #         "user_liked": user_liked
-    #     })
+    
+
         
     return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, logged_in=logged_in, bookmarked=bookmarked,eval_avg=eval_avg,rev_sum=rev_sum)
 
 @detail_bp.route('/review/<title>')
 def get_reviews(title):
     sort_option = request.args.get('sort_option', 'newest')
-    reviews = review_sort(sort_option, title)
+    reviews = review_sort(sort_option,None,limit=None, title=title)
     
     return jsonify(reviews)

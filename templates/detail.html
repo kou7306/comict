@@ -17,7 +17,10 @@
     {% endif %}
 
     <p id="bookmark_num">ブックマーク数：{{bookmark_num}}</p>
+
+
     <p id="review_avg">平均評価：{{eval_avg}} / 5.0 (レビュー数：{{rev_sum}}件)</p>
+
 
     <select id="sortOption" onChange="fetchAndDisplayReviews()" class="text-black">
       <option value="newest">日付（降順）</option>
@@ -36,4 +39,5 @@
   <script src="../../static/javascript/bookmark.js"></script>
   <script src="../../static/javascript/reviewLike.js"></script>
   <script src="../../static/javascript/reviewHandler.js"></script>
+
 {% endblock %}

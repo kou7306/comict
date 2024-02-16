@@ -43,7 +43,8 @@ def review_sort(sort_option,last_document_id,limit=4,title=None):
         query = query.start_after(start_after)
 
     # Apply limit
-    query = query.limit(limit)
+    if limit != None:
+        query = query.limit(limit)
 
     # Get the next documents
     reviews_snapshot = query.get()

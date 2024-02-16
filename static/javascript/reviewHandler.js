@@ -19,12 +19,15 @@ function fetchAndDisplayReviews() {
           const reviewElement = document.createElement('div');
           const likeButtonText = review.liked ? 'いいねを取り消す' : 'いいね';
           reviewElement.innerHTML = `
-            <p>ユーザー名: <a href="/${review.user_id}/userpage">${review.username}</a></p>
-            <p>評価: ${review.evaluation}</p>
-            <p>${review.contents}</p>
-            <p id="likeCount-${review.id}">いいね数: ${review.likes_count}</p>
-            <button id="likeButton-${ review.id }" onclick="toggleLike('${ review.id }')">${likeButtonText}</button>
-          `;
+          <a href="/review_detail?review_id=${review.id}" class="block hover:scale-105">
+            <li class="my-4 p-4 bg-gray-700">
+              <p>タイトル：${review.mangaTitle}</p>
+              <p>${review.username}</p>
+              ${Array(review.evaluation).fill().map(() => '<span class="text-yellow-400">★</span>').join('')}
+              <p style="word-wrap: break-word;">${review.contents}</p>
+              <p>いいね数：${review.likes_count}</p>
+            </li>
+          </a>`;
           container.appendChild(reviewElement);
         });
       })

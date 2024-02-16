@@ -26,7 +26,9 @@
             {% for review in query %}
             <div class="review">
                 <h4>{{ review.to_dict()["mangaTitle"] }}</h4>
-                <p>{{ review.to_dict()["evaluation"] }}</p>
+                {% for _ in range(review.get("evaluation")) %}
+                <span class="text-yellow-400">★</span>
+                {% endfor %}
                 <p>{{ review.to_dict()["contents"] }}</p>
             </div>
             {% endfor %}

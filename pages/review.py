@@ -24,6 +24,7 @@ def review():
         else:
             logged_in = False
         sort_option = request.args.get('sort_option')
+
        
 
         reviews = review_sort(sort_option,None)
