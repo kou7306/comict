@@ -67,12 +67,18 @@ def user_page():
         if follow_doc.exists:
             follow_name = follow_doc.to_dict()["username"]
             follow_data.append((follow_name, follow_id))
- 
- 
-
- 
-
 
     return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=combined_list, genre_choice=genre_choice, logged_in=logged_in)
 
-
+@userpage_bp.route('/userpage/<id>', methods=['GET', 'POST'])
+def update(id):
+    if 'user' in session:
+        name = request.form['username']
+        print(name)
+        try:
+            db.collection('user').document(id).update({'username': name})
+            return redirect('/userpage')
+        except:
+            return redirect('/userpage', code=500)
+    else:
+        return redirect('/login?query=userpage')

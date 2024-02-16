@@ -9,6 +9,14 @@
     <div>
         <h1>ユーザーページ</h1>
         <h2>ユーザーネーム: {{ username }}</h2>
+        <button class="modal-open btn">編集</button>
+        <dialog class="modal">
+            <h2>編集</h2>
+            <form action="/userpage/{{user_id}}" method="post">
+                <input type="text" name="username" value="{{ username }}" class="text-gray-900" required>
+                <button class="modal-close text-gray-900" type="button">閉じる</button>
+                <button class="update text-gray-900" type="submit">変更</button>
+            </form>
         <!-- {% for doc in query %}
         <p>{{doc.to_dict()["mangaTitle"]}}</p>
         {% endfor %} -->
@@ -65,7 +73,7 @@
     </main>
 </section>
 
-
+<script src ="../../static/javascript/userpage.js"></script>
 
 {% endblock %}
 
