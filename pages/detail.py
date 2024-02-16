@@ -46,6 +46,7 @@ def detail(title):
             rev_sum+=1
     if rev_sum!=0:
         eval_avg=eval_sum/rev_sum
+
     
 
         
