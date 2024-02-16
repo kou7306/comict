@@ -15,11 +15,11 @@
     <p id="likeCount-{{review['review_id']}}">いいね数: {{review["likes_count"]}}</p>
     {% if review['liked'] %}
     <button id="likeButton-{{review['review_id']}}" onclick="toggleLike('{{review['review_id']}}')">
-        <i class="material-icons" style="color: rgb(255, 73, 234);">favorite</i> いいねを取り消す
+        <i class="material-icons" style="color: rgb(255, 73, 234);">favorite</i>
     </button>
     {% else %}
     <button id="likeButton-{{review['review_id']}}" onclick="toggleLike('{{review['review_id']}}')">
-        <i class="material-icons">favorite_border</i> いいね
+        <i class="material-icons">favorite_border</i>
     </button>
     {% endif %}
 
