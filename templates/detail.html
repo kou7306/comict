@@ -11,9 +11,13 @@
 
     <!-- ブックマークトグルボタン -->
     {% if bookmarked %}
-    <button id="bookmarkToggle" class="btn btn-primary">ブックマーク解除</button>
+    <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
+      <i class="material-icons">bookmark</i>
+    </button>
     {% else %}
-    <button id="bookmarkToggle" class="btn btn-primary">ブックマーク</button>
+    <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
+      <i class="material-icons">bookmark_border</i>
+    </button>
     {% endif %}
 
     <p id="bookmark_num">ブックマーク数：{{bookmark_num}}</p>

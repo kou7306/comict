@@ -43,7 +43,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 console.log("Bookmark toggled:", data);
                 bookmarkNumElement.textContent = `ブックマーク数：${data.bookmarknum}`;
-                document.getElementById("bookmarkToggle").textContent = data.bookmarked ? "ブックマーク解除":"ブックマーク";
+
+                document.getElementById("bookmarkToggle").innerHTML = data.bookmarked ? '<i class="material-icons">bookmark</i>' : '<i class="material-icons">bookmark_border</i>';
+
+
     
             }
 
