@@ -99,13 +99,8 @@
         <input type="text" name="search_query" placeholder="漫画検索" class="text-gray-900">
         <button type="submit">検索</button>
       </form>
-      <h2>検索結果</h2>
-      {% if results == [] %}
-        <ul>
-          <li>該当する漫画はありません</li>
-        </ul>
-      {% endif %}
       {% if results %}
+      <h2>検索結果</h2>
         <ul>
           {% for result in results %}
             <li><a href="/{{ result.title }}/detail">{{ result.title }}</a></li>

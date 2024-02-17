@@ -3,6 +3,7 @@ from firebaseSetUp import auth, db
 from funcs.get_book import get_rakuten_book_cover
 from funcs.get_book import get_google_book_cover
 from funcs.search import search_comics
+from funcs.wiki import get_manga_title
 
 home_bp = Blueprint('home', __name__)
 user_doc_ref = db.collection('user')
@@ -50,7 +51,9 @@ def home():
     results = []
     if request.method == 'POST':
         search_query = request.form['search_query']
-        results = search_comics(search_query)
+        #results = search_comics(search_query)
+        wiki_result = get_manga_title(search_query)
+        results=search_comics(wiki_result)
 
     # 上位の漫画名のみを取り出す
     top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics'][:10]
