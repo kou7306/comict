@@ -51,6 +51,6 @@ app.register_blueprint(load_more_data_bp)
 app.secret_key = "secret"
 
 if __name__ == '__main__':
-    app.run(debug=True,port=8080)
+    app.run(debug=False,port=8080)
 
 # /fm8MhfrbKdJ5narcJvTm/home testへのURL

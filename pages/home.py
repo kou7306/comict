@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, session, flash,
 from firebaseSetUp import auth, db
 from funcs.get_book import get_rakuten_book_cover
 from funcs.get_book import get_google_book_cover
+from funcs.search import search_comics
 
 home_bp = Blueprint('home', __name__)
 user_doc_ref = db.collection('user')
@@ -44,6 +45,12 @@ def home():
     # 全期間
     all_review_book_urls = []
     all_review_book_title = []
+
+    # 漫画の検索
+    results = []
+    if request.method == 'POST':
+        search_query = request.form['search_query']
+        results = search_comics(search_query)
 
     # 上位の漫画名のみを取り出す
     top_comics_names = suggestion_doc_ref.document('all').get().to_dict()['most_review_comics'][:10]
@@ -188,10 +195,10 @@ def home():
         print(user_id)
         show_intro = flag == -2
         session['flag'] = flag + 1
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user)
+        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results)
 
     #loginしていない場合
     else:
            # テンプレートにログイン状態（logged_in）を渡す
-        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user)
+        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results)
  
