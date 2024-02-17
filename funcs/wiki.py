@@ -26,8 +26,7 @@ def get_wikipedia_page_details(title):
     return url
         
 
-# 使用例
-# get_wikipedia_page_details("One Piece")
+
 
 
 def get_manga_title(title):
@@ -67,5 +66,5 @@ def get_manga_detail():
 
     
 
-# 例として「ワンピース」の漫画のカテゴリと正確なページタイトルを取得
-# get_manga_category_and_title('はがない')
+# 例として「東リべ」の漫画のカテゴリと正確なページタイトルを取得
+# get_manga_category_and_title('東リべ')　-->　入力されたタイトル "東リべ" の正確なページタイトル: 東京リベンジャーズが帰ってくる
