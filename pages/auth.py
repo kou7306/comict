@@ -78,7 +78,7 @@ def userAdd():
             session['user_id'] = user_id 
             # userデータベースに保存
             user_doc=user_doc_ref.document(user_id)
-            user_format["username"]=user_id
+            user_format["username"]=user_id[:6]
             # デフォルトで外れ値を指定しておく
             user_format["mangaAnswer"]= [99.0 for x in range(140)]
 
