@@ -93,6 +93,23 @@
     </section>
 {% endif %}
     <section class="w-full my-8">
+      <h2 class="mb-8 text-3xl">漫画検索</h2>
+
+      <form action="/home" method="post">
+        <input type="text" name="search_query" placeholder="漫画検索" class="text-gray-900">
+        <button type="submit">検索</button>
+      </form>
+      {% if results %}
+      <h2>検索結果</h2>
+        <ul>
+          {% for result in results %}
+            <li><a href="/{{ result.title }}/detail">{{ result.title }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </section>
+
+    <section class="w-full my-8">
       <h2 class="mb-8 text-3xl">レビュー数の多い漫画</h2>
       
       <div class="swiper mySwiper">
