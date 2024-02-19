@@ -30,8 +30,8 @@
                 {% for q, ans, color, width in combined_list %}
                 <div class="mb-4">
                     <p>{{ q }}: {{ ans }}</p>
-                    <div class="w-full bg-gray-200 h-4 round-full">
-                        <div class="h-4 {{ color }}" style="width: {{ width }}%"></div>
+                    <div class="w-full bg-gray-200 h-4 rounded-full">
+                        <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
                     </div>
                 </div>
                 {% endfor %}
