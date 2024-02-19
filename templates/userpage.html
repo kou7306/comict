@@ -24,14 +24,18 @@
     </div>
     <main>
         <div class="left">
-            <h3>アンケート結果</h2>
+            <h3 class="text-lg font-bold mb-4">アンケート結果</h2>
             <div class="result">
-                <h3>選択ジャンル : {{ genre_choice }}</h3>
-                {% for q,ans in combined_list %}
-                <p>{{ q }}: {{ ans }}</p>
+                <h3 class="text-md font-semibold mb-2">選択ジャンル : {{ genre_choice }}</h3>
+                {% for q, ans, color, width in combined_list %}
+                <div class="mb-4">
+                    <p>{{ q }}: {{ ans }}</p>
+                    <div class="w-full bg-gray-200 h-4 round-full">
+                        <div class="h-4 {{ color }}" style="width: {{ width }}%"></div>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
-
         </div>
         <div class="right">
             <h3>好きな作品</h2>
