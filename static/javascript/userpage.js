@@ -14,3 +14,4 @@ modalClose[0].addEventListener('click', () => {
 updateButton[0].addEventListener('click', () => {
     dialog[0].close();
 });
+

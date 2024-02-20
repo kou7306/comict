@@ -8,6 +8,31 @@ userpage_bp = Blueprint('userpage', __name__)
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 
+def get_bar_color(ans):
+    if ans <= -4:
+        return 'bg-red-500'  # 1
+    elif ans <= -3:
+        return 'bg-red-400'  # 2
+    elif ans <= -2:
+        return 'bg-red-300'  # 3
+    elif ans <= -1:
+        return 'bg-orange-400'  # 4
+    elif ans < 0:
+        return 'bg-yellow-600'  # 5
+    elif ans == 0:
+        return 'bg-yellow-500'  # 6
+    elif ans <= 1:
+        return 'bg-lime-400'  # 7
+    elif ans <= 2:
+        return 'bg-green-400'  # 8
+    elif ans <= 3:
+        return 'bg-green-500'  # 9
+    else:
+        return 'bg-green-600'  # 10
+
+def get_bar_width(ans):
+    return ((ans + 5) / 10) * 100
+
 # ユーザーページ
 @userpage_bp .route('/userpage', methods=['GET', 'POST'])
 def user_page():   
@@ -51,12 +76,18 @@ def user_page():
     answer = result[start_question:end_question]
 
     #設問と回答をタプル化
-    combined_list = zip(question, answer)
+    combined_list = list(zip(question, answer))
 
     #選択したジャンルを取得
     genre_list = ["バトル", "スポーツ", "恋愛", "ミステリー", "コメディ", "SF", "歴史"]
     genre_choice = genre_list[int(genre_value)-1]
-
+    
+    updated_combined_list = []
+    for q, ans in combined_list:
+        color = get_bar_color(ans)
+        width = get_bar_width(ans)
+        updated_combined_list.append((q, ans, color, width))
+    
     #ブックマークをデータベースから取得
     favorite_titles = user_data["bookmark"]
 
@@ -68,7 +99,7 @@ def user_page():
             follow_name = follow_doc.to_dict()["username"]
             follow_data.append((follow_name, follow_id))
 
-    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=combined_list, genre_choice=genre_choice, logged_in=logged_in)
+    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in)
 
 @userpage_bp.route('/userpage/<id>', methods=['GET', 'POST'])
 def update(id):
