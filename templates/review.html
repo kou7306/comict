@@ -3,7 +3,7 @@
 {% endblock %} {% block content%}
 
 
-<section id="review" class="mb-12 mx-auto px-12 py-12 bg-gray-800 w-3/4">
+<section id="review" class="mb-12 mx-auto px-12 py-12 bg-zinc-800 w-3/4">
     <h2 class="text-3xl">レビュー一覧</h2>
     <form method="get">
       <select name="sort_option" onchange="this.form.submit()" class="text-black">
@@ -18,7 +18,7 @@
     <ul id="review-list">
       {% for review in reviews %}
       <a href="/review_detail?review_id={{review.get('id')}}" class="block hover:scale-105">
-        <li class="my-4 p-4 bg-gray-700">
+        <li class="my-4 p-4 bg-zinc-700">
           <p>
             タイトル：{{ review.get("mangaTitle") }}
           </p>

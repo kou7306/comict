@@ -5,80 +5,151 @@
 
 
 
-<section class="contents">
-    <div>
-        <h1>ユーザーページ</h1>
-        <h2>ユーザーネーム: {{ username }}</h2>
-        <button class="modal-open btn">編集</button>
+<div class="flex justify-center flex-col">
+    <div class="flex bg-zinc-800 mx-32 my-20 p-8">
+        <div class="w-2/5 text-center">
+            <img class="w-3/5 mx-auto" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+            <div id="usernameDisplay">
+                <h2 class="text-3xl" id="username">{{ username }}</h2>
+                
+            </div>
+            <button class="btn text-xl mt-4 text-blue-400" id="editButton">編集</button>
+            
+        </div>
+        <div class="flex flex-col items-center justify-center w-3/5 text-center">
+            <div class="flex border-b border-white border-solid px-8">
+                <p class="text-4xl my-4 w-60">投稿数</p>
+                <p class="text-4xl my-4 ml-20">{{ myreview_query|length }}</p>
+            </div>
+            <div class="flex border-b border-white border-solid px-8">
+                <p class="text-4xl my-4 w-60">フォロー数 </p>
+                <p class="text-4xl my-4 ml-20">{{ follow_data|length }}</p>
+            </div>
+            
+        </div>
+        
+    </div>
+    
+    
+<!-- 
         <dialog class="modal">
             <h2>編集</h2>
             <form action="/userpage/{{user_id}}" method="post">
                 <input type="text" name="username" value="{{ username }}" class="text-gray-900" required>
                 <button class="modal-close text-gray-900" type="button">閉じる</button>
                 <button class="update text-gray-900" type="submit">変更</button>
-            </form>
-        <!-- {% for doc in query %}
-        <p>{{doc.to_dict()["mangaTitle"]}}</p>
-        {% endfor %} -->
+            </form> -->
 
-    </div>
-    <main>
-        <div class="left">
-            <h3 class="text-3xl font-bold mb-4">アンケート結果</h2>
-            <div class="result">
-                <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ genre_choice }}</h3>
-                {% for q, ans, color, width in combined_list %}
-                <div class="mb-4">
-                    <p>{{ q }}: {{ ans }}</p>
-                    <div class="w-full bg-gray-200 h-4 rounded-full">
-                        <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
-                    </div>
+    <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8 text-center">
+        <h2 class="text-4xl">お気に入り漫画</h2>
+        <div class="flex {% if favorite_comic|length == 1 %}justify-center{% else %}justify-around{% endif %} flex-wrap my-12">
+            {% for comic in favorite_comic %}
+                <div class="flex flex-col items-center mx-2 w-1/5">
+                    <img class="w-full" src="{{ comic['image'] }}" alt="">
+                    <div class="title">{{ comic['title'] }}</div>
                 </div>
-                {% endfor %}
+            {% endfor %}
+        </div>
+        
+        
+        <a href="/favoriteAdd" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">お気に入り作品一覧へ</a>
+    </div>
+
+    <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8 text-center">
+        <h3 class="text-4xl mb-4">アンケート結果</h2>
+        <div class="result">
+            <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ genre_choice }}</h3>
+            {% for q, ans, color, width in combined_list %}
+            <div class="mt-16 flex justify-center flex-col items-center">
+                <p>{{ q }}: {{ ans }}</p>
+                <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
+                    <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+                </div>
             </div>
-        </div>
-        <div class="right">
-            <h3>好きな作品</h2>
-            {% for title in favorite_titles %}
-                <div class="title">{{ title }}</div>
             {% endfor %}
-            <h2><a href="/favoriteAdd">お気に入り作品を編集する</a></h2>
         </div>
+    </div>
 
-        <div class="follow">
-            {% for follow in follow_data %}
-
-            <li>
-                <img class="user_img" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
-                <div>
-                  <a href="/{{follow[1]}}/userpage"><h3>{{follow[0]}}</h3></a>
-                 
-                </div>    
-              </li>
-            {% endfor %}
 
    
-
+    <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8">
+        <div class="text-center">
+            <h2 class="text-4xl">マイレビュー</h2>
         </div>
-
-        <div class="myreview">
-            <h2>マイレビュー</h2>
-            {% for review in myreview_query %}
-            <div class="review">
-                <h4>{{ review.to_dict()["mangaTitle"] }}</h4>
-                {% for _ in range(review.get("evaluation")) %}
-                <span class="text-yellow-400">★</span>
-                {% endfor %}
-                <p>{{ review.to_dict()["contents"] }}</p>
-            </div>
+        
+        {% if myreview_query==[] %}
+        <p class="mt-8">まだレビューはありません</p>
+        {% endif %}
+        {% for review in myreview_query %}
+        <a href="/review_detail?review_id={{review.id}}" class="block hover:scale-105">
+            <li class="my-4 mx-8 p-4 bg-zinc-700">
+              <p>
+                タイトル：{{review.to_dict()["mangaTitle"]}}
+              </p>
+              <p>{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</p>
+  
+              {% for _ in range(review.get("evaluation")) %}
+              <span class="text-yellow-400">★</span>
             {% endfor %}
-        </div>
+              <p style="word-wrap: break-word;">{{review.to_dict()["contents"][:100]}}</p>
+            </li>
+          </a>
+        {% endfor %}
+    </div>
 
-    </main>
-</section>
 
-<script src ="../../static/javascript/userpage.js"></script>
+</div>
+
+<script>
+document.getElementById("editButton").addEventListener("click", function() {
+    var usernameDisplay = document.getElementById("usernameDisplay");
+    var username = document.getElementById("username").textContent;
+
+    // input要素を作成
+    var input = document.createElement("input");
+    input.type = "text";
+    input.value = username;
+    input.id = "usernameInput";
+    input.className = "text-3xl text-black";
+
+    // usernameDisplayの中身をinput要素に置き換える
+    usernameDisplay.replaceChild(input, document.getElementById("username"));
+
+    // ボタンのテキストとIDを変更
+    var editButton = document.getElementById("editButton");
+    editButton.textContent = "変更";
+    editButton.id = "saveButton";
+
+    // 変更ボタンのクリックイベント
+    document.getElementById("saveButton").addEventListener("click", function() {
+        var newUsername = document.getElementById("usernameInput").value;
+        fetch("/edit/{{user_id}}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username: newUsername }),
+        })
+        .then(response => response.json())
+        .then(data => { 
+            // 新しいユーザー名でh2要素を作成し、input要素を置き換える
+            var h2 = document.createElement("h2");
+            h2.textContent = newUsername;
+            h2.className = "text-3xl";
+            h2.id = "username";
+            usernameDisplay.replaceChild(h2, document.getElementById("usernameInput"));
+
+            // ボタンのテキストとIDを元に戻す
+            var saveButton = document.getElementById("saveButton");
+            saveButton.textContent = "編集";
+            saveButton.id = "editButton";
+            window.location.href = "/userpage"
+        });
+    }); 
+});
+
+  
+</script>
 
 {% endblock %}
 
-    
