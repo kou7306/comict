@@ -12,8 +12,10 @@ def most_follow_user():
 
     # フォロワー数を取得してリストに格納
     for user in users:
-        user_data = user.to_dict() 
-        follow_count = len(user_data.get("follow", []))
+
+        follower = user_doc_ref.where('follow', 'array_contains', user.id).stream()
+        # 検索結果のドキュメントの数を数える
+        follow_count = sum(1 for _ in follower)
         user_follow_counts.append({"user_id": user.id, "follow_count": follow_count})
 
     # フォロワー数でユーザーをソート
