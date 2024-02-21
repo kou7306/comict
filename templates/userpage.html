@@ -6,21 +6,33 @@
 
 
 <section class="contents">
-    <div>
-        <h1>ユーザーページ</h1>
-        <h2>ユーザーネーム: {{ username }}</h2>
-        <button class="modal-open btn">編集</button>
+    <div class="flex h-3/6 bg-zinc-800 mx-16 my-8 py-8">
+        <div class="w-1/2 text-center">
+            <img class="w-3/5 mx-auto" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+            <div id="usernameDisplay">
+                <h2 class="text-3xl" id="username">{{ username }}</h2>
+                
+            </div>
+            <button class="btn text-xl mt-4 text-blue-400" id="editButton">編集</button>
+            
+        </div>
+        <div class="flex items-center w-1/2 text-center">
+            <div>
+                <h3 class="text-4xl my-4">投稿数 : {{ myreview_query|length }}</h3>
+                <h3 class="text-4xl my-4">フォロー数 : {{ follow_num }}</h3>
+            </div>
+        </div>
+    </div>
+    
+    
+<!-- 
         <dialog class="modal">
             <h2>編集</h2>
             <form action="/userpage/{{user_id}}" method="post">
                 <input type="text" name="username" value="{{ username }}" class="text-gray-900" required>
                 <button class="modal-close text-gray-900" type="button">閉じる</button>
                 <button class="update text-gray-900" type="submit">変更</button>
-            </form>
-        <!-- {% for doc in query %}
-        <p>{{doc.to_dict()["mangaTitle"]}}</p>
-        {% endfor %} -->
-
+            </form> -->
     </div>
     <main>
         <div class="left">
@@ -73,8 +85,56 @@
     </main>
 </section>
 
-<script src ="../../static/javascript/userpage.js"></script>
+<script>
+document.getElementById("editButton").addEventListener("click", function() {
+    var usernameDisplay = document.getElementById("usernameDisplay");
+    var username = document.getElementById("username").textContent;
+
+    // input要素を作成
+    var input = document.createElement("input");
+    input.type = "text";
+    input.value = username;
+    input.id = "usernameInput";
+    input.className = "text-3xl text-black";
+
+    // usernameDisplayの中身をinput要素に置き換える
+    usernameDisplay.replaceChild(input, document.getElementById("username"));
+
+    // ボタンのテキストとIDを変更
+    var editButton = document.getElementById("editButton");
+    editButton.textContent = "変更";
+    editButton.id = "saveButton";
+
+    // 変更ボタンのクリックイベント
+    document.getElementById("saveButton").addEventListener("click", function() {
+        var newUsername = document.getElementById("usernameInput").value;
+        fetch("/edit/{{user_id}}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username: newUsername }),
+        })
+        .then(response => response.json())
+        .then(data => { 
+            // 新しいユーザー名でh2要素を作成し、input要素を置き換える
+            var h2 = document.createElement("h2");
+            h2.textContent = newUsername;
+            h2.className = "text-3xl";
+            h2.id = "username";
+            usernameDisplay.replaceChild(h2, document.getElementById("usernameInput"));
+
+            // ボタンのテキストとIDを元に戻す
+            var saveButton = document.getElementById("saveButton");
+            saveButton.textContent = "編集";
+            saveButton.id = "editButton";
+            window.location.href = "/userpage"
+        });
+    }); 
+});
+
+  
+</script>
 
 {% endblock %}
 
-    
