@@ -3,40 +3,45 @@
 <link href="../../static/css/review.css" rel="stylesheet">
 {% endblock %} 
 {% block content %}    
-  <main>
-    <h1 class="titleName" data-title="{{ title }}">{{title}}</h1>
-    {% if url != "#" %}
-    <p><a href={{url}}>wikipedia</a></p>
-    {% endif %}
+  <main class="flex flex-wrap flex-row">
+    <div class="pl-8 pr-4 w-2/5">
+      <h1 class="titleName text-3xl" data-title="{{ title }}">{{title}}</h1>
+      <img src="{{ image }}" alt="comic image" class="comicImage" width="186" height="288">
+      {% if url != "#" %}
+      <p class="text-xl"><a href={{url}}>wikipedia</a></p>
+      {% endif %}
 
-    <!-- ブックマークトグルボタン -->
-    {% if bookmarked %}
-    <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
-      <i class="material-icons">bookmark</i>
-    </button>
-    {% else %}
-    <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
-      <i class="material-icons">bookmark_border</i>
-    </button>
-    {% endif %}
+      <!-- ブックマークトグルボタン -->
+      {% if bookmarked %}
+      <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
+        <i class="material-icons">bookmark</i>
+      </button>
+      {% else %}
+      <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
+        <i class="material-icons">bookmark_border</i>
+      </button>
+      {% endif %}
 
-    <p id="bookmark_num">ブックマーク数：{{bookmark_num}}</p>
-
-
-    <p id="review_avg">平均評価：{{eval_avg}} / 5.0 (レビュー数：{{rev_sum}}件)</p>
+      <p id="bookmark_num" class="text-xl">ブックマーク数：{{bookmark_num}}</p>
 
 
-    <select id="sortOption" onChange="fetchAndDisplayReviews()" class="text-black">
-      <option value="newest">日付（降順）</option>
-      <option value="oldest">日付（昇順）</option>
-      <option value="likes_count_desc">いいね数（降順）</option>
-      <option value="likes_count_asc">いいね数（昇順）</option>
-      <option value="evaluation_desc">評価（降順）</option>
-      <option value="evaluation_asc">評価（昇順）</option>
-    </select>
+      <p id="review_avg" class="text-xl">平均評価：{{eval_avg}} / 5.0 (レビュー数：{{rev_sum}}件)</p>
+    </div>
+    
+    <div class="pr-8 w-3/5">
+      <h2 class="text-3xl">レビュー一覧</h2>
+      <select id="sortOption" onChange="fetchAndDisplayReviews()" class="text-black">
+        <option value="newest">日付（降順）</option>
+        <option value="oldest">日付（昇順）</option>
+        <option value="likes_count_desc">いいね数（降順）</option>
+        <option value="likes_count_asc">いいね数（昇順）</option>
+        <option value="evaluation_desc">評価（降順）</option>
+        <option value="evaluation_asc">評価（昇順）</option>
+      </select>
 
-    <h2>レビュー</h2>
-    <div id="reviewContainer">
+      <div id="reviewContainer" class="bg-zinc-800">
+      </div>
+
     </div>
 
   </main>

@@ -18,6 +18,7 @@ def detail(title):
         comic_data = comics_doc.to_dict()
         url = comic_data.get("url", "#")
         bookmark_num = len(comic_data.get("bookmark", []))
+        image = comic_data.get("image", "")
         bookmarked = user_id in comic_data.get("bookmark", []) if user_id else False
     else:
         url = "#"
@@ -50,7 +51,7 @@ def detail(title):
     
 
         
-    return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, logged_in=logged_in, bookmarked=bookmarked,eval_avg=eval_avg,rev_sum=rev_sum)
+    return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, logged_in=logged_in, bookmarked=bookmarked,eval_avg=eval_avg,rev_sum=rev_sum,image=image)
 
 @detail_bp.route('/review/<title>')
 def get_reviews(title):
