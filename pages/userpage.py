@@ -112,9 +112,11 @@ def user_page():
 
      
 
-        follow_num = len(follow_data)
+    follower = user_doc_ref.where('follow', 'array_contains', user_id).stream()
+    # 検索結果のドキュメントの数を数える
+    follower_num = sum(1 for _ in follower)
 
-    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_comic=favorite_comic,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in,follow_num=follow_num,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
+    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_comic=favorite_comic,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in,follower_num=follower_num,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
  
 
 @userpage_bp.route('/edit/<user_id>', methods=['POST']) 

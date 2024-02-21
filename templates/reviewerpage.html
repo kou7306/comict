@@ -1,47 +1,86 @@
 {% extends "base.html" %} {% block extra_css %} 
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/reviewerpage.css') }}">
 {% endblock %} {% block content%}
-    <div class="container2">
-        <h1>ユーザーページ</h1>
-        <div class="user-container">
-            <h2>ユーザーネーム: {{ username }}</h2>
-            <div class="follow-user">
+
+<div class="flex justify-center flex-col">
+    <div class="flex bg-zinc-800 mx-32 my-20 p-8">
+        <div class="w-2/5 text-center">
+            <img class="w-3/5 mx-auto" src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+            <div id="usernameDisplay">
+                <h2 class="text-3xl" id="username">{{ username }}</h2>               
+            </div>
+            <div class="follow-user mt-4">
                 <button id="followButton" onclick="toggleFollow()"></button>
 
             </div>
-
         </div>
-        <h2>好きな作品</h2>
-        <div class="favorite-titles">
-            <!-- {% for doc in query %}
-            <p>{{doc.to_dict()["mangaTitle"]}}</p>
-            {% endfor %} -->
-            {% for title in favorite_titles %}
-                <li>{{ title }}</li>
-            {% endfor %}
-        </div>
-
-        <div class="myreview">
-            <h2>レビュー</h2>
-            {% for review in query %}
-            <div class="review">
-                <h4>{{ review.to_dict()["mangaTitle"] }}</h4>
-                {% for _ in range(review.get("evaluation")) %}
-                <span class="text-yellow-400">★</span>
-                {% endfor %}
-                <p>{{ review.to_dict()["contents"] }}</p>
+        <div class="flex flex-col items-center justify-center w-3/5 text-center">
+            <div class="flex border-b border-white border-solid px-8">
+                <p class="text-4xl my-4 w-60">投稿数</p>
+                <p class="text-4xl my-4 ml-20">{{ query|length }}</p>
             </div>
+            <div class="flex border-b border-white border-solid px-8">
+                <p class="text-4xl my-4 w-60">フォロワー数 </p>
+                <p class="text-4xl my-4 ml-20">{{ follower_num }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8 text-center">
+        <h2 class="text-4xl">お気に入り漫画</h2>
+        <div class="flex {% if favorite_comic|length == 1 %}justify-center{% else %}justify-around{% endif %} flex-wrap my-12">
+            {% for comic in favorite_comic %}
+                <div class="flex flex-col items-center mx-2 w-1/5">
+                    <img class="w-full" src="{{ comic['image'] }}" alt="">
+                    <div class="title">{{ comic['title'] }}</div>
+                </div>
             {% endfor %}
         </div>
+        
+        
+        <a href="#" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">お気に入り作品一覧へ</a>
+    </div>
+ 
 
-        <div>
-            <h3>アンケート結果</h2>
+  
+
+        <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8 text-center">
+            <h3 class="text-4xl mb-4">アンケート結果</h2>
             <div class="result">
-                <h3>選択ジャンル : {{ rev_genre_choice }}</h3>
-                {% for q,ans in rev_combined_list %}
-                <p>{{ q }}: {{ ans }}</p>
+                <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ rev_genre_choice }}</h3>
+                {% for q, ans, color, width in combined_list %}
+                <div class="mt-16 flex justify-center flex-col items-center">
+                    <p>{{ q }}: {{ ans }}</p>
+                    <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
+                        <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
+        </div>
+
+        <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8">
+            <div class="text-center">
+                <h2 class="text-4xl">レビュー</h2>
+            </div>
+            
+            {% if query==[] %}
+            <p class="mt-8">まだレビューはありません</p>
+            {% endif %}
+            {% for review in query %}
+            <a href="/review_detail?review_id={{review.id}}" class="block hover:scale-105">
+                <li class="my-4 mx-8 p-4 bg-zinc-700">
+                  <p>
+                    タイトル：{{review.to_dict()["mangaTitle"]}}
+                  </p>
+                  <p>{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</p>
+      
+                  {% for _ in range(review.get("evaluation")) %}
+                  <span class="text-yellow-400">★</span>
+                {% endfor %}
+                  <p style="word-wrap: break-word;">{{review.to_dict()["contents"][:100]}}</p>
+                </li>
+              </a>
+            {% endfor %}
         </div>
     <script>
         const followButton = document.getElementById('followButton');
