@@ -1,6 +1,6 @@
 
 {% extends "base.html" %} {% block extra_css %} 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+<script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://unpkg.com/@sjmc11/tourguidejs/dist/css/tour.min.css">
 
 {% endblock %} {% block content%}
@@ -8,7 +8,7 @@
 
 {% if logged_in %}
 
-
+<main class="bg-zinc-800">
   <div class="mx-20">
       <section class="w-full my-8">
           <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
@@ -300,7 +300,7 @@
       </ul>
     </section>
   </div>
-
+</main>
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
     <script src="../static/javascript/home.js"></script>
     <script src="https://unpkg.com/@sjmc11/tourguidejs/dist/tour.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
