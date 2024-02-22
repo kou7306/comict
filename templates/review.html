@@ -3,10 +3,12 @@
 {% endblock %} {% block content%}
 
 
-<section id="review" class="mb-12 mx-auto px-12 py-12 bg-zinc-800 w-3/4">
+
+<section id="review" class="mb-12 mx-auto px-12 py-12 bg-zinc-800 flex flex-wrap items-start w-3/4 justify-between">
+  <div>
     <h2 class="text-3xl">レビュー一覧</h2>
-    <form method="get">
-      <select name="sort_option" onchange="this.form.submit()" class="text-black">
+    <form method="get" class="flex items-center">
+      <select name="sort_option" onchange="this.form.submit()" class="text-black mr-4">
           <option value="evaluation_desc" {{ 'selected' if sort_option == 'evaluation_desc' else '' }}>評価の高い順</option>
           <option value="evaluation_asc" {{ 'selected' if sort_option == 'evaluation_asc' else '' }}>評価の低い順</option>
           <option value="newest" {{ 'selected' if sort_option == 'newest' else '' }}>新しい順</option>
@@ -14,30 +16,41 @@
           <option value="likes_count_desc" {{ 'selected' if sort_option == 'likes_count_desc' else '' }}>いいねが多い順</option>
           <option value="likes_count_asc" {{ 'selected' if sort_option == 'likes_count_asc' else '' }}>いいねが少ない順</option>
       </select>
-  </form>
-    <ul id="review-list">
-      {% for review in reviews %}
-      <a href="/review_detail?review_id={{review.get('id')}}" class="block hover:scale-105">
-        <li class="my-4 p-4 bg-zinc-700">
+
+    </form>
+  </div>
+  <div class="mt-4">
+    <a href="/reviewAdd" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+      レビュー投稿
+    </a>
+  </div>
+  <ul id="review-list" class="mx-auto max-w-3xl flex flex-wrap flex-row">
+    {% for review in reviews %}
+      <div class="w-1/6 my-3" style="width: 120px; height: 152px;">
+        <a href="/{{ review['mangaTitle'] }}/detail" style="display: block; width: 100%; height: 100%;">
+          <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" class="w-12 h-12 mr-4 hover:scale-110" alt="Comic Image" style="width: 100%; height: 100%;">
+        </a>
+      </div>
+      <div class="w-5/6">
+        <li class="my-3 p-4 bg-zinc-700">
+
           <p>
             タイトル：{{ review.get("mangaTitle") }}
           </p>
           <p>{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</p>
           {% for _ in range(review.get("evaluation")) %}
-          <span class="text-yellow-400">★</span>
+            <span class="text-yellow-400">★</span>
           {% endfor %}
           <p style="word-wrap: break-word;">{{ review.get("contents") }}</p>
           <p>いいね数:{{ review.get("likes_count")}}</p>
         </li>
-      {% endfor %}
+      </div>
+    {% endfor %}
   </ul>
 </section>
 
 
 
-<a href="/reviewAdd" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-レビュー投稿
-</a>
 <input type="hidden" id="last-review-id" value="{{reviews[-1].id}}">
 
 <script>
@@ -80,20 +93,32 @@ function loadMoreData() {
             return; // 最後のレビューIDが取得できない場合は処理を中断する
         }
         data.forEach(review => {
-            let reviewList = document.getElementById('review-list');
-            let li = document.createElement('li');
-            li.innerHTML = `
-            <a href="/review_detail?review_id=${review.id}" class="block hover:scale-105">
-              <li class="my-4 p-4 bg-gray-700">
-                <p>タイトル：${review.mangaTitle}</p>
-                <p>${review.username}</p>
-                ${Array(review.evaluation).fill().map(() => '<span class="text-yellow-400">★</span>').join('')}
-                <p style="word-wrap: break-word;">${review.contents}</p>
-                <p>いいね数：${review.likes_count}</p>
-              </li>
+          let reviewList = document.getElementById('review-list');
+          let image_div = document.createElement('div');
+          image_div.classList.add('w-1/6', 'my-3');
+          image_div.style.width = '120px';
+          image_div.style.height = '152px';
+
+          let review_div = document.createElement('div');
+          review_div.classList.add('w-5/6');
+
+          image_div.innerHTML = `
+            <a href="/${review.mangaTitle}/detail" style="display: block; width: 100%; height: 100%;">
+              <img src="${review.image}" class="w-12 h-12 mr-4 hover:scale-110" alt="Comic Image" style="width: 100%; height: 100%;">
             </a>`;
-            reviewList.appendChild(li);
+            
+          review_div.innerHTML = `
+            <li class="my-3 p-4 bg-zinc-700">
+              <p>タイトル：${review.mangaTitle}</p>
+              <p>${review.username}</p>
+              ${Array(review.evaluation).fill().map(() => '<span class="text-yellow-400">★</span>').join('')}
+              <p style="word-wrap: break-word;">${review.contents}</p>
+              <p>いいね数：${review.likes_count}</p>
+            </li>`;
+          reviewList.appendChild(image_div);
+          reviewList.appendChild(review_div);
         });
+
         // 最後のレビューIDを更新
         let lastReviewId = data[data.length - 1].id;
         document.getElementById('last-review-id').value = lastReviewId;
@@ -102,4 +127,5 @@ function loadMoreData() {
 }
 
 </script>
+<script src="../../static/javascript/reviewLike.js"></script>
 {% endblock %}
