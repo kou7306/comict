@@ -49,7 +49,7 @@ def matching(mangaAnswer,user_id):
         
         for user in nearest_values_users:
             # usernameが一致するレビューデータをすべて取り出す
-            review_query_result = review_doc_ref.where('username', '==', user["username"]).stream()
+            review_query_result = review_doc_ref.where('user_id', '==', user_id).stream()
             user_query_result = user_doc_ref.where('username', '==', user["username"]).stream()
             for doc in review_query_result:
                 review_query_results.append(doc.id)
