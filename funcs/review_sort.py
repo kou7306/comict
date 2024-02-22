@@ -6,6 +6,7 @@ def review_sort(sort_option,last_document_id,limit=4,title=None):
     user_id = session.get("user_id")
     user_doc_ref = db.collection('user')
     review_doc_ref = db.collection('review')
+    comics_doc_ref = db.collection('comics')
     query = review_doc_ref
     
     if title:
@@ -62,6 +63,14 @@ def review_sort(sort_option,last_document_id,limit=4,title=None):
                 user_data = user_doc.to_dict()
                 r_username = user_data.get('username')
                 review_data['username'] = r_username
+            
+        r_mangaTitle = review_data.get('mangaTitle')
+        if r_mangaTitle:
+            comics_doc = comics_doc_ref.document(r_mangaTitle).get()
+            if comics_doc.exists:
+                comics_data = comics_doc.to_dict()
+                r_mangaimage = comics_data.get('image')
+                review_data['image'] = r_mangaimage
 
         likes = review_data.get('likes', [])
         if user_id in likes:
