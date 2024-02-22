@@ -3,6 +3,7 @@
 {% endblock %} {% block content%}
 
 
+
 <section id="review" class="mb-12 mx-auto px-12 py-12 bg-zinc-800 flex flex-wrap items-start w-3/4 justify-between">
   <div>
     <h2 class="text-3xl">レビュー一覧</h2>
@@ -15,6 +16,7 @@
           <option value="likes_count_desc" {{ 'selected' if sort_option == 'likes_count_desc' else '' }}>いいねが多い順</option>
           <option value="likes_count_asc" {{ 'selected' if sort_option == 'likes_count_asc' else '' }}>いいねが少ない順</option>
       </select>
+
     </form>
   </div>
   <div class="mt-4">
@@ -31,6 +33,7 @@
       </div>
       <div class="w-5/6">
         <li class="my-3 p-4 bg-zinc-700">
+
           <p>
             タイトル：{{ review.get("mangaTitle") }}
           </p>

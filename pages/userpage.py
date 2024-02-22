@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages
+from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages,jsonify
 from firebaseSetUp import auth, db
 from bs4 import BeautifulSoup
 import requests
@@ -7,6 +7,7 @@ userpage_bp = Blueprint('userpage', __name__)
 
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
+comic_doc_ref = db.collection('comics')  
 
 def get_bar_color(ans):
     if ans <= -4:
@@ -34,7 +35,7 @@ def get_bar_width(ans):
     return ((ans + 5) / 10) * 100
 
 # ユーザーページ
-@userpage_bp .route('/userpage', methods=['GET', 'POST'])
+@userpage_bp.route('/userpage', methods=['GET', 'POST'])
 def user_page():   
     user_id = session.get('user_id')
     if not user_doc_ref.document(user_id).get().exists:
@@ -51,7 +52,8 @@ def user_page():
     user_data=user.to_dict()
     username=user_data["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
-    query = review_doc_ref.where('username', '==', username).get()
+    query = review_doc_ref.where('user_id', '==', user_id).get()
+
 
     # アンケート結果の取得・表示
     genre_value=user_data.get("genre")
@@ -89,7 +91,14 @@ def user_page():
         updated_combined_list.append((q, ans, color, width))
     
     #ブックマークをデータベースから取得
+    favorite_comic =[]
     favorite_titles = user_data["bookmark"]
+    for title in favorite_titles[:4]:
+        title_doc = comic_doc_ref.document(title).get()
+        if title_doc.exists:
+            title_data = title_doc.to_dict()
+            favorite_comic.append(title_data)
+   
 
     # フォローしたユーザーのIDを取得
     follow_data = []
@@ -99,17 +108,25 @@ def user_page():
             follow_name = follow_doc.to_dict()["username"]
             follow_data.append((follow_name, follow_id))
 
-    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_titles=favorite_titles,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in)
 
-@userpage_bp.route('/userpage/<id>', methods=['GET', 'POST'])
-def update(id):
-    if 'user' in session:
-        name = request.form['username']
-        print(name)
-        try:
-            db.collection('user').document(id).update({'username': name})
-            return redirect('/userpage')
-        except:
-            return redirect('/userpage', code=500)
-    else:
-        return redirect('/login?query=userpage')
+
+     
+
+    follower = user_doc_ref.where('follow', 'array_contains', user_id).stream()
+    # 検索結果のドキュメントの数を数える
+    follower_num = sum(1 for _ in follower)
+
+    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_comic=favorite_comic,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in,follower_num=follower_num,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
+ 
+
+@userpage_bp.route('/edit/<user_id>', methods=['POST']) 
+def edit_name(user_id): 
+    data = request.json
+
+    new_username = data.get("username")
+    print(new_username)
+    print(user_id)
+    user_doc_ref.document(user_id).update({"username": new_username})
+    return jsonify({"status": "success"})
+
+
