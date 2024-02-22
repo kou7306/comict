@@ -94,11 +94,12 @@
 {% endif %}
     <section class="w-full my-8">
       <h2 class="mb-8 text-3xl">漫画検索</h2>
-
-      <form action="/home" method="post">
-        <input type="text" name="search_query" placeholder="漫画検索" class="text-gray-900">
-        <button type="submit">検索</button>
-      </form>
+      <div class="">
+        <form action="/home" method="post" class="flex m-5">
+          <input type="text" name="search_query" placeholder="漫画検索" class="relative m-0 -mr-0.5 block min-w-0 w-10/100 rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:focus:border-primary">
+          <button type="submit" class="relative z-[2] flex items-center rounded-r bg-blue-500 hover:bg-blue-600 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg">検索</button>
+        </form>
+      </div>
       {% if results %}
       <h2>検索結果</h2>
         <ul>
