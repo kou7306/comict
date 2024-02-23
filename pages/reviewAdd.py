@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages
 from firebaseSetUp import auth, db
-from funcs.wiki import get_manga_title,get_wikipedia_page_details
+from funcs.wiki import get_manga_title,get_wikipedia_page_details,get_manga_genre
 from funcs.get_book import get_google_book_cover
 from firebase_admin import credentials, firestore
 from datetime import datetime
@@ -71,10 +71,11 @@ def review():
         # 検索結果がない場合の処理を追加
         if not any(query):
             url=get_wikipedia_page_details(manga_title)
+            genre = get_manga_genre(manga_title)
             image_url=get_google_book_cover(manga_title)
             print(image_url)
 
-            comics_doc_ref.document(manga_title).set({"title": manga_title,"bookmark":[],"url":url,"reviews":[review_document_id],"author":None,"image":image_url})
+            comics_doc_ref.document(manga_title).set({"title": manga_title,"genre": genre,"bookmark":[],"url":url,"reviews":[review_document_id],"author":None,"image":image_url})
         # 作品データベースに登録されている場合
         else:
             # 作品データベースの`reviews`フィールドに`id`を追加
