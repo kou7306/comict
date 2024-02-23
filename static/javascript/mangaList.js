@@ -30,7 +30,7 @@ function fetchComics(sortOption, page=1) {
                 hasMore = false;
             }
 
-            appendComicsToDom(data.comics);
+            appendComicsToDom(data.comics, sortOption);
             currentPage += 1;
             isLoading = false;
             document.getElementById('loadingIndicator').classList.add('hidden');
@@ -49,11 +49,13 @@ function fetchComics(sortOption, page=1) {
 
 let totalComicsCount = 0;
 
-function appendComicsToDom(comics) {
+function appendComicsToDom(comics, sortOption) {
     const contentContainer = document.querySelector('#manga-content');
     contentContainer.classList.add('grid', 'grid-cols-4', 'gap-8', 'p-12');
     comics.forEach((comic) => {
-        totalComicsCount += 1;
+        if (sortOption !== 'recommendations') {
+            totalComicsCount += 1;
+        }
         const mangaElement = document.createElement('div');
         mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg');
         mangaElement.innerHTML = `
@@ -61,7 +63,7 @@ function appendComicsToDom(comics) {
                 <img src="${comic.image}" alt="${comic.title}" class="w-full h-auto object-cover rounded-lg">
             </div>
             <div class="flex items-baseline gap-2">
-                <span class=" font-black text-gray-400 text-3xl">${totalComicsCount}.</span>
+                ${sortOption !== 'recommendations' ? `<span class="font-black text-gray-400 text-3xl">${totalComicsCount}.</span>` : ''}
                 <h3 class="mt-2 text-xl text-center">${comic.title}</h3>
             </div>
         `;
