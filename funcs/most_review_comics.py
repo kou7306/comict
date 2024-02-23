@@ -14,7 +14,7 @@ comics_doc_ref=db.collection('comics')
 # レビュー数が多い漫画を取得
 
 
-def most_review_comics(date):
+def most_review_comics(date=None):
     # 漫画ごとのレビュー数を格納する辞書を作成
     comic_review_count = {}
 
