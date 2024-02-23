@@ -58,7 +58,7 @@
 let isLoading = false;
 window.addEventListener('scroll', function() {
   
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight-5) {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight-5 && !isLoading) {
         console.log('load more data');
         isLoading = true;
         // スクロールの最後に達した時に新しいデータを読み込む
@@ -67,12 +67,13 @@ window.addEventListener('scroll', function() {
         if(isLoading == true)
         setTimeout(() => {
             isLoading = false;
-        }, 500);
+        }, 100);
         
     }
 });
 
 function loadMoreData() {
+  console.log("loadMoreData");
     let startAfter = document.getElementById('last-review-id').value; // 最後のレビューIDを取得
     fetch('/load-more-data', {
         method: 'POST',
