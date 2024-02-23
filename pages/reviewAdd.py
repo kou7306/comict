@@ -72,6 +72,7 @@ def review():
         if not any(query):
             url=get_wikipedia_page_details(manga_title)
             image_url=get_google_book_cover(manga_title)
+            print(image_url)
 
             comics_doc_ref.document(manga_title).set({"title": manga_title,"bookmark":[],"url":url,"reviews":[review_document_id],"author":None,"image":image_url})
         # 作品データベースに登録されている場合
