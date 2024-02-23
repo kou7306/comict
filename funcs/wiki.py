@@ -1,5 +1,6 @@
 import wikipedia
 import requests
+from bs4 import BeautifulSoup
 
 def get_wikipedia_page_details(title):
     endpoint = "https://ja.wikipedia.org/w/api.php"
@@ -68,3 +69,40 @@ def get_manga_detail():
 
 # 例として「東リべ」の漫画のカテゴリと正確なページタイトルを取得
 # get_manga_title('東リべ')　-->　入力されたタイトル "東リべ" の正確なページタイトル: 東京リベンジャーズが帰ってくる
+
+
+
+
+# ジャンルを取得
+def get_manga_genre(title):
+    wikipedia.set_lang('ja')
+
+    # 漫画のWikipediaページを検索
+    search_results = wikipedia.search(title)
+    print(search_results)
+
+    
+
+        # ページ情報を取得
+    page = wikipedia.page(search_results[0])
+    url = page.url
+
+    # ページのHTMLを取得
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    print(soup) 
+
+    # インフォボックスを探す
+    infobox = soup.find('table', class_='infobox bordered')
+    print(infobox)
+
+    if infobox:
+        # ジャンルの行を探す
+        for row in infobox.find_all('tr'):
+            header = row.find('th')
+            if header and 'ジャンル' in header.get_text():
+                genre_cell = row.find('td')
+                if genre_cell:
+                    return genre_cell.get_text().strip()
+
+    return None

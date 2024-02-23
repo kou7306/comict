@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, session, flash, url_for, get_flashed_messages,jsonify
 from firebaseSetUp import auth, db
 from firebase_admin import credentials, firestore
-from funcs.wiki import get_manga_title,get_wikipedia_page_details
+from funcs.wiki import get_manga_title,get_wikipedia_page_details,get_manga_genre
 from funcs.get_book import get_google_book_cover
 
 favoriteAdd_bp = Blueprint('favoriteAdd', __name__)
@@ -42,11 +42,12 @@ def add_manga():
         # 検索結果がない場合の処理を追加
         if not any(query):
             url=get_wikipedia_page_details(manga_title)
+            genre = get_manga_genre(manga_title)
             image_url=get_google_book_cover(manga_title)
             print(url)
             print(image_url)
 
-            comics_doc_ref.document(manga_title).set({"title": manga_title,"bookmark":[user_id],"url":url,"reviews":[],"author":None,"image":image_url})
+            comics_doc_ref.document(manga_title).set({"title": manga_title,"genre":genre,"bookmark":[user_id],"url":url,"reviews":[],"author":None,"image":image_url})
         else:
             # comicsドキュメントのbookmarkを更新
             comics_doc_ref.document(manga_title).update({
