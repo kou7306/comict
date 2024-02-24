@@ -43,8 +43,12 @@ async function search(user_id) {
     searchEnd = false;
 
     if (query.trim() === '') {
-        // 検索クエリが空の場合は処理しない
+        // 検索クエリが空の場合
+        document.getElementById('message').textContent = '作品名を入力してください';
         return;
+    } else {
+        // クエリが空でない場合、メッセージをクリア
+        document.getElementById('message').textContent = '';
     }
 
     try {
@@ -90,8 +94,7 @@ async function search(user_id) {
 
 
 // ブックマークの削除
-function delete_manga(user_id,title){
-   
+function delete_manga(title){
     // POSTリクエストのオプションを設定
     const options = {
         method: 'POST',
@@ -171,6 +174,9 @@ function appendComicsToDom(comics) {
             </div>
             <div class="flex items-baseline gap-2">
                 <h3 class="mt-2 text-xl text-center">${comic.title}</h3>
+                <button onclick="event.stopPropagation(); delete_manga('${comic.title}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  削除
+                </button>
             </div>
         `;
         mangaElement.addEventListener('click', () => {
@@ -198,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     closeModal.addEventListener('click', () => {
+        document.getElementById('message').textContent = '';
         modal.style.display = 'none';
     });
 
