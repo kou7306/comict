@@ -16,7 +16,6 @@ comics_doc_ref=db.collection('comics')
 def review():
     if request.method == 'GET':
         user_id = session.get('user_id')
-        print(user_id)
         if user_id:
             logged_in = True
         else:
@@ -32,7 +31,6 @@ def review():
         if not user_id or not user_doc_ref.document(user_id).get().exists:
             return jsonify({"error": "Unauthorized"}), 401
         
-        print(user_id)        
         review_id = request.form.get('review_id')
         review_ref = db.collection('review').document(review_id)
         review_doc = review_ref.get()

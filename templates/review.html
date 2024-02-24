@@ -135,7 +135,7 @@ function loadMoreData() {
           reviewList.appendChild(image_div);
           reviewList.appendChild(review_div);
 
-          // 新しく生成されたlikeButtonにイベントリスナーを追加
+          // loadMoreDataで新しく生成されたlikeButtonにイベントリスナーを追加
           const newLikeButton = review_div.querySelector('.likeButton');
           newLikeButton.addEventListener('click', function() {
               const reviewId = this.dataset.reviewId;
@@ -149,27 +149,24 @@ function loadMoreData() {
               .then(response => response.json())
               .then(data => {
                   if (data.error != "Unauthorized") {
-                    const likeCountElement = this.parentNode.querySelector('.likeCount'); // いいね数の要素を取得
-                    const heartIcon = this.querySelector('i'); // ハートのアイコン要素を取得
+                    const likeCountElement = this.parentNode.querySelector('.likeCount');
+                    const heartIcon = this.querySelector('i');
 
-                    // 現在のいいね数を取得
                     let likeCount = parseInt(likeCountElement.textContent.replace('いいね数: ', ''), 10);
 
-                    // クリックされたボタンの状態に応じていいね数を更新
                     if (data.status == 'liked') {
-                        likeCount += 1; // いいねされた場合はいいね数を増やす
-                        heartIcon.style.color = 'rgb(255, 73, 234)'; // ハートのアイコンの色を変更
+                        likeCount += 1;
+                        heartIcon.style.color = 'rgb(255, 73, 234)';
                     } else {
-                        likeCount -= 1; // いいねが解除された場合はいいね数を減らす
-                        heartIcon.style.color = ''; // ハートのアイコンの色をデフォルトに戻す
+                        likeCount -= 1;
+                        heartIcon.style.color = '';
                     }
 
-                    // いいね数を更新した値に書き換える
                     likeCountElement.textContent = `いいね数: ${likeCount}`;
 
                     console.log('Success:', data);
                   } else {
-                    window.location.href = "/login"; // ログインページにリダイレクト
+                    window.location.href = "/login";
                   }
               })
               .catch(error => {
