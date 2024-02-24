@@ -8,7 +8,7 @@
 
 {% if logged_in %}
 
-<main class="bg-zinc-800">
+<main>
   <div class="mx-20">
       <section class="w-full my-8">
           <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
@@ -281,7 +281,7 @@
   <h2 class="text-3xl">タイムライン</h2>
   <ul id="review-list" class="mx-auto w-4/5 flex flex-wrap flex-row">
     {% for review in review_doc_ref.stream() %}
-    <div class="w-full flex items-start my-3 p-4 bg-zinc-700 transition duration-500 hover:scale-105">
+    <div class="w-full flex items-start my-3 p-4 bg-zinc-900 transition duration-500 hover:scale-105">
       <div style="width: 120px;">
         <a href="/{{ review.to_dict()["mangaTitle"] }}/detail">
           <img src="{{ comics_doc_ref.document(review.to_dict()['mangaTitle']).get().to_dict()['image'] }}" class="h-auto w-full object-contain transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image">
@@ -292,7 +292,7 @@
           <p class="mb-1 break-all text-2xl font-bold">{{review.to_dict()["mangaTitle"]}}</p>
           <div class="flex items-center">
             <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png" alt="" class="h-auto max-h-8">
-            <p class="ml-2 break-all">{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</p>
+            <a href="/{{ review.to_dict()["user_id"]}}/userpage" class="ml-2 break-all">{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</a>
           </div>
           <p class="mt-1 text-xl">
             {% for _ in range(review.get("evaluation")) %}
