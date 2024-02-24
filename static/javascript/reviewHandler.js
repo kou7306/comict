@@ -20,7 +20,7 @@ function fetchAndDisplayReviews() {
           const likeButtonText = review.liked ? 'いいねを取り消す' : 'いいね';
           reviewElement.innerHTML = `
           <a href="/review_detail?review_id=${review.id}" class="block hover:scale-105">
-            <li class="my-4 p-4 bg-gray-700">
+            <li class="my-4 p-4 bg-zinc-700">
               <p>タイトル：${review.mangaTitle}</p>
               <p>${review.username}</p>
               ${Array(review.evaluation).fill().map(() => '<span class="text-yellow-400">★</span>').join('')}

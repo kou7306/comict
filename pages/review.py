@@ -9,7 +9,7 @@ review_bp = Blueprint('review', __name__)
 
 user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
-
+comics_doc_ref=db.collection('comics')
 
 # レビュー一覧
 @review_bp.route('/review')
@@ -25,10 +25,9 @@ def review():
             logged_in = False
         sort_option = request.args.get('sort_option')
 
-       
 
         reviews = review_sort(sort_option,None)
 
-        return render_template("review.html", user_id=user_id, reviews=reviews, sort_option=sort_option, logged_in=logged_in, user_doc_ref=user_doc_ref)
+        return render_template("review.html", user_id=user_id, reviews=reviews, sort_option=sort_option, logged_in=logged_in, user_doc_ref=user_doc_ref, comics_doc_ref=comics_doc_ref)
 
 
