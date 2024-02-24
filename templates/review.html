@@ -28,7 +28,7 @@
     {% for review in reviews %}
       <div class="w-1/6 my-3" style="width: 120px; height: 152px;">
         <a href="/{{ review['mangaTitle'] }}/detail" style="display: block; width: 100%; height: 100%;">
-          <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" class="w-12 h-12 mr-4 hover:scale-110" alt="Comic Image" style="width: 100%; height: 100%;">
+          <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" class="w-12 h-12 mr-4 transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image" style="width: 100%; height: 100%;">
         </a>
       </div>
       <div class="w-5/6">
@@ -58,7 +58,7 @@
 let isLoading = false;
 window.addEventListener('scroll', function() {
   
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight-5) {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight-5 && !isLoading) {
         console.log('load more data');
         isLoading = true;
         // スクロールの最後に達した時に新しいデータを読み込む
@@ -67,12 +67,13 @@ window.addEventListener('scroll', function() {
         if(isLoading == true)
         setTimeout(() => {
             isLoading = false;
-        }, 500);
+        }, 100);
         
     }
 });
 
 function loadMoreData() {
+  console.log("loadMoreData");
     let startAfter = document.getElementById('last-review-id').value; // 最後のレビューIDを取得
     fetch('/load-more-data', {
         method: 'POST',
@@ -104,7 +105,7 @@ function loadMoreData() {
 
           image_div.innerHTML = `
             <a href="/${review.mangaTitle}/detail" style="display: block; width: 100%; height: 100%;">
-              <img src="${review.image}" class="w-12 h-12 mr-4 hover:scale-110" alt="Comic Image" style="width: 100%; height: 100%;">
+              <img src="${review.image}" class="w-12 h-12 mr-4 transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image" style="width: 100%; height: 100%;">
             </a>`;
             
           review_div.innerHTML = `
