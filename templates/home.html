@@ -281,10 +281,10 @@
   <h2 class="text-3xl">タイムライン</h2>
   <ul id="review-list" class="mx-auto w-4/5 flex flex-wrap flex-row">
     {% for review in review_doc_ref.stream() %}
-    <div class="w-full flex items-start my-3 p-4 bg-zinc-700">
+    <div class="w-full flex items-start my-3 p-4 bg-zinc-700 transition duration-500 hover:scale-105">
       <div style="width: 120px;">
         <a href="/{{ review.to_dict()["mangaTitle"] }}/detail">
-          <img src="{{ comics_doc_ref.document(review.to_dict()['mangaTitle']).get().to_dict()['image'] }}" class="h-auto w-full object-contain transition duration-500 rounded-lg" alt="Comic Image">
+          <img src="{{ comics_doc_ref.document(review.to_dict()['mangaTitle']).get().to_dict()['image'] }}" class="h-auto w-full object-contain transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image">
         </a>
       </div>
       <div class="ml-4 flex-1">
