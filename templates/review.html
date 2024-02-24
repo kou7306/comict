@@ -43,11 +43,11 @@
           <p style="word-wrap: break-word;">{{ review.get("contents") }}</p>
           <p>いいね数:{{ review.get("likes_count")}}</p>
           {% if review['liked'] %}
-          <button class="likeButton" data-review-id="{{ review.get('id') }}" onclick="setTimeout(function() { location.reload(true); }, 100)">
+          <button class="likeButton" data-review-id="{{ review.get('id') }}" onclick="setTimeout(function() { location.reload(true); }, 120)">
               <i class="material-icons" style="color: rgb(255, 73, 234);">favorite</i>
           </button>
           {% else %}
-          <button class="likeButton" data-review-id="{{ review.get('id') }}" onclick="setTimeout(function() { location.reload(true); }, 100)">
+          <button class="likeButton" data-review-id="{{ review.get('id') }}" onclick="setTimeout(function() { location.reload(true); }, 120)">
               <i class="material-icons">favorite_border</i>
           </button>
           {% endif %}
@@ -124,10 +124,10 @@ function loadMoreData() {
               <p style="word-wrap: break-word;">${review.contents}</p>
               <p>いいね数：${review.likes_count}</p>
               ${review.liked ? 
-                `<button class="likeButton" data-review-id="${review.id}" onclick="setTimeout(function() { location.reload(true); }, 100)">
+                `<button class="likeButton" data-review-id="${review.id}" onclick="setTimeout(function() { location.reload(true); }, 120)">
                     <i class="material-icons" style="color: rgb(255, 73, 234);">favorite</i>
                 </button>` :
-                `<button class="likeButton" data-review-id="${review.id}" onclick="setTimeout(function() { location.reload(true); }, 100)">
+                `<button class="likeButton" data-review-id="${review.id}" onclick="setTimeout(function() { location.reload(true); }, 120)">
                     <i class="material-icons">favorite_border</i>
                 </button>`
               }
