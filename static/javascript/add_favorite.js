@@ -43,15 +43,19 @@ async function search(user_id) {
     searchEnd = false;
 
     if (query.trim() === '') {
-        // 検索クエリが空の場合は処理しない
+        // 検索クエリが空の場合
+        document.getElementById('message').textContent = '作品名を入力してください';
         return;
+    } else {
+        // クエリが空でない場合、メッセージをクリア
+        document.getElementById('message').textContent = '';
     }
 
     try {
         // ローディング表示
-        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('modalLoadingIndicator').style.display = 'flex';
         // 検索欄を無効化
-        document.getElementById('add_favorite_form').disabled = true;
+        document.getElementById('modal').disabled = true;
 
         const response = await fetch('/search?query=' + query);
         const data = await response.json();
@@ -83,15 +87,14 @@ async function search(user_id) {
         alert('エラーが発生しました');
     } finally {
         // ローディング非表示
-        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('modalLoadingIndicator').style.display = 'none';
 
     }
 }
 
 
 // ブックマークの削除
-function delete_manga(user_id,title){
-   
+function delete_manga(title){
     // POSTリクエストのオプションを設定
     const options = {
         method: 'POST',
@@ -118,3 +121,93 @@ function delete_manga(user_id,title){
         });
 
   }
+
+let currentPage = 1;
+const pageSize = 8;
+let isLoading = false;
+let hasMore = true;
+
+function fetchComics(page=1) {
+    if (isLoading || !hasMore) return;
+    isLoading = true;
+    document.getElementById('loadingIndicator').style.display = 'flex';
+
+    fetch(`/api/favoriteAdd?page=${page}&page_size=${pageSize}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.comics.length < pageSize) {
+                hasMore = false;
+            }
+
+            appendComicsToDom(data.comics);
+            currentPage += 1;
+            isLoading = false;
+            document.getElementById('loadingIndicator').style.display = 'none';
+
+        })
+        .catch(error => {
+            isLoading = false;
+            const messageContainer = document.querySelector('#error-message');
+            if (messageContainer) {
+                messageContainer.innerHTML = `<p>${error.message}</p>`;
+            }
+            document.getElementById('loadingIndicator').style.display = 'none';
+            // document.getElementById('loadingIndicator').classList.add('hidden');
+
+        });
+}
+
+function appendComicsToDom(comics) {
+    const contentContainer = document.querySelector('#comic-container');
+    contentContainer.classList.add('grid', 'grid-cols-4', 'gap-8', 'p-12');
+    comics.forEach((comic) => {
+        const mangaElement = document.createElement('div');
+        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg');
+        mangaElement.innerHTML = `
+            <div class="w-64 h-full flex justify-center items-center overflow-hidden bg-gray-200 rounded-lg">
+                <img src="${comic.image}" alt="${comic.title}" class="w-full h-auto object-cover rounded-lg">
+            </div>
+            <div class="flex items-baseline gap-2">
+                <h3 class="mt-2 text-xl text-center">${comic.title}</h3>
+                <button onclick="event.stopPropagation(); delete_manga('${comic.title}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                  削除
+                </button>
+            </div>
+        `;
+        mangaElement.addEventListener('click', () => {
+            window.location.href = `/${encodeURIComponent(comic.title)}/detail`;
+        });
+        contentContainer.appendChild(mangaElement);
+    });
+}
+
+window.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+        fetchComics(currentPage);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const addButton = document.getElementById('addButton');
+    const modal = document.getElementById('modal');
+    const closeModal = document.getElementById('closeModal');
+
+    addButton.addEventListener('click', () => {
+        modal.style.display = 'flex';
+    });
+    
+    closeModal.addEventListener('click', () => {
+        document.getElementById('message').textContent = '';
+        modal.style.display = 'none';
+    });
+
+    // 初回の読み込み
+    fetchComics(currentPage);
+});

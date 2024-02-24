@@ -50,7 +50,7 @@ function fetchComics(sortOption, page=1) {
 let totalComicsCount = 0;
 
 function appendComicsToDom(comics, sortOption) {
-    const contentContainer = document.querySelector('#manga-content');
+    const contentContainer = document.querySelector('#comic-container');
     contentContainer.classList.add('grid', 'grid-cols-4', 'gap-8', 'p-12');
     comics.forEach((comic) => {
         if (sortOption !== 'recommendations') {
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             activeTab = tab;
             const sortOption = tab.getAttribute('data-tab');
-            const contentContainer = document.querySelector('#manga-content');
+            const contentContainer = document.querySelector('#comic-container');
             const messageContainer = document.querySelector('#error-message');
             messageContainer.innerHTML = '';
             contentContainer.innerHTML = '';

@@ -15,95 +15,15 @@
   </ul>
 </div>
 <div id="error-message" class="mt-8"></div>
-<!-- ローディングインジケータ -->
-<div id="loadingIndicator" class="hidden fixed top-0 left-0 right-0 bottom-0 z-50 flex justify-center items-center bg-white bg-opacity-25">
-    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-900"></div>
+
+<div id="manga-content" class="relative mt-8">
+  <div id="comic-container"></div>
+  <!-- ローディングインジケータ -->
+  <div id="loadingIndicator" class="absolute top-0 left-0 right-0 bottom-0 hidden flex justify-center items-center">
+    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-200"></div>
+  </div>
 </div>
 
-<div id="manga-content" class="mt-8"></div>
-
-
-
-
-
-
-
-
-{# 
-<div class="mx-20">
-{% if logged_in %}
-<section class="w-full my-8">
-    <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
-    
-    <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper mySwiper">
-        <div class="swiper-wrapper">
-          {% if data != [] %}
-            {% for title, url in data %}
-            {% if url != "no" %}
-            <div class="swiper-slide bg-center bg-cover">
-                <a href="/{{ title }}/detail" >
-                    <img class="block w-full h-full" src="{{ url }}" alt="">
-                </a>
-            </div>
-            {% else %}
-            <div class="swiper-slide">
-              <a href="/{{ title }}/detail">
-                  <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
-              </a>
-            </div>             
-            {% endif %}
-            {% endfor %}
-            {% endif %}
-
-            {% if favolite_book_urls !=[] %}
-            {% for url in favolite_book_urls %}
-            <div class="swiper-slide">
-              <img class="image-placeholder" src="{{ url }}" alt="">
-            </div>
-            
-            
-            {% endfor %}
-            {% endif %}
-            
-        </div>
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    </div>
-  </section>
-  {% endif %}
-
-
-  <section class="w-full my-8">
-    <h2 class="text-3xl">漫画一覧</h2>
-    <form method="get">
-      <select name="sort_option" onchange="this.form.submit()" class="text-black">
-          <option value="all_review" {{ 'selected' if sort_option == 'all_review' else '' }}>レビューが多い順</option>
-          <option value="oneweek_review" {{ 'selected' if sort_option == 'oneweek_review' else '' }}>最近レビューが多い順</option>
-          <option value="all_bookmark" {{ 'selected' if sort_option == 'all_bookmark' else '' }}>ブックマークの多い順</option>
-          <option value="all_evaluate" {{ 'selected' if sort_option == 'all_evaluate' else '' }}>評価の高い順</option>
-      </select>
-  </form>
-    <ul>
-      {% if sort_data != [] %}
-      {% for title, url in sort_data %}
-      {% if url != "no" %}
-        <li>
-          <a href="/{{ title }}/detail" >
-              <img class="block w-3/12" src="{{ url }}" alt="">
-          </a>
-        </li>
-      {% else %}
-        <li>
-            <a href="/{{ title }}/detail">
-                <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
-            </a>
-        </li>             
-      {% endif %}
-      {% endfor %}
-      {% endif %}
-  </ul>
-</section>
-</div> #}
 <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
 <script src="../static/javascript/mangaList.js"></script>
 {% endblock %}
