@@ -198,10 +198,10 @@ def home():
         print(user_id)
         show_intro = flag == -2
         session['flag'] = flag + 1
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results)
+        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref)
 
     #loginしていない場合
     else:
            # テンプレートにログイン状態（logged_in）を渡す
-        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results)
+        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref)
  
