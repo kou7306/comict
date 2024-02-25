@@ -1,26 +1,30 @@
-var swiper = new Swiper('.mySwiper', {
-     effect: 'coverflow',
-     slidesPerView: 2,
-     breakpoints: {
-          // 画面幅が630px以上のとき
-          630: {
-            slidesPerView: 5,
-          },
-     },
-     spaceBetween: 0,
-     grabCursor: true,
-     centeredSlides: true,
-     coverflowEffect: {
-          rotate: 15,
-          stretch: 0,
-          depth: 300,
-          modifier: 1,
-          slideShadows: true,
-     },
-     loop: true,
+const mySwiper = new Swiper('.swiper', {
+	slidesPerView: 2,
+	slidesPerGroup: 2,
+	spaceBetween: 16,
+	grabCursor: true,
+	pagination: {
+		el: '.swiper-pagination',
+		clickable: true,
+	},
+	navigation: {
+		nextEl: '.swiper-button-next',
+		prevEl: '.swiper-button-prev',
+	},
+	breakpoints: {
+		600: {
+			slidesPerView: 4,
+			lidesPerGroup: 4,
+			spaceBetween: 24,
+		},
+		1025: {
+			slidesPerGroup: 6,
+			slidesPerView: 6,
+			spaceBetween: 32,
+		}
+	},
 });
 
 function showAlert() {
-    alert('ボタンがクリックされました！');
+	alert('ボタンがクリックされました！');
 }
-

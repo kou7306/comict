@@ -3,103 +3,97 @@
 <link rel="stylesheet" href="https://unpkg.com/@sjmc11/tourguidejs/dist/css/tour.min.css">
 <script src="https://cdn.tailwindcss.com"></script>
 {% endblock %} {% block content%}
-<main class="bg-zinc-800">
-  <div class="mx-20">
+<main>
+  <div class="l-section mx-20">
     <section class="w-full my-8">
-      <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>
-      
-      <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper mySwiper">
-          <div class="swiper-wrapper">
-            {% if data != [] %}
-              {% for title, url in data %}
+      <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>   
+      <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper">
+        <div class="swiper-wrapper">
+          {% if data != [] %}
+            {% for title, url in data %}
               {% if url != "no" %}
-              <div class="swiper-slide bg-center bg-cover">
-                  <a href="/{{ user_id }}/{{ title }}/detail" >
-                      <img class="block w-full h-full" src="{{ url }}" alt="">
-                  </a>
-              </div>
-              {% else %}
-              <div class="swiper-slide">
-                <a href="/{{ user_id }}/{{ title }}/detail">
-                    <img class="image-placeholder" src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
+                <a href="/{{ title }}/detail" class="swiper-slide">
+                  <article class="slide">
+                    <div class="slide-media img-cover"><img src="{{ url }}" alt=""></div>
+                    <div class="slide-content">
+                      <h2 class="slide-title">{{ title }}</h2>
+                    </div>
+                  </article>
                 </a>
-              </div>             
+              {% else %}
+                <a href="/{{ title }}/detail" class="swiper-slide">
+                  <article class="slide">
+                    <div class="slide-media img-cover"><img src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt=""></div>
+                    <div class="slide-content">
+                      <h2 class="slide-title">{{ title }}</h2>
+                    </div>
+                  </article>
+                </a>
               {% endif %}
-              {% endfor %}
-              {% endif %}
-
-              {% if favolite_book_urls !=[] %}
-              {% for url in favolite_book_urls %}
-              <div class="swiper-slide">
-                <img class="image-placeholder" src="{{ url }}" alt="">
-              </div>
-              
-              
-              {% endfor %}
-              {% endif %}
-          </div>
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
       </div>
     </section>
-
-    
-
     <section class="my-20" id="user">
-        <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
+      <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
         <ul data-tg-order='2' data-tg-tour='あなたのアンケートの回答と似ているユーザーです。' class="flex flex-wrap list-none">
           {% if user_query != None %}
-          {% for id in user_query %}
-          {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+            {% for id in user_query %}
+              {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
+                <li class="w-2/12 text-center box-border m-2">
+                  <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
+                  <div>
+                    <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
+                  </div>    
+                </li>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </ul>
+    </section>
+    <section class="my-20" id="reviewer">
+      <h2 class="text-3xl" >フォローしたユーザー</h2>
+      <ul class="flex flex-wrap list-none">
+        {% for follow in follow_data %}
           <li class="w-2/12 text-center box-border m-2">
-
             <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
             <div>
-              <a href="/{{user_id}}/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
-
-
-          </div>    
+              <a href="/{{follow[1]}}/userpage" class="hover:text-blue-500">{{follow[0]}}</a>
+            </div>
           </li>
-      
-        {% endif %}
-          {% endfor %}
-          {% endif %}
-        
+        {% endfor %}
       </ul>
     </section>
-
-    <section class="my-20" id="reviewer">
-        <h2 class="text-3xl" >フォローしたユーザー</h2>
-        <ul class="flex flex-wrap list-none">
-          
-          {% for follow in follow_data %}
-          <li class="w-2/12 text-center box-border m-2">
-          <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
-          <div>
-            <a href="/{{user_id}}/{{follow[1]}}/userpage" class="hover:text-blue-500">{{follow[0]}}</a>
-            
-          </div>    
-        </li>
-          {% endfor %}
-   
-      </ul>
-    </section>
-
     <section id="timeline">
-        <h2 class="text-3xl">タイムライン</h2>
-        <ul>
-          {% for review in review_doc_ref.stream() %}
-          
-          <li class="my-4 p-4 bg-gray-800">
-            <p>{{review.to_dict()["username"]}}</p>
-            <a href="/{{ user_id }}/{{review.to_dict()['mangaTitle']}}/detail" class="hover:text-blue-500">
-              タイトル：{{review.to_dict()["mangaTitle"]}}
+      <h2 class="text-3xl">新着レビュー</h2>
+      <ul id="review-list" class="mx-auto w-4/5 flex flex-wrap flex-row">
+        {% for review in review_doc_ref.stream() %}
+        <div class="w-full flex items-start my-3 p-4 bg-zinc-900 transition duration-500 hover:scale-105">
+          <div style="width: 120px;">
+            <a href="/{{ review.to_dict()["mangaTitle"] }}/detail">
+              <img src="{{ comics_doc_ref.document(review.to_dict()['mangaTitle']).get().to_dict()['image'] }}" class="h-auto w-full object-contain transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image">
             </a>
-            <p>評価：{{review.to_dict()["evaluation"]}}</p>
-            <p>{{review.to_dict()["contents"]}}</p>
-          </li>
-          
-          {% endfor %}
+          </div>
+          <div class="ml-4 flex-1">
+            <a href="/review_detail?review_id={{ review.id }}" class="block">
+              <p class="mb-1 break-all text-2xl font-bold">{{review.to_dict()["mangaTitle"]}}</p>
+              <div class="flex items-center">
+                <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png" alt="" class="h-auto max-h-8">
+                <a href="/{{ review.to_dict()["user_id"]}}/userpage" class="ml-2 break-all">{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</a>
+              </div>
+              <p class="mt-1 text-xl">
+                {% for _ in range(review.get("evaluation")) %}
+                  <span class="text-yellow-400">★</span>
+                {% endfor %}
+              </p>
+              <p class="my-1 break-all">{{review.to_dict()["contents"]}}</p>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
       </ul>
     </section>
   </div>
