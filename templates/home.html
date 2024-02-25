@@ -15,19 +15,25 @@
             {% if data != [] %}
               {% for title, url in data %}
                 {% if url != "no" %}
-                  <a href="/{{ title }}/detail" class="swiper-slide">
+                  <a href="/{{ title }}/detail" class="swiper-slide relative">
                     <article class="slide">
-                      <div class="slide-media img-cover"><img src="{{ url }}" alt=""></div>
-                      <div class="slide-content">
+                      <div class="slide-media">
+                        <img src="{{ url }}" alt="">
+                      </div>
+                      <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
+                        <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
                         <h2 class="slide-title">{{ title }}</h2>
                       </div>
                     </article>
                   </a>
                 {% else %}
-                  <a href="/{{ title }}/detail" class="swiper-slide">
+                  <a href="/{{ title }}/detail" class="swiper-slide relative">
                     <article class="slide">
-                      <div class="slide-media img-cover"><img src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt=""></div>
-                      <div class="slide-content">
+                      <div class="slide-media">
+                        <img src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
+                      </div>
+                      <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
+                        <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
                         <h2 class="slide-title">{{ title }}</h2>
                       </div>
                     </article>
@@ -39,7 +45,7 @@
           <div class="swiper-button-prev"></div>
           <div class="swiper-button-next"></div>
         </div>
-      </section>
+      </section>  
       <section class="my-20" id="user">
         <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
           <ul data-tg-order='2' data-tg-tour='あなたのアンケートの回答と似ているユーザーです。' class="flex flex-wrap list-none">
@@ -50,7 +56,7 @@
                     <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
                     <div>
                       <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
-                    </div>    
+                    </div>
                   </li>
                 {% endif %}
               {% endfor %}
@@ -83,6 +89,10 @@
                 <a href="/{{ title }}/detail" >
                   <img class="block w-full h-full hover:scale-105" src="{{ url }}" alt="">
                 </a>
+                <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
+                  <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
+                  <h2 class="slide-title">{{ title }}</h2>
+                </div>
               </div>
             {% endfor %}
           {% endif %}
@@ -101,6 +111,10 @@
                 <a href="/{{ title }}/detail" >
                   <img class="block w-full h-full" src="{{ url }}" alt="">
                 </a>
+                <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
+                  <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
+                  <h2 class="slide-title">{{ title }}</h2>
+                </div>
               </div>
             {% endfor %}
           {% endif %}
@@ -119,6 +133,10 @@
                 <a href="/{{ title }}/detail" >
                   <img class="block w-full h-full" src="{{ url }}" alt="">
                 </a>
+                <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
+                  <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
+                  <h2 class="slide-title">{{ title }}</h2>
+                </div>
               </div>
             {% endfor %}
           {% endif %}
@@ -137,6 +155,10 @@
                 <a href="/{{ title }}/detail" >
                   <img class="block w-full h-full" src="{{ url }}" alt="">
                 </a>
+                <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
+                  <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
+                  <h2 class="slide-title">{{ title }}</h2>
+                </div>
               </div>
             {% endfor %}
           {% endif %}
