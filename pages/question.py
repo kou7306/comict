@@ -19,7 +19,7 @@ def question(genre):
         return render_template("question"+ genre + '.html',user_id=user_id,genre=genre,logged_in=logged_in)
     else:
 
-        #長さ20*８のリストを作成し、０で初期化する
+        #長さ20*7のリストを作成し、０で初期化する
         mangaAnswer = [0.0] *141
 
         genre=int(genre)
