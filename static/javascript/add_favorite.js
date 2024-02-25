@@ -12,6 +12,7 @@ function inputFunction(user_id,title){
         body: JSON.stringify({
             title: title,
             // 他に送りたいデータがあればここに追加
+            requested_user_id: user_id, //更新したいuser_id
         }),
         credentials: 'same-origin' // CSRF対策
     };
@@ -123,16 +124,17 @@ function delete_manga(title){
   }
 
 let currentPage = 1;
-const pageSize = 8;
+const pageSize = 4;
 let isLoading = false;
 let hasMore = true;
+let userId;
 
-function fetchComics(page=1) {
+function fetchComics(userId, page=1) {
     if (isLoading || !hasMore) return;
     isLoading = true;
     document.getElementById('loadingIndicator').style.display = 'flex';
 
-    fetch(`/api/favoriteAdd?page=${page}&page_size=${pageSize}`)
+    fetch(`/api/favoriteAdd?user_id=${userId}&page=${page}&page_size=${pageSize}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -144,7 +146,7 @@ function fetchComics(page=1) {
                 hasMore = false;
             }
 
-            appendComicsToDom(data.comics);
+            appendComicsToDom(data.comics, data.is_own);
             currentPage += 1;
             isLoading = false;
             document.getElementById('loadingIndicator').style.display = 'none';
@@ -161,11 +163,24 @@ function fetchComics(page=1) {
 
         });
 }
+let isFirstLoad = true;
 
-function appendComicsToDom(comics) {
+function appendComicsToDom(comics, isOwn) {
     const contentContainer = document.querySelector('#comic-container');
     contentContainer.classList.add('grid', 'grid-cols-4', 'gap-8', 'p-12');
+
+    // comics配列が空の場合、メッセージを表示
+    if (isFirstLoad && comics.length === 0) {
+        const noComicsMessage = document.createElement('div');
+        noComicsMessage.classList.add('text-center', 'text-xl', 'col-span-4');
+        noComicsMessage.textContent = 'お気に入り作品はありません'
+        contentContainer.appendChild(noComicsMessage);
+        isFirstLoad = false;
+        return;
+    }
     comics.forEach((comic) => {
+        const deleteButtonHTML = isOwn ? `<button onclick="event.stopPropagation(); delete_manga('${comic.title}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>` : '';
+        
         const mangaElement = document.createElement('div');
         mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg');
         mangaElement.innerHTML = `
@@ -174,15 +189,14 @@ function appendComicsToDom(comics) {
             </div>
             <div class="flex items-baseline gap-2">
                 <h3 class="mt-2 text-xl text-center">${comic.title}</h3>
-                <button onclick="event.stopPropagation(); delete_manga('${comic.title}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                  削除
-                </button>
+                ${deleteButtonHTML}
             </div>
         `;
         mangaElement.addEventListener('click', () => {
             window.location.href = `/${encodeURIComponent(comic.title)}/detail`;
         });
         contentContainer.appendChild(mangaElement);
+        isFirstLoad = false;
     });
 }
 
@@ -190,7 +204,7 @@ window.addEventListener('scroll', () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
 
     if (scrollTop + clientHeight >= scrollHeight - 5) {
-        fetchComics(currentPage);
+        fetchComics(userId, currentPage);
     }
 });
 
@@ -198,16 +212,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.getElementById('addButton');
     const modal = document.getElementById('modal');
     const closeModal = document.getElementById('closeModal');
+    const pageInfo = document.getElementById('page-info');
+    userId = pageInfo.getAttribute('data-user-id');
+    // console.log("見たいユーザーのID:", userId);
 
-    addButton.addEventListener('click', () => {
-        modal.style.display = 'flex';
-    });
-    
-    closeModal.addEventListener('click', () => {
-        document.getElementById('message').textContent = '';
-        modal.style.display = 'none';
-    });
+    if (addButton) {
+        addButton.addEventListener('click', () => {
+            modal.style.display = 'flex';
+        });
+        
+        closeModal.addEventListener('click', () => {
+            document.getElementById('message').textContent = '';
+            modal.style.display = 'none';
+        });
+    }
 
     // 初回の読み込み
-    fetchComics(currentPage);
+    fetchComics(userId, currentPage);
 });
