@@ -47,7 +47,7 @@ def get_google_book_cover(book_title):
     CUSTOM_SEARCH_ENGINE_ID = "3354fe1c38e254ad8"
 
     search_word=f"{book_title}1巻"
-    url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={CUSTOM_SEARCH_ENGINE_ID}&searchType=image&q={search_word}&num=1"
+    url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={CUSTOM_SEARCH_ENGINE_ID}&searchType=image&q={search_word}&num=2"
 
     # APIリクエストを送信して検索結果を取得
     response = requests.get(url)
