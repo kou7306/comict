@@ -6,6 +6,7 @@ from firebaseSetUp import auth, db
 from pages.home import home_bp
 from pages.auth import auth_bp
 
+from pages.check import check_bp
 from pages.genre import genre_bp
 from pages.question import question_bp
 from pages.review import review_bp
@@ -29,6 +30,7 @@ from pages.load_more_data import load_more_data_bp
 app = Flask(__name__)
 app.register_blueprint(auth_bp)
 app.register_blueprint(home_bp)
+app.register_blueprint(check_bp)
 app.register_blueprint(genre_bp)
 app.register_blueprint(question_bp)
 app.register_blueprint(review_bp)
