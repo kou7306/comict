@@ -124,7 +124,7 @@ function delete_manga(title){
   }
 
 let currentPage = 1;
-const pageSize = 4;
+const pageSize = 8;
 let isLoading = false;
 let hasMore = true;
 let userId;
