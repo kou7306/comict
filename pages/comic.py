@@ -62,7 +62,7 @@ def review_get_manga_title(review_ids):
     
     return manga_titles
             
-
+# 漫画取得用API
 @comic_bp.route('/api/comics', methods = ['GET'])
 def api_comics():
     user_id = session.get('user_id')

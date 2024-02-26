@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 user_doc_ref = db.collection('user')
 review_doc_ref = db.collection('review')
 
-def most_review_users(date):
+def most_review_users(date=None):
     # 指定された日数前の日時を計算
     if date is not None:
         start_date = datetime.now() - timedelta(days=date)

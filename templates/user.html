@@ -2,89 +2,28 @@
 {% extends "base.html" %} {% block extra_css %} 
 
 
-{% endblock %} {% block content%}
+{% endblock %}
+{% block content%}
+<h1 class="mb-8 font-black text-4xl text-white shadow-lg">ユーザー</h1>
+<div class="tabs">
+  <ul class="flex mb-8">
+    <li class="tab-item mr-2 py-2 px-4 cursor-pointer hover:bg-blue-500 text-white" data-tab="suggestions">おすすめ</li>
+    <li class="tab-item mr-2 py-2 px-4 cursor-pointer hover:bg-blue-500 text-white" data-tab="rising">急上昇</li>
+    <li class="tab-item mr-2 py-2 px-4 cursor-pointer hover:bg-blue-500 text-white" data-tab="review-count">レビュー数</li>
+    <li class="tab-item mr-2 py-2 px-4 cursor-pointer hover:bg-blue-500 text-white" data-tab="follows">フォロー</li>
+    <li class="tab-item mr-2 py-2 px-4 cursor-pointer hover:bg-blue-500 text-white" data-tab="popularity">人気</li>
+  </ul>
+</div>
+<div id="error-message" class="mt-8 mx-auto text-center w-1/2"></div>
 
-
-
-
-
-  <div class="mx-20">
-    <h1>ユーザー詳細ページ</h1>
-
-    {% if logged_in %}
-    
-
-    <section class="my-20" id="user">
-        <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
-        <ul data-tg-order='2' data-tg-tour='あなたのアンケートの回答と似ているユーザーです。' class="flex flex-wrap list-none">
-          {% if user_query != None %}
-          {% for id in user_query %}
-          {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
-          <li class="w-2/12 text-center box-border m-2">
-
-            <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
-            <div>
-              <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
-
-
-          </div>    
-          </li>
-      
-        {% endif %}
-          {% endfor %}
-          {% endif %}
-        
-      </ul>
-    </section>
-
-    <section class="my-20" id="reviewer">
-        <h2 class="text-3xl" >フォローしたユーザー</h2>
-        <ul class="flex flex-wrap list-none">
-          
-          {% for follow in follow_data %}
-          <li class="w-2/12 text-center box-border m-2">
-          <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
-          <div>
-            <a href="/{{follow[1]}}/userpage" class="hover:text-blue-500">{{follow[0]}}</a>
-            
-          </div>    
-        </li>
-          {% endfor %}
-   
-      </ul>
-    </section>
-{% endif %}
-
-<section class="w-full my-8">
-  <h2 class="text-3xl">ユーザー一覧</h2>
-  <form method="get">
-    <select name="sort_option" onchange="this.form.submit()" class="text-black">
-        <option value="all_review" {{ 'selected' if sort_option == 'all_review' else '' }}>レビュー投稿が多い順</option>
-        <option value="oneweek_review" {{ 'selected' if sort_option == 'oneweek_review' else '' }}>最近レビュー投稿が多い順</option>
-        <option value="follow" {{ 'selected' if sort_option == 'follow' else '' }}>フォロワーが多い順</option>
-    </select>
-</form>
-  <ul>
-    {% if sort_user != [] %}
-    {% for id in sort_user %}
-    {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
-    <li class="w-2/12 text-center box-border m-2">
-
-      <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png">
-      <div>
-        <a href="/{{id}}/userpage" class="text-white hover:text-blue-500">{{user_doc_ref.document(id).get().to_dict()["username"]}}</a>
-
-
-    </div>    
-    </li>
-
-  {% endif %}
-    {% endfor %}
-    {% endif %}
-</ul>
-</section>
+<div id="user-content" class="relative mt-8">
+  <div id="user-container"></div>
+  <!-- ローディングインジケータ -->
+  <div id="loadingIndicator" class="absolute top-0 left-0 right-0 bottom-0 hidden flex justify-center items-center">
+    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-200"></div>
   </div>
+</div>
 
+<script src="../static/javascript/userList.js"></script>
 
 {% endblock %}
-
