@@ -49,4 +49,4 @@ jobs:
               --platform=managed \
               --allow-unauthenticated \
               --quiet \
-              --set-env-vars=ENV=PRODUCTION
+              --set-env-vars=ENV=PRODUCTION,GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
