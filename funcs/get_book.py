@@ -62,7 +62,8 @@ def get_google_book_cover(book_title):
     response = requests.get(url)
     print(response)
     data = response.json()
-    print(data)
+    print('data:' + data)
+    print('items:' +data['items'])
 
     # 最初にヒットした画像のURLを取得して返す
     if 'items:' in data and len(data['items']) > 0:
@@ -73,3 +74,4 @@ def get_google_book_cover(book_title):
     else:
         print('no') 
         return None
+    
