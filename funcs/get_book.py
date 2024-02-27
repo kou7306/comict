@@ -44,7 +44,7 @@ def get_google_book_cover(book_title):
 
    
 
-    GOOGLE_API_KEY =  "AIzaSyDi_vx0dITT2IN-dgij7rfGj_6vZt5VhTw"
+    GOOGLE_API_KEY =  ""
     # if GOOGLE_API_KEY is None:
     #     GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
