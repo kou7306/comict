@@ -43,14 +43,18 @@ def get_rakuten_book_cover(book_title):
 def get_google_book_cover(book_title):
 
    
-    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    if GOOGLE_API_KEY is None:
-        GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+
+    GOOGLE_API_KEY =  "AIzaSyDi_vx0dITT2IN-dgij7rfGj_6vZt5VhTw"
+    # if GOOGLE_API_KEY is None:
+    #     GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+
+
+    print(GOOGLE_API_KEY)
+
+
 
     CUSTOM_SEARCH_ENGINE_ID = "3354fe1c38e254ad8"
 
-
-   
    
    
     search_word=f"{book_title}1巻"
@@ -58,12 +62,16 @@ def get_google_book_cover(book_title):
 
     # APIリクエストを送信して検索結果を取得
     response = requests.get(url)
+    print(response)
     data = response.json()
+    print(data)
 
     # 最初にヒットした画像のURLを取得して返す
     if 'items:' in data and len(data['items']) > 0:
+        print('yes')
         image_url = data['items'][0]['link']
         print('img'+image_url)
         return image_url
     else:
+        print('no') 
         return None
