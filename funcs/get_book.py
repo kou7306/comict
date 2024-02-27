@@ -7,7 +7,10 @@ import httplib2
 import json
 import os
 from firebaseSetUp import auth, db
+from dotenv import load_dotenv
 
+
+load_dotenv()  # .env ファイルを読み込む
 
 
 
@@ -39,9 +42,10 @@ def get_rakuten_book_cover(book_title):
 # custom search APIから画像検索を行う
 def get_google_book_cover(book_title):
 
+   
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
-    print('key'+GOOGLE_API_KEY)
+    if GOOGLE_API_KEY is None:
+        GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
     CUSTOM_SEARCH_ENGINE_ID = "3354fe1c38e254ad8"
 

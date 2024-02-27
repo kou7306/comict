@@ -20,9 +20,11 @@ def search():
 
         if comic_doc_ref.document(manga_title).get().exists:
             return jsonify({'manga_title': manga_title, 'is_exist': True})
-        elif comic_doc_ref.where('title', '>=', query).where('title', '<=', query + '\uf8ff').stream().exists():
-            return jsonify({'manga_title': query, 'is_exist': True})  
+     
         else:
+            comics=comic_doc_ref.where('title', '>=', query).where('title', '<=', query + '\uf8ff').stream()
+            for comic in comics:
+                return jsonify({'manga_title': comic.to_dict()['title'], 'is_exist': True})
             return jsonify({'manga_title': manga_title, 'is_exist': False})
         
     else:
