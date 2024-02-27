@@ -7,10 +7,7 @@ import httplib2
 import json
 import os
 from firebaseSetUp import auth, db
-from dotenv import load_dotenv
 
-
-load_dotenv()  # .env ファイルを読み込む
 
 
 
@@ -41,11 +38,17 @@ def get_rakuten_book_cover(book_title):
     
 # custom search APIから画像検索を行う
 def get_google_book_cover(book_title):
+
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
     print('key'+GOOGLE_API_KEY)
+
     CUSTOM_SEARCH_ENGINE_ID = "3354fe1c38e254ad8"
 
+
+   
+   
+   
     search_word=f"{book_title}1巻"
     url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={CUSTOM_SEARCH_ENGINE_ID}&searchType=image&q={search_word}&num=2"
 
@@ -54,7 +57,7 @@ def get_google_book_cover(book_title):
     data = response.json()
 
     # 最初にヒットした画像のURLを取得して返す
-    if 'items' in data and len(data['items']) > 0:
+    if 'items:' in data and len(data['items']) > 0:
         image_url = data['items'][0]['link']
         print('img'+image_url)
         return image_url
