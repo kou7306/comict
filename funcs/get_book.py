@@ -42,7 +42,7 @@ def get_rakuten_book_cover(book_title):
 # custom search APIから画像検索を行う
 def get_google_book_cover(book_title):
 
-    google_api_key = os.getenv('GOOGLE_API_KEY')
+    GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
     CUSTOM_SEARCH_ENGINE_ID = "3354fe1c38e254ad8"
    
     search_word=f"{book_title}1巻"
