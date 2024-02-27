@@ -50,8 +50,6 @@ def get_manga_title(title):
         page_data = wikipedia.page(page_title)
         categories = page_data.categories
 
- 
-
        
         # カテゴリが「漫画」のものを検索
         for category in categories:
