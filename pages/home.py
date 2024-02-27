@@ -60,7 +60,7 @@ def home():
         all_review_book_title.append(title)
         doc_ref=comics_doc_ref.document(title)
         comic_data=doc_ref.get().to_dict()
-        if "image" in comic_data:
+        if comic_data is not None and "image" in comic_data:
             image=comic_data["image"]
         all_review_book_urls.append(image) 
 

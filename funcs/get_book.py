@@ -40,7 +40,9 @@ def get_rakuten_book_cover(book_title):
 def get_google_book_cover(book_title):
 
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    print('key:'+GOOGLE_API_KEY)
+    print('kkkkkkkkkkkkkkkkkkkkkkkkkkkkk')
+    print('key'+GOOGLE_API_KEY)
+
     CUSTOM_SEARCH_ENGINE_ID = "3354fe1c38e254ad8"
 
 
