@@ -7,10 +7,7 @@ import httplib2
 import json
 import os
 from firebaseSetUp import auth, db
-from dotenv import load_dotenv
 
-
-load_dotenv()  # .env ファイルを読み込む
 
 
 

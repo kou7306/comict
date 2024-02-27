@@ -101,6 +101,7 @@ def add_manga():
         if not any(query):
             url=get_wikipedia_page_details(manga_title)
             genre = get_manga_genre(manga_title)
+            print("start_get_google_book_cover")
             image_url=get_google_book_cover(manga_title)
             print(url)
             print(image_url)
