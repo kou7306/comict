@@ -90,11 +90,11 @@ def get_manga_genre(title):
     # ページのHTMLを取得
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
-    print(soup) 
+
 
     # インフォボックスを探す
     infobox = soup.find('table', class_='infobox bordered')
-    print(infobox)
+   
 
     if infobox:
         # ジャンルの行を探す
