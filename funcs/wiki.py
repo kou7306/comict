@@ -36,6 +36,8 @@ def get_manga_title(title):
     # 最初の検索結果から漫画のカテゴリを取得
     search_response = wikipedia.search(title)
 
+    print(search_response)
+
     while search_response:
         # 正確なページタイトルを取得
         try:
@@ -48,11 +50,16 @@ def get_manga_title(title):
         page_data = wikipedia.page(page_title)
         categories = page_data.categories
 
+ 
+
+       
         # カテゴリが「漫画」のものを検索
         for category in categories:
+            
             if '漫画' in category:
                 print(f'入力されたタイトル "{title}" の正確なページタイトル: {page_title}')
                 return page_title
+            
 
         # 次の検索結果を取得
         if len(search_response) > 1:
@@ -60,6 +67,8 @@ def get_manga_title(title):
         else:
             print(f'入力されたタイトル "{title}" に関連する「漫画」のカテゴリは見つかりませんでした。')
             return None
+    
+    return None
         
 
 def get_manga_detail():
@@ -89,7 +98,7 @@ def get_manga_genre(title):
 
     # ページのHTMLを取得
     response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
+    soup = BeautifulSoup(response.content, features='html.parser')
 
 
     # インフォボックスを探す

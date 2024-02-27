@@ -27,12 +27,8 @@
 
     <div class="absolute right-1 items-center flex justify-between mx-4">
         <div class="relative mr-8">
-            <input type="search" placeholder="作品名で検索" class="bg-gray-700 text-sm rounded-full pl-4 pr-10 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <button class="absolute right-2 top-0 mt-1 mr-2">
-              <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13m-7 6h7" />
-              </svg>
-            </button>
+            <input type="search" placeholder="作品名で検索" class="bg-gray-700 text-sm rounded-full pl-4 pr-10 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" id="searchInput">
+            <button type="button" onclick="searchTitle()">検索</button>
           </div>    
      
 
@@ -103,7 +99,7 @@
     </footer> -->
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-    
+    <script src="../static/javascript/searchTitle.js"></script>
     <script>
     var overlay = document.getElementById("overlay");
     var popup = document.getElementById("myPopup");
