@@ -32,11 +32,12 @@ def get_wikipedia_page_details(title):
 
 def get_manga_title(title):
     wikipedia.set_lang('ja')
+    title = "漫画" + title
 
     # 最初の検索結果から漫画のカテゴリを取得
     search_response = wikipedia.search(title)
 
-    print(search_response)
+    
 
     while search_response:
         # 正確なページタイトルを取得
