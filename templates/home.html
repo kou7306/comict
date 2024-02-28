@@ -222,14 +222,12 @@
       <h2 class="text-3xl">新着レビュー</h2>
       <ul id="review-list" class="mx-auto w-4/5 flex flex-wrap flex-row">
         {% for review in reviews %}
-        <div class="w-full flex items-start my-3 p-4 bg-zinc-900 transition duration-500 hover:scale-105">
-          <div style="width: 120px;">
-            <a href="/{{ review["mangaTitle"] }}/detail">
-              <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" class="h-auto w-full object-contain transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image">
-            </a>
+        <div class="w-full flex items-start my-3 p-4 bg-zinc-700 transition duration-500">
+          <div style="width: 120px;" class="">
+            <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" class="h-auto w-full object-contain transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image">
           </div>
-          <div class="ml-4 flex-1">
-            <a href="/review_detail?review_id={{ review.id }}" class="block">
+          <div class="ml-4">
+            <a href="/{{ review["user_id"] }}/userpage" class="block">
               <p class="mb-1 break-all text-2xl font-bold">{{review["mangaTitle"]}}</p>
               <div class="flex items-center">
                 <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png" alt="" class="h-auto max-h-8">
