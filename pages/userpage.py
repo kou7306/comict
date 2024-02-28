@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, session, flash,
 from firebaseSetUp import auth, db
 from bs4 import BeautifulSoup
 import requests
+from funcs.review_sort_user import review_sort_for_user
 
 userpage_bp = Blueprint('userpage', __name__)
 
@@ -52,8 +53,8 @@ def user_page():
     user_data=user.to_dict()
     username=user_data["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
-    query = review_doc_ref.where('user_id', '==', user_id).get()
-
+    #query = review_doc_ref.where('user_id', '==', user_id).get()
+    reviews = review_sort_for_user(user_id,None)
 
     # アンケート結果の取得・表示
     genre_value=user_data.get("genre")
@@ -116,7 +117,7 @@ def user_page():
     # 検索結果のドキュメントの数を数える
     follower_num = sum(1 for _ in follower)
 
-    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_comic=favorite_comic,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in,follower_num=follower_num,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
+    return render_template("userpage.html", reviews=reviews,username=username, user_id=user_id,favorite_comic=favorite_comic,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in,follower_num=follower_num,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
  
 
 @userpage_bp.route('/edit/<user_id>', methods=['POST']) 

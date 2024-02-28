@@ -220,30 +220,41 @@
     </section>
     <section id="timeline">
       <h2 class="text-3xl">新着レビュー</h2>
-      <ul id="review-list" class="mx-auto w-4/5 flex flex-wrap flex-row">
         {% for review in reviews %}
-        <div class="w-full flex items-start my-3 p-4 bg-zinc-700 transition duration-500">
-          <div style="width: 120px;" class="">
-            <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" class="h-auto w-full object-contain transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image">
-          </div>
-          <div class="ml-4">
-            <a href="/{{ review["user_id"] }}/userpage" class="block">
-              <p class="mb-1 break-all text-2xl font-bold">{{review["mangaTitle"]}}</p>
-              <div class="flex items-center">
-                <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png" alt="" class="h-auto max-h-8">
-                <a href="/{{ review["user_id"] }}/userpage" class="ml-2 break-all">{{ user_doc_ref.document(review["user_id"]).get().to_dict()["username"] }}</a>
-              </div>
-              <p class="mt-1 text-xl">
-                {% for _ in range(review.get("evaluation")) %}
+        <div id="review-list" class="review rounded-lg over-flow-hidden shadow-lg m-2 p-4 transition duration-500 hover:shadow-2xl">
+          <div class="flex flex-col md:flex-row bg-zinc-700 text-white p-4 rounded-lg">
+            <div class="md:w-1/4 flex justify-center items-center p-2">
+                <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" alt="{{review["mangaTitle"]}}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg hover:scale-110 cursor-pointer transition-transform duration-300 review-image">
+            </div>
+            <div class="md:w-3/4 md:pl-4">
+                <p class="font-semibold">{{ review['mangaTitle'] }}</p>
+                <p class="text-sm mt-2">{{ user_doc_ref.document(review["user_id"]).get().to_dict()["username"] }}</p>
+                <span class="text-yellow-400 mt-2">
+                  {% for _ in range(review.get("evaluation")) %}
                   <span class="text-yellow-400">★</span>
-                {% endfor %}
-              </p>
-              <p class="my-1 break-all">{{review["contents"]}}</p>
-            </a>
+                  {% endfor %}
+                </span>
+                <p class="text-sm mt-2" style="word-wrap: break-word;">{{review["contents"]}}</p>
+                <div class="flex items-center mt-2">
+                  {% if loggedIn %}
+                    {% if review.liked %}
+                        <button id="like-button-{{review['id']}}" class="focus:outline-none"><span class="material-icons text-red-500">favorite</span></button>
+                    {% else %}
+                        <button id="like-button-{{review['id']}}" class="focus:outline-none"><span class="material-icons">favorite_border</span></button>
+                    {% endif %}
+                  {% else %}
+                      {% if review.liked %}
+                          <span class="material-icons text-red-500">favorite</span>
+                      {% else %}
+                          <span class="material-icons">favorite_border</span>
+                      {% endif %}
+                  {% endif %}
+                  <p id="likes-count-${review.id}" class="text-sm ml-4">{{review['likes_count']}}</p>
+                </div>
+            </div>
           </div>
         </div>
         {% endfor %}
-      </ul>
       <p class="mx-auto text-xl text-center my-4"><a href="/review">and more...</a></p>
     </section>
   </div>
