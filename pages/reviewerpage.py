@@ -3,6 +3,7 @@ from firebaseSetUp import auth, db
 from bs4 import BeautifulSoup
 import requests
 import json
+from funcs.review_sort_user import review_sort_for_user
 
 reviewerpage_bp = Blueprint('reviewerpage', __name__)
 
@@ -52,7 +53,9 @@ def reviewer(reviewer_id):
         reviewername=reviewer_doc.to_dict()["username"]
         review_data=reviewer_doc.to_dict()
         # 特定のユーザーネームに一致するレビュー情報を取得
-        query = review_doc_ref.where('user_id', '==', reviewer_id).get()
+        #query = review_doc_ref.where('user_id', '==', reviewer_id).get()
+        reviews = review_sort_for_user(reviewer_id,None)
+
         if user_id:
             # そのユーザーをフォローしてるか
             user_doc = user_doc_ref.document(user_id)
@@ -108,7 +111,7 @@ def reviewer(reviewer_id):
         # 検索結果のドキュメントの数を数える
         follower_num = sum(1 for _ in follower)
 
-        return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_comic=favorite_comic,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in,follower_num=follower_num,combined_list=updated_combined_list,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
+        return render_template("reviewerpage.html",reviews=reviews,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_comic=favorite_comic,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in,follower_num=follower_num,combined_list=updated_combined_list,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
     
     else:
         data = request.get_json()
