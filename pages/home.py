@@ -3,6 +3,7 @@ from firebaseSetUp import auth, db
 from funcs.get_book import get_rakuten_book_cover
 from funcs.search import search_comics
 from funcs.wiki import get_manga_title
+from funcs.review_sort import review_sort
 
 home_bp = Blueprint('home', __name__)
 user_doc_ref = db.collection('user')
@@ -122,6 +123,9 @@ def home():
     # フォロワーが多いユーザーの表示
     most_follow_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user'][:10]
 
+    # 新着レビュー
+    reviews = review_sort('newest',None,limit=5)[:5]
+
     
     # loginしている場合
     if logged_in:
@@ -185,10 +189,10 @@ def home():
         print(user_id)
         show_intro = flag == -2
         session['flag'] = flag + 1
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref)
+        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref, reviews=reviews)
 
     #loginしていない場合
     else:
            # テンプレートにログイン状態（logged_in）を渡す
-        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref)
+        return render_template("home.html", logged_in=logged_in, review_doc_ref=review_doc_ref,user_doc_ref=user_doc_ref,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref, reviews=reviews)
  

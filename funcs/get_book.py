@@ -43,9 +43,11 @@ def get_rakuten_book_cover(book_title):
 def get_google_book_cover(book_title):
 
    
+
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     if GOOGLE_API_KEY is None:
         GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+
 
     print(GOOGLE_API_KEY)
 
