@@ -112,7 +112,7 @@ def api_comics():
         
     return jsonify({'comics': comics_info})
 
-@comic_bp.route('/comic', methods = ['GET','POST'])
+@comic_bp.route('/comic', methods = ['GET'])
 def comic():
     user_id = session.get('user_id')
     logged_in = True if user_id else False
