@@ -103,8 +103,7 @@ def add_manga():
             genre = get_manga_genre(manga_title)
             print("start_get_google_book_cover")
             image_url=get_google_book_cover(manga_title)
-            print(url)
-            print(image_url)
+            
 
             comics_doc_ref.document(manga_title).set({"title": manga_title,"genre":genre,"bookmark":[session_user_id],"url":url,"reviews":[],"author":None,"image":image_url})
         else:
