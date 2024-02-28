@@ -68,7 +68,7 @@ def get_google_book_cover(book_title):
     
 
     # 最初にヒットした画像のURLを取得して返す
-    if 'items:' in data and len(data['items']) > 0:
+    if 'items' in data and len(data['items']) > 0:
         print('yes')
         image_url = data['items'][0]['link']
         print('img'+image_url)
