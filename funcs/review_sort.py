@@ -2,6 +2,7 @@ from flask import session
 from firebase_admin import firestore
 from firebaseSetUp import db
 
+# レビューをソートして返す関数
 def review_sort(sort_option,last_document_id,limit=4,title=None):
     user_id = session.get("user_id")
     user_doc_ref = db.collection('user')
