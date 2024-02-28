@@ -3,7 +3,7 @@ from firebase_admin import firestore
 from firebaseSetUp import db
 
 # 特定のユーザーのレビューを取得する関数
-def review_sort_for_user(user_id,last_document_id,title=None):
+def review_sort_for_user(user_id,logged_in,last_document_id,title=None):
     user_doc_ref = db.collection('user')
     review_doc_ref = db.collection('review')
     comics_doc_ref = db.collection('comics')
@@ -49,7 +49,7 @@ def review_sort_for_user(user_id,last_document_id,title=None):
                 review_data['image'] = r_mangaimage
 
         likes = review_data.get('likes', [])
-        if user_id in likes:
+        if user_id in likes and logged_in:
             review_data['liked'] = True
         else:
             review_data['liked'] = False

@@ -54,7 +54,7 @@ def user_page():
     username=user_data["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
     #query = review_doc_ref.where('user_id', '==', user_id).get()
-    reviews = review_sort_for_user(user_id,None)
+    reviews = review_sort_for_user(user_id,logged_in,None)
 
     # アンケート結果の取得・表示
     genre_value=user_data.get("genre")

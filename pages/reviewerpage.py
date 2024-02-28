@@ -54,7 +54,7 @@ def reviewer(reviewer_id):
         review_data=reviewer_doc.to_dict()
         # 特定のユーザーネームに一致するレビュー情報を取得
         #query = review_doc_ref.where('user_id', '==', reviewer_id).get()
-        reviews = review_sort_for_user(reviewer_id,None)
+        reviews = review_sort_for_user(reviewer_id,logged_in,None)
 
         if user_id:
             # そのユーザーをフォローしてるか
