@@ -169,7 +169,8 @@ def home():
         # お気に入り漫画の画像取得
         if user.to_dict()['user_query'] != None:
             for id in user.to_dict()['user_query']:
-                if user_doc_ref.document(id).get().to_dict()["bookmark"] != None:
+                doc = user_doc_ref.document(id).get()
+                if doc.exists and doc.to_dict()["bookmark"] is not None:
                     favorite_titles = user_doc_ref.document(id).get().to_dict()["bookmark"]
 
                     for title in favorite_titles:

@@ -39,7 +39,7 @@ def get_bookmarks(connected_user_ids):
     return bookmarks
 
 # review_queryに含まれるレビューを取ってくる
-def get_review_query(user_id):
+def get_comic_query(user_id):
     user_doc = user_doc_ref.document(user_id).get()
     if user_doc.exists:
         user_data = user_doc.to_dict()
@@ -93,7 +93,11 @@ def api_comics():
         comics_title = [comic["title"] for comic in comics_data]
     elif sort_option == "recommendations":
         # connected_user_ids = get_user_queries_and_follows(user_id)
-        comics_title = [comics_doc_ref.document(comic_id).to_dict["title"] for comic_id in get_review_query(user_id)]
+        for comic_id in get_comic_query(user_id):
+            comic_data = comics_doc_ref.document(comic_id).get().to_dict()
+            if comic_data is not None and "title" in comic_data:
+                comics_title.append(comic_data["title"])
+        
 
 
 

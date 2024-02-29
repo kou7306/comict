@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, session, flash,
 from firebaseSetUp import auth, db
 from bs4 import BeautifulSoup
 import requests
+from funcs.review_sort_user import review_sort_for_user
 
 userpage_bp = Blueprint('userpage', __name__)
 
@@ -10,31 +11,18 @@ review_doc_ref=db.collection('review')
 comic_doc_ref = db.collection('comics')  
 
 def get_bar_color(ans):
-    if ans <= -4:
-        return 'bg-red-500'  # 1
-    elif ans <= -3:
-        return 'bg-red-400'  # 2
-    elif ans <= -2:
-        return 'bg-red-300'  # 3
-    elif ans <= -1:
-        return 'bg-orange-400'  # 4
-    elif ans < 0:
-        return 'bg-yellow-600'  # 5
+    if ans < 0:
+        return 'bg-red-500'
     elif ans == 0:
-        return 'bg-yellow-500'  # 6
-    elif ans <= 1:
-        return 'bg-lime-400'  # 7
-    elif ans <= 2:
-        return 'bg-green-400'  # 8
-    elif ans <= 3:
-        return 'bg-green-500'  # 9
+        return 'bg-yellow-300'
     else:
-        return 'bg-green-600'  # 10
+        return 'bg-green-500'
+
 
 def get_bar_width(ans):
     return ((ans + 5) / 10) * 100
 
-# ユーザーページ
+# マイページ
 @userpage_bp.route('/userpage', methods=['GET', 'POST'])
 def user_page():   
     user_id = session.get('user_id')
@@ -52,8 +40,8 @@ def user_page():
     user_data=user.to_dict()
     username=user_data["username"]
     # 特定のユーザーネームに一致するドキュメントを取得
-    query = review_doc_ref.where('user_id', '==', user_id).get()
-
+    #query = review_doc_ref.where('user_id', '==', user_id).get()
+    reviews = review_sort_for_user(user_id,logged_in,None)
 
     # アンケート結果の取得・表示
     genre_value=user_data.get("genre")
@@ -108,15 +96,11 @@ def user_page():
             follow_name = follow_doc.to_dict()["username"]
             follow_data.append((follow_name, follow_id))
 
-
-
-     
-
     follower = user_doc_ref.where('follow', 'array_contains', user_id).stream()
     # 検索結果のドキュメントの数を数える
     follower_num = sum(1 for _ in follower)
 
-    return render_template("userpage.html", myreview_query=query,username=username, user_id=user_id,favorite_comic=favorite_comic,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in,follower_num=follower_num,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
+    return render_template("userpage.html", reviews=reviews,username=username, user_id=user_id,favorite_comic=favorite_comic,follow_data=follow_data,result=result, combined_list=updated_combined_list, genre_choice=genre_choice, logged_in=logged_in,follower_num=follower_num,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
  
 
 @userpage_bp.route('/edit/<user_id>', methods=['POST']) 

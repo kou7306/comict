@@ -42,7 +42,7 @@ def question(genre):
         user_doc.update({'mangaAnswer':mangaAnswer,'username':user.to_dict()["username"],'genre':genre})
    
         # マッチング
-        comic_query, user_query =matching(mangaAnswer,user_id)
+        comic_query, user_query =matching(mangaAnswer,user_id,genre)
        
         update_data = {"user_query":  user_query,"comic_query":comic_query}
         user_doc.update(update_data)

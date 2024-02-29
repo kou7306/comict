@@ -3,6 +3,7 @@ from firebaseSetUp import auth, db
 from bs4 import BeautifulSoup
 import requests
 import json
+from funcs.review_sort_user import review_sort_for_user
 
 reviewerpage_bp = Blueprint('reviewerpage', __name__)
 
@@ -12,37 +13,25 @@ comic_doc_ref = db.collection('comics')
 
 is_following=False
 def get_bar_color(ans):
-    if ans <= -4:
-        return 'bg-red-500'  # 1
-    elif ans <= -3:
-        return 'bg-red-400'  # 2
-    elif ans <= -2:
-        return 'bg-red-300'  # 3
-    elif ans <= -1:
-        return 'bg-orange-400'  # 4
-    elif ans < 0:
-        return 'bg-yellow-600'  # 5
+    if ans < 0:
+        return 'bg-red-500'
     elif ans == 0:
-        return 'bg-yellow-500'  # 6
-    elif ans <= 1:
-        return 'bg-lime-400'  # 7
-    elif ans <= 2:
-        return 'bg-green-400'  # 8
-    elif ans <= 3:
-        return 'bg-green-500'  # 9
+        return 'bg-yellow-300'
     else:
-        return 'bg-green-600'  # 10
+        return 'bg-green-500'
+    
 
 def get_bar_width(ans):
     return ((ans + 5) / 10) * 100
+
 # reviewer page
 @reviewerpage_bp.route('/<reviewer_id>/userpage', methods = ['GET','POST'])
 def reviewer(reviewer_id):
     user_id = session.get('user_id')
 
     if request.method == 'GET':
-        if not user_id is None and not user_doc_ref.document(user_id).get().exists:
-            return redirect("/login")
+        if user_id is not None and user_id == reviewer_id:
+            return redirect(url_for('userpage.user_page'))
         if user_id:
             logged_in = True
         else:
@@ -52,7 +41,9 @@ def reviewer(reviewer_id):
         reviewername=reviewer_doc.to_dict()["username"]
         review_data=reviewer_doc.to_dict()
         # 特定のユーザーネームに一致するレビュー情報を取得
-        query = review_doc_ref.where('user_id', '==', reviewer_id).get()
+        #query = review_doc_ref.where('user_id', '==', reviewer_id).get()
+        reviews = review_sort_for_user(reviewer_id,logged_in,None)
+
         if user_id:
             # そのユーザーをフォローしてるか
             user_doc = user_doc_ref.document(user_id)
@@ -108,9 +99,11 @@ def reviewer(reviewer_id):
         # 検索結果のドキュメントの数を数える
         follower_num = sum(1 for _ in follower)
 
-        return render_template("reviewerpage.html",query=query,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_comic=favorite_comic,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in,follower_num=follower_num,combined_list=updated_combined_list,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
+        return render_template("reviewerpage.html",reviews=reviews,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_comic=favorite_comic,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in,follower_num=follower_num,combined_list=updated_combined_list,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
     
     else:
+        if not logged_in:
+            return redirect(url_for('auth.login'))
         data = request.get_json()
         is_following = data.get('is_following')
         if not user_id:
