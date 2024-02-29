@@ -18,7 +18,7 @@
         <div class="flex flex-col items-center justify-center w-3/5 text-center">
             <div class="flex border-b border-white border-solid px-8">
                 <p class="text-4xl my-4 w-60">投稿数</p>
-                <p class="text-4xl my-4 ml-20">{{ query|length }}</p>
+                <p class="text-4xl my-4 ml-20">{{ review_num }}</p>
             </div>
             <div class="flex border-b border-white border-solid px-8">
                 <p class="text-4xl my-4 w-60">フォロワー数 </p>
@@ -144,6 +144,7 @@
                         followButton.textContent = 'フォロー';
                     }
                 }
+                window.location.href = '/{{reviewer_id}}/userpage'
 
             })
             .catch((error) => {
