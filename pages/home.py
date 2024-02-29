@@ -63,7 +63,7 @@ def home():
         comic_data=doc_ref.get().to_dict()
         if comic_data is not None and "image" in comic_data:
             image=comic_data["image"]
-        all_review_book_urls.append(image) 
+            all_review_book_urls.append(image) 
 
     all_review_book = list(zip(all_review_book_title,all_review_book_urls))
 
@@ -77,7 +77,7 @@ def home():
         comic_data=doc_ref.get().to_dict()
         if comic_data is not None and "image" in comic_data:
             image=comic_data["image"]
-        week_review_book_urls.append(image)
+            week_review_book_urls.append(image)
     week_review_book = list(zip(week_review_book_title,week_review_book_urls))
         
 
@@ -91,7 +91,7 @@ def home():
         comic_data=doc_ref.get().to_dict()
         if comic_data is not None and "image" in comic_data:
             image=comic_data["image"]
-        bookmark_book_urls.append(image)
+            bookmark_book_urls.append(image)
     bookmark_book = list(zip(bookmark_book_title,bookmark_book_urls))
 
 
@@ -106,7 +106,7 @@ def home():
         comic_data=doc_ref.get().to_dict()
         if comic_data is not None and "image" in comic_data:
             image=comic_data["image"]
-        high_evaluate_book_urls.append(image)
+            high_evaluate_book_urls.append(image)
     high_evaluate_book = list(zip(high_evaluate_book_title,high_evaluate_book_urls))
 
 
@@ -148,7 +148,7 @@ def home():
                 comic_data=doc_ref.get().to_dict()
                 if comic_data is not None and "image" in comic_data:
                     image=comic_data["image"]
-                book_urls.append(image)
+                    book_urls.append(image)
             data=list(zip(titles,book_urls))
         else:    
             data = []
