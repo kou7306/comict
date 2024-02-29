@@ -7,7 +7,7 @@ user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 comics_doc_ref=db.collection('comics')
 
-# 作品詳細ページ
+# 漫画詳細ページ
 @detail_bp.route('/<title>/detail')
 def detail(title):
     # query = review_doc_ref.where('mangaTitle', '==', title).get()
@@ -47,15 +47,21 @@ def detail(title):
             rev_sum+=1
     if rev_sum!=0:
         eval_avg=eval_sum/rev_sum
-
-    
-
         
     return render_template("detail.html",title=title, url=url, bookmark_num=bookmark_num, logged_in=logged_in, bookmarked=bookmarked,eval_avg=eval_avg,rev_sum=rev_sum,image=image)
 
+# review取得用エンドポイント
 @detail_bp.route('/review/<title>')
 def get_reviews(title):
+    user_id = session.get('user_id')
+    logged_in = True if user_id else False
+    
     sort_option = request.args.get('sort_option', 'newest')
     reviews = review_sort(sort_option,None,limit=None, title=title)
     
-    return jsonify(reviews)
+    response_data = {
+        'logged_in': logged_in,
+        'reviews': reviews
+    }
+    
+    return jsonify(response_data)

@@ -11,8 +11,30 @@ user_doc_ref = db.collection('user')
 review_doc_ref=db.collection('review')
 comics_doc_ref=db.collection('comics')
 
-# レビュー一覧
-@review_bp.route('/review', methods=['GET', 'POST'])
+# レビュー取得用エンドポイント
+@review_bp.route('/api/reviews', methods=['POST'])
+def fetch_reviews():
+    user_id = session.get('user_id')
+    logged_in = True if user_id else False
+    
+    data = request.get_json()
+    sort_option = data.get('sortOption', 'evaluation_desc')
+    last_review_id = data.get('lastReviewId', None)
+    
+    # print('sort_option:', sort_option)
+    # print('last_review_id:', last_review_id)
+    
+    reviews = review_sort(sort_option, last_review_id)
+    
+    response_data = {
+        'logged_in': logged_in,
+        'reviews': reviews
+    }
+    
+    return jsonify(response_data)
+
+# レビュー一覧レンダリング用
+@review_bp.route('/review', methods=['GET'])
 def review():
     if request.method == 'GET':
         user_id = session.get('user_id')
@@ -20,32 +42,8 @@ def review():
             logged_in = True
         else:
             logged_in = False
-        sort_option = request.args.get('sort_option')
+            
+        return render_template("review.html", user_id=user_id, logged_in=logged_in)
 
-
-        reviews = review_sort(sort_option,None)
-        return render_template("review.html", user_id=user_id, reviews=reviews, sort_option=sort_option, logged_in=logged_in, user_doc_ref=user_doc_ref, comics_doc_ref=comics_doc_ref)
-
-    elif request.method == 'POST':
-        user_id = session.get('user_id')
-        if not user_id or not user_doc_ref.document(user_id).get().exists:
-            return jsonify({"error": "Unauthorized"}), 401
-        
-        review_id = request.form.get('review_id')
-        review_ref = db.collection('review').document(review_id)
-        review_doc = review_ref.get()
-    
-        if review_doc.exists and user_doc_ref.document(user_id).get().exists:
-            likes = review_doc.to_dict().get('likes', [])
-            if user_id in likes:
-                review_ref.update({'likes': firestore.ArrayRemove([user_id])})
-                review_ref.update({'likes_count': firestore.Increment(-1)})
-                return jsonify({'status': 'unliked'}), 200
-            else:
-                review_ref.update({'likes': firestore.ArrayUnion([user_id])})
-                review_ref.update({'likes_count': firestore.Increment(1)})
-                return jsonify({'status': 'liked'}), 200
-        else:
-            return jsonify({"error": "Review not found"}), 404
 
 

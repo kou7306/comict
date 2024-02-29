@@ -21,13 +21,16 @@
 
 </head>
 <body class="">
+  <div id="loadingIndicator" class="absolute hidden top-0 left-0 right-0 bottom-0 flex justify-center items-center z-50">
+    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-200"></div>
+  </div>
   <!-- Header -->
   <header class="bg-zinc-900 bg-opacity-50 px-4 py-2 items-center fixed top-0 left-0 w-full h-20 z-30">
     <!-- Logo and search bar container -->
 
     <div class="absolute right-1 items-center flex justify-between mx-4">
         <div class="relative mr-8">
-            <input type="search" placeholder="作品名で検索" class="bg-gray-700 text-sm rounded-full pl-4 pr-10 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" id="searchInput">
+            <input type="search" placeholder="作品名で検索" class="bg-gray-700 text-sm rounded-full pl-4 pr-10 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" id="searchTitle">
             <button type="button" onclick="searchTitle()">検索</button>
           </div>    
      
@@ -74,7 +77,7 @@
 
     <p class="mb-8"><a href="/userpage">マイページ</a></p>
     <p class="my-8"><a href="/check">アンケート変更</a></p>
-    <p class="mt-8 text-red-600"><a class=" hover:text-gray-400 href="/logout">ログアウト</a></p>
+    <p class="mt-8 text-red-600"><a class="hover:text-gray-400" href="/logout">ログアウト</a></p>
   </div>
     <!-- コンテンツ -->
     <div class="p-4" style="margin-left:17%; width: 83%;">

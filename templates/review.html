@@ -1,237 +1,38 @@
 {% extends "base.html" %} {% block extra_css %} 
 
-{% endblock %} {% block content%}
+{% endblock %} 
+{% block content%}
 
+<div class="flex justify-between items-center mb-8">
+    <h1 class="font-black text-4xl text-white shadow-lg">漫画レビュー</h1>
+    <select id="sort_option" class="text-lg h-10 p-2 text-black mb-4 bg-white border border-gray-300 rounded">
+        <option value="evaluation_desc" selected>評価の高い順</option>
+        <option value="evaluation_asc">評価の低い順</option>
+        <option value="newest">新しい順</option>
+        <option value="oldest">古い順</option>
+        <option value="likes_count_desc">いいねが多い順</option>
+        <option value="likes_count_asc">いいねが少ない順</option>
+    </select>
+</div>
 
+<div id="error-message" class="mt-8 mx-auto text-center w-1/2"></div>
 
-<section id="review" class="mb-12 mx-auto px-12 py-12 bg-zinc-800 flex flex-wrap items-start w-3/4 justify-between">
-  <div>
-    <h2 class="text-3xl">レビュー一覧</h2>
-    <form method="get" class="flex items-center">
-      <select name="sort_option" onchange="this.form.submit()" class="text-black mr-4">
-          <option value="evaluation_desc" {{ 'selected' if sort_option == 'evaluation_desc' else '' }}>評価の高い順</option>
-          <option value="evaluation_asc" {{ 'selected' if sort_option == 'evaluation_asc' else '' }}>評価の低い順</option>
-          <option value="newest" {{ 'selected' if sort_option == 'newest' else '' }}>新しい順</option>
-          <option value="oldest" {{ 'selected' if sort_option == 'oldest' else '' }}>古い順</option>
-          <option value="likes_count_desc" {{ 'selected' if sort_option == 'likes_count_desc' else '' }}>いいねが多い順</option>
-          <option value="likes_count_asc" {{ 'selected' if sort_option == 'likes_count_asc' else '' }}>いいねが少ない順</option>
-      </select>
-
-    </form>
+<div id="review-content" class="relative mt-8">
+  <div id="review-container"></div>
+  <!-- ローディングインジケータ -->
+  <div id="loadingIndicator" class="absolute top-0 left-0 right-0 bottom-0 hidden flex justify-center items-center">
+    <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-gray-200"></div>
   </div>
-  <div class="mt-4">
-    <a href="/reviewAdd" class="inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
-      レビュー投稿
-    </a>
-  </div>
-  <ul id="review-list" class="mx-auto max-w-3xl flex flex-wrap flex-row">
-    {% for review in reviews %}
-      <div class="w-1/6 my-3" style="width: 120px; height: 180px;">
-        <a href="/{{ review['mangaTitle'] }}/detail" style="display: block; width: 100%; height: 100%;">
-          <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" class="w-12 h-12 mr-4 transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image" style="width: 100%; height: 100%;">
-        </a>
-      </div>
-      <div class="w-5/6">
-        <li class="my-3 p-4 bg-zinc-700">
-          <p>
-            タイトル：{{ review.get("mangaTitle") }}
-          </p>
-          <p>{{user_doc_ref.document(review["user_id"]).get().to_dict()["username"]}}</p>
-          {% for _ in range(review.get("evaluation")) %}
-            <span class="text-yellow-400">★</span>
-          {% endfor %}
-          <p style="word-wrap: break-word;">{{ review.get("contents") }}</p>
-          <p>いいね数:{{ review.get("likes_count")}}</p>
-          {% if review['liked'] %}
-          <button class="likeButton" data-review-id="{{ review.get('id') }}" onclick="setTimeout(function() { location.reload(true); }, 120)">
-              <i class="material-icons" style="color: rgb(255, 73, 234);">favorite</i>
-          </button>
-          {% else %}
-          <button class="likeButton" data-review-id="{{ review.get('id') }}" onclick="setTimeout(function() { location.reload(true); }, 120)">
-              <i class="material-icons">favorite_border</i>
-          </button>
-          {% endif %}
-        </li>
-      </div>
-    {% endfor %}
-  </ul>
-</section>
+</div>
+
+{% if logged_in %}
+<!-- 追加ボタン -->
+<button id="addButton" onclick="location.href='/reviewAdd';" class="fixed bottom-16 right-8 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-opacity-50 active:bg-blue-800 transition duration-150 ease-in-out transform active:scale-95 flex justify-center items-center w-12 h-12 sm:w-16 sm:h-16 sm:text-2xl md:w-20 md:h-20 md:text-3xl lg:w-24 lg:h-24 lg:text-4xl">
+  +
+</button>
+{% endif %}
 
 
-
-<input type="hidden" id="last-review-id" value="{{reviews[-1].id}}">
-
-<script>
-
-let isLoading = false;
-window.addEventListener('scroll', function() {
-  
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight-5 && !isLoading) {
-        console.log('load more data');
-        isLoading = true;
-        // スクロールの最後に達した時に新しいデータを読み込む
-        loadMoreData();
-        // 5秒後に再び発火できるようにフラグをリセット
-        if(isLoading == true)
-        setTimeout(() => {
-            isLoading = false;
-        }, 100);
-        
-    }
-});
-
-function loadMoreData() {
-  console.log("loadMoreData");
-    let startAfter = document.getElementById('last-review-id').value; // 最後のレビューIDを取得
-    fetch('/load-more-data', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ start_after: startAfter, sort_option: "{{sort_option}}" }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log(data);
-        if (data.length === 0) {
-          return; // data リストが空の場合は処理を中断する
-        }
-        // 取得したデータをリストに追加
-        let startAfter = document.getElementById('last-review-id').value; // 最後のレビューIDを取得
-        if (!startAfter) {
-            return; // 最後のレビューIDが取得できない場合は処理を中断する
-        }
-        data.forEach(review => {
-          let reviewList = document.getElementById('review-list');
-          let image_div = document.createElement('div');
-          image_div.classList.add('w-1/6', 'my-3');
-          image_div.style.width = '120px';
-          image_div.style.height = '180px';
-
-          let review_div = document.createElement('div');
-          review_div.classList.add('w-5/6');
-
-          image_div.innerHTML = `
-            <a href="/${review.mangaTitle}/detail" style="display: block; width: 100%; height: 100%;">
-              <img src="${review.image}" class="w-12 h-12 mr-4 transition duration-500 hover:scale-110 rounded-lg" alt="Comic Image" style="width: 100%; height: 100%;">
-            </a>`;
-            
-          review_div.innerHTML = `
-            <li class="my-3 p-4 bg-zinc-700">
-              <p>タイトル：${review.mangaTitle}</p>
-              <p>${review.username}</p>
-              ${Array(review.evaluation).fill().map(() => '<span class="text-yellow-400">★</span>').join('')}
-              <p style="word-wrap: break-word;">${review.contents}</p>
-              <p>いいね数：${review.likes_count}</p>
-              ${review.liked ? 
-                `<button class="likeButton" data-review-id="${review.id}" onclick="setTimeout(function() { location.reload(true); }, 120)">
-                    <i class="material-icons" style="color: rgb(255, 73, 234);">favorite</i>
-                </button>` :
-                `<button class="likeButton" data-review-id="${review.id}" onclick="setTimeout(function() { location.reload(true); }, 120)">
-                    <i class="material-icons">favorite_border</i>
-                </button>`
-              }
-            </li>`;
-          reviewList.appendChild(image_div);
-          reviewList.appendChild(review_div);
-
-          // loadMoreDataで新しく生成されたlikeButtonにイベントリスナーを追加
-          const newLikeButton = review_div.querySelector('.likeButton');
-          newLikeButton.addEventListener('click', function() {
-              const reviewId = this.dataset.reviewId;
-              fetch('/review', {
-                  method: 'POST',
-                  headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded',
-                  },
-                  body: `review_id=${reviewId}`,
-              })
-              .then(response => response.json())
-              .then(data => {
-                  if (data.error != "Unauthorized") {
-                    const likeCountElement = this.parentNode.querySelector('.likeCount');
-                    const heartIcon = this.querySelector('i');
-
-                    let likeCount = parseInt(likeCountElement.textContent.replace('いいね数: ', ''), 10);
-
-                    if (data.status == 'liked') {
-                        likeCount += 1;
-                        heartIcon.style.color = 'rgb(255, 73, 234)';
-                    } else {
-                        likeCount -= 1;
-                        heartIcon.style.color = '';
-                    }
-
-                    likeCountElement.textContent = `いいね数: ${likeCount}`;
-
-                    console.log('Success:', data);
-                  } else {
-                    window.location.href = "/login";
-                  }
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-              });
-          });
-        });
-
-        // 最後のレビューIDを更新
-        let lastReviewId = data[data.length - 1].id;
-        document.getElementById('last-review-id').value = lastReviewId;
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-
-</script>
-
-<script>
-  // いいねボタンがクリックされたときの処理
-  document.querySelectorAll('.likeButton').forEach(button => {
-      button.addEventListener('click', function() {
-          const reviewId = this.dataset.reviewId;
-          fetch('/review', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/x-www-form-urlencoded',
-              },
-              body: `review_id=${reviewId}`,
-          })
-          .then(response => response.json())
-          .then(data => {
-              if (data.error != "Unauthorized") {
-                const likeCountElement = document.querySelector(`#likeCount-${reviewId}`);
-                let likeCount = parseInt(likeCountElement.textContent.replace('いいね数: ', ''), 10);
-
-                const likeButton = document.querySelector(`#likeButton-${reviewId}`);
-                const heartIcon = likeButton.querySelector('i');
-                
-                if (data.status == 'liked') {
-                    likeCount += 1
-                    likeButton.innerHTML = `
-                    <i class="material-icons" style="color: rgb(255, 73, 234);">favorite</i>
-                    `
-                } else {
-                    console.log('unliked');
-                    likeCount -= 1;
-                    likeButton.innerHTML = `
-                    <i class="material-icons">favorite_border</i>
-                    `
-                }
-    
-                likeCountElement.textContent = `いいね数: ${likeCount}`;
-                console.log('Success:', data);
-                setTimeout(function() { location.reload(true); }, 50)
-              } else {
-                window.location.href = "/login";
-              }
-          })
-          .catch(error => {
-              console.error('Error:', error);
-          });
-      });
-  });
-</script>
-
+<script src="../static/javascript/reviewList.js"></script>
 
 {% endblock %}
