@@ -135,18 +135,18 @@ def matching(mangaAnswer,user_id,genre):
                             if comic.id not in comic_query_results:
                                 comic_query_results.append(comic.id)
 
-            for doc in review_query:
-                eval=doc.to_dict()["evaluation"]
-                if(int(eval)>=4):
-                    # レビューした漫画を取り出す
-                    comic = next(comic_doc_ref.where('title', '==', doc.to_dict()['mangaTitle']).limit(1).stream(), None)
-                    if comic.id not in comic_query_results:
-                        comic_query_results.append(comic.id)
+                for doc in review_query:
+                    eval=doc.to_dict()["evaluation"]
+                    if(int(eval)>=4):
+                        # レビューした漫画を取り出す
+                        comic = next(comic_doc_ref.where('title', '==', doc.to_dict()['mangaTitle']).limit(1).stream(), None)
+                        if comic.id not in comic_query_results:
+                            comic_query_results.append(comic.id)
 
-            
-            for comic in favorite_query:
-                if comic.id not in comic_query_results:
-                    comic_query_results.append(comic.id)              
+                
+                for comic in favorite_query:
+                    if comic.id not in comic_query_results:
+                        comic_query_results.append(comic.id)              
 
 
         
