@@ -4,12 +4,19 @@
 <link rel="stylesheet" href="https://unpkg.com/@sjmc11/tourguidejs/dist/css/tour.min.css">
 <link rel="stylesheet" type="text/css" href="https://unpkg.com/swiper@8/swiper.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 {% endblock %} {% block content%}
 <main>
   {% if logged_in %}
     <div class="l-section mx-20">
       <section class="w-full my-8">
-        <h2 class="mb-8 text-3xl">あなたにおすすめの漫画</h2>   
+        <div class="flex">
+          <h2 class="mb-8 text-3xl mr-4">あなたにおすすめの漫画</h2>  
+          <a href="/comic"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+            trending_flat
+            </span></a>
+        </div>
+         
         <div data-tg-order='1' data-tg-tour='あなたのアンケートをもとにマッチングされた漫画です。' class="swiper">
           <div class="swiper-wrapper">
             {% if data != [] %}
@@ -21,7 +28,7 @@
                         <img src="{{ url }}" alt="">
                       </div>
                       <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
-                        <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
+                        
                         <h2 class="slide-title">{{ title }}</h2>
                       </div>
                     </article>
@@ -33,7 +40,7 @@
                         <img src="https://illustrain.com/img/work/2016/illustrain08-book02.png" alt="">
                       </div>
                       <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
-                        <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
+                        
                         <h2 class="slide-title">{{ title }}</h2>
                       </div>
                     </article>
@@ -47,7 +54,13 @@
         </div>
       </section>  
       <section class="my-16" id="user">
-        <h2 class="text-3xl">あなたの属性に近いユーザー</h2>
+        <div class="flex">
+          <h2 class="text-3xl mr-4">あなたの属性に近いユーザー</h2> 
+          <a href="/user"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+            trending_flat
+            </span></a>
+        </div>
+        
         <div id="user-content" class="relative mt-6">
           <div id="user-container" class="grid grid-cols-4 p-4 max-w-4xl">
             {% if all_review_users != None %}
@@ -71,7 +84,13 @@
         </div>
       </section>
       <section class="my-16" id="reviewer">
-        <h2 class="text-3xl" >フォローしたユーザー</h2>
+        
+        <div class="flex">
+          <h2 class="text-3xl mr-4" >フォローしたユーザー</h2>
+          <a href="/user"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+            trending_flat
+            </span></a>
+        </div>
         <div id="user-content" class="relative mt-6">
           <div id="user-container" class="grid grid-cols-4 p-4 max-w-4xl">
             {% if all_review_users != None %}
@@ -98,20 +117,26 @@
   {% endif %}
   <div class="l-section mx-20">
     <section class="w-full my-8">
-      <h2 class="mb-8 text-3xl">レビュー数の多い漫画</h2>
+      <div class="flex">
+        <h2 class="mb-8 text-3xl mr-4">レビュー数の多い漫画</h2>
+        <a href="/comic"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
+      
       <div class="swiper mySwiper">
         <div class="swiper-wrapper">
           {% if all_review_book !=[] %}
             {% for title,url in all_review_book %}
-              <div class="swiper-slide">
-                <a href="/{{ title }}/detail" >
-                  <img class="block w-full h-full hover:scale-105" src="{{ url }}" alt="">
-                </a>
+              <a href="/{{ title }}/detail" class="swiper-slide">
+             
+                <img class="block w-full h-full hover:scale-105" src="{{ url }}" alt="">
+            
                 <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
                   <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
                   <h2 class="slide-title">{{ title }}</h2>
                 </div>
-              </div>
+              </a>
             {% endfor %}
           {% endif %}
         </div>
@@ -120,20 +145,26 @@
       </div>
     </section>
     <section class="w-full my-8">
-      <h2 class="mb-8 text-3xl">レビュー数の多い（一週間以内）漫画</h2>
+
+      <div class="flex">
+        <h2 class="mb-8 text-3xl mr-4">レビュー数の多い（一週間以内）漫画</h2>
+        <a href="/comic"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
       <div class="swiper mySwiper">
         <div class="swiper-wrapper">
           {% if week_review_book !=[] %}
             {% for title,url in week_review_book %}
-              <div class="swiper-slide">
-                <a href="/{{ title }}/detail" >
+              <a href="/{{ title }}/detail" class="swiper-slide">
+                
                   <img class="block w-full h-full" src="{{ url }}" alt="">
-                </a>
+                
                 <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
                   <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
                   <h2 class="slide-title">{{ title }}</h2>
                 </div>
-              </div>
+              </a>
             {% endfor %}
           {% endif %}
         </div>
@@ -142,20 +173,27 @@
       </div>
     </section>
     <section class="w-full my-8">
-      <h2 class="mb-8 text-3xl">ブックマーク数が多い漫画</h2>
+      
+      <div class="flex">
+        <h2 class="mb-8 text-3xl mr-4">ブックマーク数が多い漫画</h2>
+        <a href="/comic"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
+      
       <div class="swiper mySwiper">
         <div class="swiper-wrapper">
           {% if bookmark_book !=[] %}
             {% for title,url in bookmark_book %}
-              <div class="swiper-slide">
-                <a href="/{{ title }}/detail" >
+              <a href="/{{ title }}/detail" class="swiper-slide">
+                
                   <img class="block w-full h-full" src="{{ url }}" alt="">
-                </a>
+              
                 <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
                   <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
                   <h2 class="slide-title">{{ title }}</h2>
                 </div>
-              </div>
+              </a>
             {% endfor %}
           {% endif %}
         </div>
@@ -164,20 +202,26 @@
       </div>
     </section>
     <section class="w-full my-8">
-      <h2 class="mb-8 text-3xl">高評価の漫画</h2>
+   
+      <div class="flex">
+        <h2 class="mb-8 text-3xl mr-4">高評価の漫画</h2>
+        <a href="/comic"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
       <div class="swiper mySwiper">
         <div class="swiper-wrapper">
           {% if high_evaluate_book !=[] %}
             {% for title,url in high_evaluate_book %}
-              <div class="swiper-slide">
-                <a href="/{{ title }}/detail" >
+              <a href="/{{ title }}/detail" class="swiper-slide">
+               
                   <img class="block w-full h-full" src="{{ url }}" alt="">
-                </a>
+               
                 <div class="slide-content opacity-0 hover:opacity-100 transition duration-500 absolute inset-0 flex flex-col justify-center items-center bg-black bg-opacity-75 text-white">
                   <h1 class="text-lg font-bold mt-2">{{ loop.index }}位</h1>
                   <h2 class="slide-title">{{ title }}</h2>
                 </div>
-              </div>
+              </a>
             {% endfor %}
           {% endif %}
         </div>
@@ -186,7 +230,13 @@
     </div>
     </section>
     <section class="my-16" id="user">
-      <h2 class="text-3xl">レビュー投稿数が多いユーザー</h2>
+      
+      <div class="flex">
+        <h2 class="text-3xl mr-4">レビュー投稿数が多いユーザー</h2>
+        <a href="/user"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
       <div id="user-content" class="relative mt-6">
         <div id="user-container" class="grid grid-cols-4 p-4 max-w-4xl">
           {% if all_review_users != None %}
@@ -210,7 +260,13 @@
       </div>
     </section>
     <section class="my-16" id="user">
-      <h2 class="text-3xl">レビュー投稿数が多い(直近一週間)ユーザー</h2>
+
+      <div class="flex">
+        <h2 class="text-3xl mr-4">レビュー投稿数が多い(直近一週間)ユーザー</h2>
+        <a href="/user"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
       <div id="user-content" class="relative mt-6">
         <div id="user-container" class="grid grid-cols-4 p-4 max-w-4xl">
           {% if all_review_users != None %}
@@ -234,7 +290,13 @@
       </div>
     </section>
     <section class="my-16" id="user">
-      <h2 class="text-3xl">フォロワーが多いユーザー</h2>
+   
+      <div class="flex">
+        <h2 class="text-3xl mr-4">フォロワーが多いユーザー</h2>
+        <a href="/user"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
       <div id="user-content" class="relative mt-6">
         <div id="user-container" class="grid grid-cols-4 p-4 max-w-4xl">
           {% if all_review_users != None %}
@@ -258,7 +320,12 @@
       </div>
     </section>
     <section id="timeline">
-      <h2 class="text-3xl">新着レビュー</h2>
+      <div class="flex">
+        <h2 class="text-3xl mr-4">新着レビュー</h2>
+        <a href="/review"><span class="material-symbols-outlined text-3xl hover:text-blue-500">
+          trending_flat
+          </span></a>
+      </div>
         {% for review in reviews %}
         <div id="review-list" class="review rounded-lg over-flow-hidden shadow-lg m-2 p-4 transition duration-500 hover:shadow-2xl">
           <div class="flex flex-col md:flex-row bg-zinc-700 text-white p-4 rounded-lg">
