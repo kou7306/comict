@@ -1,0 +1,44 @@
+{% extends "base.html" %} {% block extra_css %} 
+<link href="../static/css/review.css" rel="stylesheet">
+{% endblock %} 
+{% block content%}
+    <main class="mb-12 mx-auto px-12 py-12 bg-gray-800 w-3/4">
+    <!-- 本文スタート -->
+    <!-- レビュー記録フォーム -->
+    <form id="reviewForm" action="/reviewAdd" method="POST">
+        <div class="w-3/4 mx-auto">
+            <div class="text-4xl text-center mb-12"><h1>レビュー投稿</h1></div>
+            <div class="mb-8">
+                <label for="work_name" class="text-2xl">作品名</label>
+                <input type="text" id="work_name" name="work_name" class="w-full mt-2 h-12 text-black" value="{{ title }}" readonly>
+            </div>
+            <div class="row mb-8">
+                <label for="" class="text-2xl">評価</label>
+                <div class="mt-2">
+                    <i class="fa-solid fa-star fa-2x" style="color:gray" id="starbutton_1" onclick="star_update(1)"></i>
+                    <i class="fa-solid fa-star fa-2x" style="color:gray" id="starbutton_2" onclick="star_update(2)"></i>
+                    <i class="fa-solid fa-star fa-2x" style="color:gray" id="starbutton_3" onclick="star_update(3)"></i>
+                    <i class="fa-solid fa-star fa-2x" style="color:gray" id="starbutton_4" onclick="star_update(4)"></i>
+                    <i class="fa-solid fa-star fa-2x" style="color:gray" id="starbutton_5" onclick="star_update(5)"></i>
+                </div>
+            </div>
+                <!-- 隠しフィールド -->
+            <input type="hidden" name="rating" id="rating_input" value="0">
+            <div class="">
+                <label for="comment" class="text-2xl">コメント</label>
+                <div class="w-full mt-2">
+                    <textarea name="comment_text" id="comment" rows="5" class="w-full text-black" maxlength="1000"></textarea>
+                </div>
+            </div>
+            <div id="errorMessage" class="text-red-500 text-sm mb-4"></div>
+            <div class="text-center mt-8">
+                <input type="button" value="投稿" class="bg-blue-500 text-white mr-12 py-2 px-4 rounded hover:bg-blue-600 my-4 w-3/12" onclick="validateAndSubmit()" id="submitbutton">
+                <button type="button" onclick="goBack('{{ title }}')" class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 my-4">戻る</button>
+            </div>
+        </div>
+    </form>
+    <script src="https://kit.fontawesome.com/12a4c3ee6d.js" crossorigin="anonymous"></script>
+        <!-- ★の切り替え -->
+    <script src="../static/javascript/reviewPost.js"></script>
+{% endblock %}
+

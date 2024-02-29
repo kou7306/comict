@@ -3,50 +3,62 @@
 <link href="../../static/css/review.css" rel="stylesheet">
 {% endblock %} 
 {% block content %}    
-  <main class="flex flex-wrap flex-row">
-    <div class="pl-8 pr-4 w-2/5">
-      <h1 class="titleName text-3xl" data-title="{{ title }}">{{title}}</h1>
-      <img src="{{ image }}" alt="comic image" class="comicImage" width="186" height="288">
-      {% if url != "#" %}
-      <p class="text-xl"><a href={{url}}>wikipedia</a></p>
-      {% endif %}
-
-      <!-- ブックマークトグルボタン -->
-      {% if bookmarked %}
-      <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
-        <i class="material-icons">bookmark</i>
-      </button>
-      {% else %}
-      <button id="bookmarkToggle" class="btn btn-primary" onclick="toggleBookmark()">
-        <i class="material-icons">bookmark_border</i>
-      </button>
-      {% endif %}
-
-      <p id="bookmark_num" class="text-xl">ブックマーク数：{{bookmark_num}}</p>
-
-
-      <p id="review_avg" class="text-xl">平均評価：{{eval_avg}} / 5.0 (レビュー数：{{rev_sum}}件)</p>
+<main class="max-w-screen-lg mx-auto p-12">
+  <div class="flex flex-col md:flex-row my-8">
+    <!-- 左側のセクション：　タイトルと画像　-->
+    <div class="md:w-2/5 mb-8">
+      <img src="{{ image }}" alt="comic image" class="w-48 h-auto mb-4">
     </div>
-    
-    <div class="pr-8 w-3/5">
-      <h2 class="text-3xl">レビュー一覧</h2>
-      <select id="sortOption" onChange="fetchAndDisplayReviews()" class="text-black">
-        <option value="newest">日付（降順）</option>
-        <option value="oldest">日付（昇順）</option>
-        <option value="likes_count_desc">いいね数（降順）</option>
-        <option value="likes_count_asc">いいね数（昇順）</option>
-        <option value="evaluation_desc">評価（降順）</option>
-        <option value="evaluation_asc">評価（昇順）</option>
-      </select>
 
-      <div id="reviewContainer" class="bg-zinc-800">
+    <!-- 右側のセクション -->
+    <div class="md:w-3/5 mb-8">
+      <div class="md:w-3/5 mb-8 flex items-center">
+        <h1 class="text-3xl font-bold mr-4 titleName">{{ title }}</h1>
+        {% if logged_in %}
+        <!-- ブックマークトグルボタン -->
+        <button id="bookmarkToggle" class="rounded">
+          {% if bookmarked %}
+            <i class="material-icons text-3xl text-sky-500" id="bookmarkIcon">bookmark</i>
+          {% else %}
+            <i class="material-icons text-3xl" id="bookmarkIcon">bookmark_border</i>
+          {% endif %}
+        </button>
+        {% endif %}
       </div>
-
+      <p id="bookmark_num" class="text-xl mb-4">お気に入り：{{ bookmark_num }}人</p>
+      <p id="review_avg" class="text-xl mb-4">平均評価：{{ eval_avg }} / 5.0 (全： {{ rev_sum }}件)</p>
+      {% if url != "#" %}
+        <p class="text-xl mb-4"><a href="{{ url }}" class="text-blue-500 hover:text-blue-700">wikipediaへ移動する</a></p>
+      {% endif %}
+      {% if logged_in %}
+        <!-- レビューを投稿するボタン -->
+        <button onclick="redirectToReviewAdd()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4">
+          レビューを投稿する
+        </button>
+      {% endif %}
     </div>
+  </div>
 
-  </main>
-  <script src="../../static/javascript/bookmark.js"></script>
-  <script src="../../static/javascript/reviewLike.js"></script>
-  <script src="../../static/javascript/reviewHandler.js"></script>
+  <!-- 下のセクション -->
+  <div>
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-4xl mb-4">レビュー</h2>
+      <select id="sortOption" onChange="fetchAndDisplayReviews()" class="text-lg h-10 p-2 text-black mb-4 border border-gray-300 rounded">
+        <option value="newest">新しい順</option>
+        <option value="oldest">古い順</option>
+        <option value="likes_count_desc">いいねが多い順</option>
+        <option value="likes_count_asc">いいねが少ない順</option>
+        <option value="evaluation_desc">評価の高い順</option>
+        <option value="evaluation_asc">評価の低い順</option>
+      </select>
+    </div>
+    <div id="reviewContainer" class="p-4 mt-4 rounded-lg">
+    <!-- 以下にレビューが追加されていく -->
+    </div>
+  </div>
+</main>
+
+<script src="../../static/javascript/bookmark.js"></script>
+<script src="../../static/javascript/reviewHandler.js"></script>
 
 {% endblock %}

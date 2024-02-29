@@ -1,9 +1,14 @@
 async function searchTitle() {
+
+
+    var title = document.getElementById('searchTitle').value;
+  
+
     var overlay = document.getElementById("overlay");
     overlay.style.display = "block";
     document.getElementById('loadingIndicator').style.display = 'flex';
-    var title = document.getElementById('searchInput').value;
     
+
     // titleをAPIに渡す処理をここに記述する
     //　正式名称に変換
 
@@ -23,7 +28,7 @@ async function searchTitle() {
     else {
         document.getElementById('loadingIndicator').style.display = 'none';
         // 選択された作品名を検索欄に入力
-        document.getElementById('searchInput').value = "";
+        document.getElementById('searchTitle').value = "";
         // 漫画のページに遷移
         window.location.href = `/${selectedTitle}/detail`;
         return;

@@ -11,6 +11,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // テキスト内容を取得
         var titleText = h1Element.textContent || h1Element.innerText;
 
+        // ブックマークボタン
+        const bookmarkIcon = document.getElementById('bookmarkIcon');
 
         
         // サーバーにブックマークデータを送信
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
         .then(response => response.json())
         .then(data => {
             // ログインしていない場合はログインページにリダイレクト
-            console.log(data.bookmarknum);
+            // console.log(data.bookmarknum);
             if (data.bookmarknum == -1) {
                 window.location.href = '/login?query=bookmark';
             }
@@ -37,14 +39,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                 // ブックマークトグルボタンの状態を更新
-                // updateBookmarkButtonState(newBookmarkState);
-
+                if (data.bookmarked) {
+                    bookmarkIcon.classList.add('text-sky-500');
+                    bookmarkIcon.textContent = 'bookmark';
+                } else {
+                    bookmarkIcon.classList.remove('text-sky-500');
+                    bookmarkIcon.textContent = 'bookmark_border';
+                }
                 // ブックマーク数を更新
 
-                console.log("Bookmark toggled:", data);
-                bookmarkNumElement.textContent = `ブックマーク数：${data.bookmarknum}`;
+                // console.log("Bookmark toggled:", data);
+                bookmarkNumElement.textContent = `お気に入り：${data.bookmarknum}人`;
 
-                document.getElementById("bookmarkToggle").innerHTML = data.bookmarked ? '<i class="material-icons">bookmark</i>' : '<i class="material-icons">bookmark_border</i>';
+                // document.getElementById("bookmarkToggle").innerHTML = data.bookmarked ? '<i class="material-icons">bookmark</i>' : '<i class="material-icons">bookmark_border</i>';
 
 
     
