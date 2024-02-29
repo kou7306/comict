@@ -1,6 +1,6 @@
 async function searchTitle() {
 
-    var title = document.getElementById('searchInput').value;
+    var title = document.getElementById('searchTitle').value;
   
     // titleをAPIに渡す処理をここに記述する
     //　正式名称に変換
@@ -18,7 +18,7 @@ async function searchTitle() {
     }
     else {
         // 選択された作品名を検索欄に入力
-        document.getElementById('searchInput').value = "";
+        document.getElementById('searchTitle').value = "";
         // 漫画のページに遷移
         window.location.href = `/${selectedTitle}/detail`;
         return;
