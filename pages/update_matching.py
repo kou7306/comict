@@ -23,9 +23,9 @@ def update_matching():
         user_id = user.id
         user_doc = user_doc_ref.document(user_id)
         # マッチング
-        review_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
+        comic_query, user_query =matching(user.to_dict()["mangaAnswer"],user_id)
         
-        update_data = {"user_query":  user_query,"review_query":review_query}
+        update_data = {"user_query":  user_query,"comic_query":comic_query}
         user_doc.update(update_data)
 
 

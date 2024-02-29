@@ -43,24 +43,24 @@ def get_review_query(user_id):
     user_doc = user_doc_ref.document(user_id).get()
     if user_doc.exists:
         user_data = user_doc.to_dict()
-        review_query = user_data.get('review_query', [])
-        return review_query
+        comic_query = user_data.get('comic_query', [])
+        return comic_query
     else:
         return []
 
 # review_queryの中で★４以上の漫画のタイトルを取ってくる
-def review_get_manga_title(review_ids):
-    manga_titles = []
-    for review_id in review_ids:
-        review_query = review_doc_ref.document(review_id)
-        review_doc = review_query.get()
+# def review_get_manga_title(review_ids):
+#     manga_titles = []
+#     for review_id in review_ids:
+#         review_query = review_doc_ref.document(review_id)
+#         review_doc = review_query.get()
         
-        if review_doc.exists:
-            reivew_data = review_doc.to_dict()
-            if reivew_data['evaluation'] >= 4:
-                manga_titles.append(reivew_data['mangaTitle'])    
+#         if review_doc.exists:
+#             reivew_data = review_doc.to_dict()
+#             if reivew_data['evaluation'] >= 4:
+#                 manga_titles.append(reivew_data['mangaTitle'])    
     
-    return manga_titles
+#     return manga_titles
             
 # 漫画取得用API
 @comic_bp.route('/api/comics', methods = ['GET'])
@@ -92,9 +92,10 @@ def api_comics():
         comics_data = high_evaluate_comics()
         comics_title = [comic["title"] for comic in comics_data]
     elif sort_option == "recommendations":
-        connected_user_ids = get_user_queries_and_follows(user_id)
-        review_ids = get_review_query(user_id)
-        comics_title = get_bookmarks(connected_user_ids) + review_get_manga_title(review_ids)
+        # connected_user_ids = get_user_queries_and_follows(user_id)
+        comics_title = [comics_doc_ref.document(comic_id).to_dict["title"] for comic_id in get_review_query(user_id)]
+
+
 
     # print("comics_data:", comics_title)
     
