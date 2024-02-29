@@ -44,14 +44,15 @@ def get_bar_color(ans):
 
 def get_bar_width(ans):
     return ((ans + 5) / 10) * 100
+
 # reviewer page
 @reviewerpage_bp.route('/<reviewer_id>/userpage', methods = ['GET','POST'])
 def reviewer(reviewer_id):
     user_id = session.get('user_id')
 
     if request.method == 'GET':
-        if not user_id is None and not user_doc_ref.document(user_id).get().exists:
-            return redirect("/login")
+        if user_id is not None and user_id == reviewer_id:
+            return redirect(url_for('userpage.user_page'))
         if user_id:
             logged_in = True
         else:
@@ -122,6 +123,8 @@ def reviewer(reviewer_id):
         return render_template("reviewerpage.html",reviews=reviews,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_comic=favorite_comic,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in,follower_num=follower_num,combined_list=updated_combined_list,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
     
     else:
+        if not logged_in:
+            return redirect(url_for('auth.login'))
         data = request.get_json()
         is_following = data.get('is_following')
         if not user_id:

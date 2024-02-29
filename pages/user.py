@@ -76,6 +76,7 @@ def fetch_user():
         
     return jsonify({'users': user_info})
 
+# ユーザー一覧用
 @user_bp.route('/user')
 def user():
     # セッションからユーザーIDを取得（未ログインの場合はNoneが返る）

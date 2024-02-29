@@ -43,7 +43,7 @@ def get_bar_color(ans):
 def get_bar_width(ans):
     return ((ans + 5) / 10) * 100
 
-# ユーザーページ
+# マイページ
 @userpage_bp.route('/userpage', methods=['GET', 'POST'])
 def user_page():   
     user_id = session.get('user_id')
@@ -116,10 +116,6 @@ def user_page():
         if follow_doc.exists:
             follow_name = follow_doc.to_dict()["username"]
             follow_data.append((follow_name, follow_id))
-
-
-
-     
 
     follower = user_doc_ref.where('follow', 'array_contains', user_id).stream()
     # 検索結果のドキュメントの数を数える

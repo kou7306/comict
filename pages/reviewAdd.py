@@ -81,7 +81,9 @@ def review():
             # 作品データベースの`reviews`フィールドに`id`を追加
             comics_doc_ref.document(manga_title).update({"reviews": firestore.ArrayUnion([review_document_id])})
             
-
-        return redirect("/reviewAdd")
-
-
+        return redirect(f"/{manga_title}/detail")
+    
+@reviewAdd_bp.route('/reviewAdd/manga-detail',methods=['GET','POST'])
+def review_post():
+    title = request.args.get('title')
+    return render_template('reviewPost.html', title=title)

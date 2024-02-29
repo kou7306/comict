@@ -29,8 +29,8 @@ function fetchReviews() {
         }
 
         appendReviewsToDom(data.reviews, data.logged_in);
-        console.log('data:', data);
-        console.log('data.logged_in:', data.logged_in);
+        // console.log('data:', data);
+        // console.log('data.logged_in:', data.logged_in);
 
         if (data.reviews.length > 0) {
             lastReviewId = data.reviews[data.reviews.length - 1].id;
