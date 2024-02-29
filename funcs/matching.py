@@ -25,7 +25,9 @@ def matching(mangaAnswer,user_id,genre):
             if (int(user.to_dict()["genre"]) == genre):                  
 
                     all_user_vector.append(user.to_dict()["mangaAnswer"])
-                    all_users.append(user.to_dict())
+                    all_users.append(user.id)
+
+
    
     if(all_user_vector != []):
         # Faissインデックスの作成
@@ -34,7 +36,7 @@ def matching(mangaAnswer,user_id,genre):
         index.add(np.array(all_user_vector, dtype=np.float32))
         
         # 最近傍のベクトルを検索
-        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=1)
+        _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=10)
         
         # 結果の値だけを取り出す
         nearest_values_users = [all_users[i] for i in indices[0]]
@@ -43,12 +45,14 @@ def matching(mangaAnswer,user_id,genre):
         comic_query_results = []
         user_query_results = []
 
+
         
         
-        for user in nearest_values_users:
-            user_query_results.append(user.id)
+        for user_id in nearest_values_users:
+            
+            user_query_results.append(user_id)
             # usernameが一致するレビューデータをすべて取り出す
-            review_query = review_doc_ref.where('user_id', '==', user.id).stream()
+            review_query = review_doc_ref.where('user_id', '==', user_id).stream()
 
             for doc in review_query:
                 eval=doc.to_dict()["evaluation"]
@@ -58,65 +62,93 @@ def matching(mangaAnswer,user_id,genre):
 
 
                     if genre == 1:
-                        if "バトル" in comic.to_dict()['genre'] or "アクション" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                        if "バトル" in comic.to_dict()['genre'] or "アクション" in comic.to_dict()['genre'] or "格闘" in comic.to_dict()['genre']:
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
                     
                     elif genre == 2:
                         if "スポーツ" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
 
                     elif genre == 3:
                         if "恋愛" in comic.to_dict()['genre'] or "ラブコメ" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
                     
                     elif genre == 4:
                         if "ミステリー" in comic.to_dict()['genre'] or "サスペンス" in comic.to_dict()['genre'] or "ホラー" in comic.to_dict()['genre'] or "探偵" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
 
                     elif genre == 5:
                         if "コメディー" in comic.to_dict()['genre'] or "ギャグ" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
                     
                     elif genre == 6:
                         if "ファンタジー" in comic.to_dict()['genre'] or "SF" in comic.to_dict()['genre'] or "ロボット" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
 
                     elif genre == 7:
                         if "歴史" in comic.to_dict()['genre'] or "時代" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
 
 
             # お気に入り漫画の情報を取り出す
-                favorite_query = user_doc_ref.document(user.id).get().to_dict()["bookmark"]
+                favorite_query = user_doc_ref.document(user_id).get().to_dict()["bookmark"]
                 for comic in favorite_query:
-                    comic_query_results.append(comic)
                     if genre == 1:
-                        if "バトル" in comic.to_dict()['genre'] or "アクション" in comic.to_dict()['genre']:
+                        if "バトル" in comic.to_dict()['genre'] or "アクション" in comic.to_dict()['genre'] or "格闘" in comic.to_dict()['genre']:
+                            if comic.id not in comic_query_results:
                                 comic_query_results.append(comic.id)
                         
                     elif genre == 2:
                         if "スポーツ" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
 
                     elif genre == 3:
                         if "恋愛" in comic.to_dict()['genre'] or "ラブコメ" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
                     
                     elif genre == 4:
                         if "ミステリー" in comic.to_dict()['genre'] or "サスペンス" in comic.to_dict()['genre'] or "ホラー" in comic.to_dict()['genre'] or "探偵" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
 
                     elif genre == 5:
                         if "コメディー" in comic.to_dict()['genre'] or "ギャグ" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
                     
                     elif genre == 6:
                         if "ファンタジー" in comic.to_dict()['genre'] or "SF" in comic.to_dict()['genre'] or "ロボット" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
 
                     elif genre == 7:
                         if "歴史" in comic.to_dict()['genre'] or "時代" in comic.to_dict()['genre']:
-                            comic_query_results.append(comic.id)
+                            if comic.id not in comic_query_results:
+                                comic_query_results.append(comic.id)
+
+            for doc in review_query:
+                eval=doc.to_dict()["evaluation"]
+                if(int(eval)>=4):
+                    # レビューした漫画を取り出す
+                    comic = next(comic_doc_ref.where('title', '==', doc.to_dict()['mangaTitle']).limit(1).stream(), None)
+                    if comic.id not in comic_query_results:
+                        comic_query_results.append(comic.id)
+
+            
+            for comic in favorite_query:
+                if comic.id not in comic_query_results:
+                    comic_query_results.append(comic.id)              
+
+
         
         return comic_query_results, user_query_results
     return [],[]
