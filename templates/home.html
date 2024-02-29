@@ -63,8 +63,8 @@
         
         <div id="user-content" class="relative mt-6">
           <div id="user-container" class="grid grid-cols-4 p-4 max-w-4xl">
-            {% if all_review_users != None %}
-              {% for id in all_review_users %}
+            {% if user_query != None %}
+              {% for id in user_query %}
                 {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
                   <a href="/{{id}}/userpage">
                     <div class="flex flex-col items-center cursor-pointer transform transition duration-500 hover:scale-110 rounded-lg">
@@ -93,8 +93,8 @@
         </div>
         <div id="user-content" class="relative mt-6">
           <div id="user-container" class="grid grid-cols-4 p-4 max-w-4xl">
-            {% if all_review_users != None %}
-              {% for id in all_review_users %}
+            {% if follow_data != None %}
+              {% for id in follow_data %}
                 {% if user_doc_ref.document(id).get().to_dict()["username"] != username %}
                   <a href="/{{id}}/userpage">
                     <div class="flex flex-col items-center cursor-pointer transform transition duration-500 hover:scale-110 rounded-lg">

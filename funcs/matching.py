@@ -37,10 +37,20 @@ def matching(mangaAnswer,user_id,genre):
         
         # 最近傍のベクトルを検索
         _, indices = index.search(np.array([mangaAnswer], dtype=np.float32), k=10)
-        
-        # 結果の値だけを取り出す
-        nearest_values_users = [all_users[i] for i in indices[0]]
-        
+        # indicesから重複を取り除いて最初の要素を取得
+        unique_indices = set(indices[0])
+        print(unique_indices)
+
+        # 重複を除去
+        unique_users = []
+        for i in unique_indices:
+            user = all_users[i]
+            if user not in unique_users:
+                unique_users.append(user)
+
+        # unique_usersを使ってnearest_values_usersを作成
+        nearest_values_users = unique_users
+
         # 対象ユーザーのレビューした情報のIDを取り出す
         comic_query_results = []
         user_query_results = []
