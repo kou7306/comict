@@ -41,7 +41,8 @@ def reviewer(reviewer_id):
         reviewername=reviewer_doc.to_dict()["username"]
         review_data=reviewer_doc.to_dict()
         # 特定のユーザーネームに一致するレビュー情報を取得
-        #query = review_doc_ref.where('user_id', '==', reviewer_id).get()
+        query = review_doc_ref.where('user_id', '==', reviewer_id).stream()
+        review_num = sum(1 for _ in query)
         reviews = review_sort_for_user(reviewer_id,logged_in,None)
 
         if user_id:
@@ -95,11 +96,14 @@ def reviewer(reviewer_id):
                 title_data = title_doc.to_dict()
                 favorite_comic.append(title_data)
 
+        
+
         follower = user_doc_ref.where('follow', 'array_contains', reviewer_id).stream()
         # 検索結果のドキュメントの数を数える
         follower_num = sum(1 for _ in follower)
+       
 
-        return render_template("reviewerpage.html",reviews=reviews,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_comic=favorite_comic,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in,follower_num=follower_num,combined_list=updated_combined_list,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref)
+        return render_template("reviewerpage.html",reviews=reviews,username=reviewername,reviewer_id=reviewer_id,user_id=user_id,is_following=is_following,favorite_comic=favorite_comic,rev_combined_list=rev_combined_list,rev_genre_choice=rev_genre_choice,logged_in=logged_in,follower_num=follower_num,combined_list=updated_combined_list,user_doc_ref=user_doc_ref,review_doc_ref=review_doc_ref,comic_doc_ref=comic_doc_ref,review_num=review_num)
     
     else:
         if not logged_in:
