@@ -20,27 +20,6 @@ def get_bar_color(ans):
     else:
         return 'bg-green-500'
     
-    
-    #if ans <= -4:
-        #return 'bg-red-500'  # 1
-    #elif ans <= -3:
-        #return 'bg-red-400'  # 2
-    #elif ans <= -2:
-        #return 'bg-red-300'  # 3
-    #elif ans <= -1:
-        #return 'bg-orange-400'  # 4
-    #elif ans < 0:
-        #return 'bg-yellow-600'  # 5
-    #elif ans == 0:
-        #return 'bg-yellow-500'  # 6
-    #elif ans <= 1:
-        #return 'bg-lime-400'  # 7
-    #elif ans <= 2:
-        #return 'bg-green-400'  # 8
-    #elif ans <= 3:
-        #return 'bg-green-500'  # 9
-    #else:
-        #return 'bg-green-600'  # 10
 
 def get_bar_width(ans):
     return ((ans + 5) / 10) * 100
