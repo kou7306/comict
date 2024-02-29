@@ -28,14 +28,14 @@ def get_bar_width(ans):
 @reviewerpage_bp.route('/<reviewer_id>/userpage', methods = ['GET','POST'])
 def reviewer(reviewer_id):
     user_id = session.get('user_id')
-
+    if user_id:
+        logged_in = True
+    else:
+        logged_in = False   
     if request.method == 'GET':
         if user_id is not None and user_id == reviewer_id:
             return redirect(url_for('userpage.user_page'))
-        if user_id:
-            logged_in = True
-        else:
-            logged_in = False    
+ 
         # レビュワーの情報をとってくる
         reviewer_doc = user_doc_ref.document(reviewer_id).get()
         reviewername=reviewer_doc.to_dict()["username"]
