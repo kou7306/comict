@@ -82,7 +82,7 @@ function appendReviewsToDom(data, loggedIn) {
                 </div>
                 <div class="md:w-3/4 md:pl-4">
                     <p class="font-semibold">${review.mangaTitle}</p>
-                    <p class="text-sm mt-2">${review.username}</p>
+                    <a href="/${review.user_id}/userpage"><p class="text-sm mt-2 text-blue-500 hover:text-pink-400">${review.username}</p></a>
                     <span class="text-yellow-400 mt-2 text-xl">${'★ '.repeat(review.evaluation)}</span>
                     <p class="text-sm mt-2">${formattedDate}</p>
                     <p class="text-sm mt-2" style="word-wrap: break-word;">${review.contents}</p>
