@@ -45,7 +45,7 @@
         <div class="flex {% if favorite_comic|length == 1 %}justify-center{% else %}justify-around{% endif %} flex-wrap my-12">
             {% for comic in favorite_comic %}
                 <div class="flex flex-col items-center mx-2 w-1/5">
-                    <img class="w-full" src="{{ comic['image'] }}" alt="">
+                    <a href="/{{ comic['title']}}/detail"><img class="w-full" src="{{ comic['image'] }}" alt=""></a>
                     <div class="title">{{ comic['title'] }}</div>
                 </div>
             {% endfor %}

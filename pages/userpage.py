@@ -87,7 +87,6 @@ def user_page():
         if title_doc.exists:
             title_data = title_doc.to_dict()
             favorite_comic.append(title_data)
-   
 
     # フォローしたユーザーのIDを取得
     follow_data = []
