@@ -18,7 +18,7 @@ user_format={
     "username":None,
     "follow":[],
     "user_query":[],
-    "review_query":[],
+    "comic_query":[],
     "genre":None,   
 }
 
@@ -138,19 +138,17 @@ def home():
         favolite_book_urls = []
         book_urls=[]
         titles=[]
-        if user.to_dict()['review_query'] != None:
-            for id in user.to_dict()['review_query']:
-                review=review_doc_ref.document(id).get()
-                eval=review.to_dict()["evaluation"]
-                # 4以上の評価のものだけ取得
-                if(int(eval)>=4):
-                    title=review.to_dict()["mangaTitle"]  
-                    titles.append(title)
-                    doc_ref=comics_doc_ref.document(title)
-                    comic_data=doc_ref.get().to_dict()
-                    if comic_data is not None and "image" in comic_data:
-                        image=comic_data["image"]
-                    book_urls.append(image)
+        if user.to_dict()['comic_query'] != None:
+            for id in user.to_dict()['comic_query']:
+                
+           
+                title=comics_doc_ref.document(id).get().to_dict()["title"]
+                titles.append(title)
+                doc_ref=comics_doc_ref.document(title)
+                comic_data=doc_ref.get().to_dict()
+                if comic_data is not None and "image" in comic_data:
+                    image=comic_data["image"]
+                book_urls.append(image)
             data=list(zip(titles,book_urls))
         else:    
             data = []
@@ -171,7 +169,8 @@ def home():
         # お気に入り漫画の画像取得
         if user.to_dict()['user_query'] != None:
             for id in user.to_dict()['user_query']:
-                if user_doc_ref.document(id).get().to_dict()["bookmark"] != None:
+                doc = user_doc_ref.document(id).get()
+                if doc.exists and doc.to_dict()["bookmark"] is not None:
                     favorite_titles = user_doc_ref.document(id).get().to_dict()["bookmark"]
 
                     for title in favorite_titles:
@@ -189,7 +188,7 @@ def home():
         print(user_id)
         show_intro = flag == -2
         session['flag'] = flag + 1
-        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],review_query=user.to_dict()['review_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref, reviews=reviews)
+        return render_template("home.html",user_id=user_id,user_doc_ref=user_doc_ref,follow_data=follow_data,user_query=user.to_dict()['user_query'],comic_query=user.to_dict()['comic_query'],data=data,favolite_book_urls=favolite_book_urls,username=user.to_dict()["username"],review_doc_ref=review_doc_ref,show_intro=show_intro,logged_in=logged_in,all_review_book=all_review_book,week_review_book=week_review_book,bookmark_book=bookmark_book,high_evaluate_book=high_evaluate_book,all_review_users=all_review_users,oneweek_review_users=oneweek_review_users,most_follow_user=most_follow_user,results=results, comics_doc_ref=comics_doc_ref, reviews=reviews)
 
     #loginしていない場合
     else:
