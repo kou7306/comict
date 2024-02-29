@@ -83,7 +83,7 @@
                       </span>
                       <p class="text-sm mt-2" style="word-wrap: break-word;">{{review["contents"]}}</p>
                       <div class="flex items-center mt-2">
-                        {% if loggedIn %}
+                        {% if logged_in %}
                           {% if review.liked %}
                               <button id="like-button-{{review['id']}}" class="focus:outline-none"><span class="material-icons text-red-500">favorite</span></button>
                           {% else %}
