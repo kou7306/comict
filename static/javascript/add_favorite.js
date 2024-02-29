@@ -167,7 +167,7 @@ let isFirstLoad = true;
 
 function appendComicsToDom(comics, isOwn) {
     const contentContainer = document.querySelector('#comic-container');
-    contentContainer.classList.add('grid', 'grid-cols-3', 'gap-8', 'p-12', 'max-w-screen-lg', 'mx-auto');
+    contentContainer.classList.add('grid', 'grid-cols-3', 'gap-12', 'p-12', 'max-w-screen-lg', 'mx-auto');
 
     // comics配列が空の場合、メッセージを表示
     if (isFirstLoad && comics.length === 0) {
@@ -179,19 +179,21 @@ function appendComicsToDom(comics, isOwn) {
         return;
     }
     comics.forEach((comic) => {
-        const deleteButtonHTML = isOwn ? `<button onclick="event.stopPropagation(); delete_manga('${comic.title}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">削除</button>` : '';
-        
+        const deleteButtonHTML = isOwn ? `<button onclick="event.stopPropagation(); delete_manga('${comic.title}')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" style="margin-left: 4px;">削除</button>` : '';
+
         const mangaElement = document.createElement('div');
-        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg', 'justify-self-center');
+        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-300', 'hover:scale-105', 'rounded-lg', 'justify-self-center');
         mangaElement.innerHTML = `
-            <div class="w-64 h-full flex justify-center items-center overflow-hidden rounded-lg">
-                <img src="${comic.image}" alt="${comic.title}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg">
+            <div class="w-64 h-full flex justify-center items-center overflow-hidden rounded-lg"> <!-- 幅をw-64に変更 -->
+                <img src="${comic.image}" alt="${comic.title}" style="width: auto; height: 260px; object-fit: contain;" class="rounded-lg">
             </div>
-            <div class="flex items-baseline gap-2">
-                <h3 class="mt-2 text-xl text-center">${comic.title}</h3>
+            <div class="flex items-center w-64 mt-2 justify-center"> <!-- 幅をw-64に変更 -->
+                <h3 class="text-xl flex-grow truncate" style="max-width: calc(100% - 50px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${comic.title}</h3>
                 ${deleteButtonHTML}
             </div>
         `;
+
+
         mangaElement.addEventListener('click', () => {
             window.location.href = `/${encodeURIComponent(comic.title)}/detail`;
         });
