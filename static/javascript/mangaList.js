@@ -57,14 +57,14 @@ function appendComicsToDom(comics, sortOption) {
             totalComicsCount += 1;
         }
         const mangaElement = document.createElement('div');
-        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg', 'justify-self-center');
+        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-300', 'hover:scale-105', 'rounded-lg', 'justify-self-center');
         mangaElement.innerHTML = `
-            <div class="w-64 h-full flex justify-center items-center overflow-hidden rounded-lg">
-                <img src="${comic.image}" alt="${comic.title}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg">
+            <div class="w-80 h-full flex justify-center items-center overflow-hidden rounded-lg">
+                <img src="${comic.image}" alt="${comic.title}" style="width: auto; height: 260px; object-fit: contain;" class="rounded-lg">
             </div>
-            <div class="flex items-baseline gap-2 w-64 h-16">
+            <div class="flex items-center gap-4 w-80 h-20 mt-2">
                 ${sortOption !== 'recommendations' ? `<span class="font-black text-gray-400 text-3xl">${totalComicsCount}.</span>` : ''}
-                <h4 class="mt-2 text-xl text-center truncate">${comic.title}</h4>
+                <h4 class="text-xl truncate w-full" style="max-width: calc(100% - 3rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${comic.title}</h4>
             </div>
         `;
 
