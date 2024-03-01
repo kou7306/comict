@@ -58,7 +58,7 @@
     <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8 text-center">
             <h3 class="text-4xl mb-4">アンケート結果</h3>
             <div class="result">
-                <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ rev_genre_choice }}</h3>
+                <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ genre_choice }}</h3>
                 {% for q, ans, color, width in combined_list[:8] %}
                 <div class="mt-16 flex justify-center flex-col items-center">
                     <p>{{ q }}: {{ ans }}</p>
