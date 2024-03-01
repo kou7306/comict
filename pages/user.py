@@ -38,7 +38,8 @@ def fetch_user():
     page = int(request.args.get('page', 1))
     page_size = int(request.args.get('page_size', 8))
     
-    print("sort_option:", sort_option)
+    # print("sort_option:", sort_option)
+    # print("page:", page)
     
     if (sort_option == "suggestions" or sort_option == "follows")and not logged_in:
         return jsonify({'message': 'ログインすると見ることができるようになります！'}), 401
