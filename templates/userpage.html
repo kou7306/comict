@@ -56,22 +56,32 @@
     </div>
 
     <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8 text-center">
-        <h3 class="text-4xl mb-4">アンケート結果</h2>
-        <div class="result">
-            <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ genre_choice }}</h3>
-            {% for q, ans, color, width in combined_list %}
-            <div class="mt-16 flex justify-center flex-col items-center">
-                <p>{{ q }}: {{ ans }}</p>
-                <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
-                    <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+            <h3 class="text-4xl mb-4">アンケート結果</h3>
+            <div class="result">
+                <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ rev_genre_choice }}</h3>
+                {% for q, ans, color, width in combined_list[:8] %}
+                <div class="mt-16 flex justify-center flex-col items-center">
+                    <p>{{ q }}: {{ ans }}</p>
+                    <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
+                        <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+                    </div>
                 </div>
+                {% endfor %}
+                <div id="hiddenResults" class="hidden">
+                    {% for q, ans, color, width in combined_list[8:] %}
+                    <div class="mt-16 flex justify-center flex-col items-center">
+                        <p>{{ q }}: {{ ans }}</p>
+                        <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
+                            <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button id="showMoreResults" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">もっと見る</button>
+                <button id="showLessResults" class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 hidden">元に戻す</button>
             </div>
-            {% endfor %}
         </div>
-    </div>
 
-
-   
     <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8">
         <div class="text-center">
             <h2 class="text-4xl">マイレビュー</h2>
@@ -168,7 +178,24 @@ document.getElementById("editButton").addEventListener("click", function() {
     }); 
 });
 
-  
+let savedScrollposition = 0;
+
+
+document.getElementById('showMoreResults').addEventListener('click', function() {
+    savedScrollposition = window.scrollY || documentElement.scrollTop;
+
+    document.getElementById('hiddenResults').classList.remove('hidden');
+    this.classList.add('hidden');
+    document.getElementById('showLessResults').classList.remove('hidden');
+});
+
+document.getElementById("showLessResults").addEventListener("click", function() {
+    document.getElementById("hiddenResults").classList.add("hidden"); 
+    this.classList.add("hidden"); 
+    document.getElementById("showMoreResults").classList.remove("hidden"); 
+
+    window.scrollTo(0, savedScrollposition);
+});
 </script>
 
 {% endblock %}
