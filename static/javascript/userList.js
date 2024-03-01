@@ -85,8 +85,6 @@ function appendUsersToDom(users) {
                 window.location.href = `/${encodeURIComponent(user.user_id)}/userpage`;
             });
             contentContainer.appendChild(mangaElement);
-        } else {
-            console.error('Error');
         }
     });
 }

@@ -89,5 +89,13 @@ def review():
     
 @reviewAdd_bp.route('/reviewAdd/manga-detail',methods=['GET','POST'])
 def review_post():
+    user_id = session.get('user_id')
+    if not user_id is None and not user_doc_ref.document(user_id).get().exists:
+        return redirect('/login?query=reviewAdd') 
+    if user_id:
+        logged_in = True
+    else:
+        logged_in = False
+        return redirect("/login?query=reviewAdd")
     title = request.args.get('title')
-    return render_template('reviewPost.html', title=title)
+    return render_template('reviewPost.html', title=title, logged_in=logged_in)
