@@ -163,6 +163,7 @@ function fetchComics(userId, page=1) {
 
         });
 }
+
 let isFirstLoad = true;
 
 function appendComicsToDom(comics, isOwn) {

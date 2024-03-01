@@ -22,7 +22,13 @@ def get_bar_color(ans):
     
 
 def get_bar_width(ans):
-    return ((ans + 5) / 10) * 100
+    bar_width = ((ans + 5) / 10) * 100
+    if bar_width < 5:
+        return 5
+    elif bar_width > 100:
+        return 100
+    else:
+        return bar_width
 
 # reviewer page
 @reviewerpage_bp.route('/<reviewer_id>/userpage', methods = ['GET','POST'])

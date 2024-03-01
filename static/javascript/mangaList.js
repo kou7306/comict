@@ -52,6 +52,16 @@ let totalComicsCount = 0;
 function appendComicsToDom(comics, sortOption) {
     const contentContainer = document.querySelector('#comic-container');
     contentContainer.classList.add('grid', 'grid-cols-3', 'gap-8', 'p-12', 'max-w-screen-lg', 'mx-auto');
+
+    // comics配列が空の場合、メッセージを表示
+    if (currentPage == 1 && comics.length === 0) {
+        const noComicsMessage = document.createElement('div');
+        noComicsMessage.classList.add('text-center', 'text-xl', 'col-span-4');
+        noComicsMessage.textContent = '条件にマッチする漫画が見つかりません';
+        contentContainer.appendChild(noComicsMessage);
+        return;
+    }
+
     comics.forEach((comic) => {
         if (sortOption !== 'recommendations') {
             totalComicsCount += 1;

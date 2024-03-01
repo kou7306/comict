@@ -330,11 +330,11 @@
         <div id="review-list" class="review rounded-lg over-flow-hidden shadow-lg m-2 p-4 transition duration-500 hover:shadow-2xl">
           <div class="flex flex-col md:flex-row bg-zinc-700 text-white p-4 rounded-lg">
             <div class="md:w-1/4 flex justify-center items-center p-2">
-                <img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" alt="{{review["mangaTitle"]}}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg hover:scale-110 cursor-pointer transition-transform duration-300 review-image">
+                <a href="/{{ review['mangaTitle'] }}/detail"><img src="{{ comics_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" alt="{{review["mangaTitle"]}}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg hover:scale-110 cursor-pointer transition-transform duration-300 review-image"></a>
             </div>
             <div class="md:w-3/4 md:pl-4">
                 <p class="font-semibold">{{ review['mangaTitle'] }}</p>
-                <p class="text-sm mt-2">{{ user_doc_ref.document(review["user_id"]).get().to_dict()["username"] }}</p>
+                <a href="/{{ review['user_id'] }}/userpage"><p class="text-sm mt-2 text-blue-500 hover:text-pink-400">{{ user_doc_ref.document(review["user_id"]).get().to_dict()["username"] }}</p></a>
                 <span class="text-yellow-400 mt-2">
                   {% for _ in range(review.get("evaluation")) %}
                   <span class="text-yellow-400">★</span>

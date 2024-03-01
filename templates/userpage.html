@@ -45,7 +45,7 @@
         <div class="flex {% if favorite_comic|length == 1 %}justify-center{% else %}justify-around{% endif %} flex-wrap my-12">
             {% for comic in favorite_comic %}
                 <div class="flex flex-col items-center mx-2 w-1/5">
-                    <img class="w-full" src="{{ comic['image'] }}" alt="">
+                    <a href="/{{ comic['title']}}/detail"><img class="w-full" src="{{ comic['image'] }}" alt=""></a>
                     <div class="title">{{ comic['title'] }}</div>
                 </div>
             {% endfor %}
@@ -56,22 +56,32 @@
     </div>
 
     <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8 text-center">
-        <h3 class="text-4xl mb-4">アンケート結果</h2>
-        <div class="result">
-            <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ genre_choice }}</h3>
-            {% for q, ans, color, width in combined_list %}
-            <div class="mt-16 flex justify-center flex-col items-center">
-                <p>{{ q }}: {{ ans }}</p>
-                <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
-                    <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+            <h3 class="text-4xl mb-4">アンケート結果</h3>
+            <div class="result">
+                <h3 class="text-xl font-semibold mb-2">選択ジャンル : {{ rev_genre_choice }}</h3>
+                {% for q, ans, color, width in combined_list[:8] %}
+                <div class="mt-16 flex justify-center flex-col items-center">
+                    <p>{{ q }}: {{ ans }}</p>
+                    <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
+                        <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+                    </div>
                 </div>
+                {% endfor %}
+                <div id="hiddenResults" class="hidden">
+                    {% for q, ans, color, width in combined_list[8:] %}
+                    <div class="mt-16 flex justify-center flex-col items-center">
+                        <p>{{ q }}: {{ ans }}</p>
+                        <div class="w-1/2 bg-gray-200 h-4 rounded-full mt-4">
+                            <div class="h-4 rounded-full {{ color }}" style="width: {{ width }}%"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <button id="showMoreResults" class="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700">もっと見る</button>
+                <button id="showLessResults" class="mt-4 px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700 hidden">元に戻す</button>
             </div>
-            {% endfor %}
         </div>
-    </div>
 
-
-   
     <div class="h-3/6 bg-zinc-800 mx-32 my-20 p-8">
         <div class="text-center">
             <h2 class="text-4xl">マイレビュー</h2>
@@ -84,7 +94,7 @@
         <div id="review-list" class="review rounded-lg over-flow-hidden shadow-lg m-2 p-4 transition duration-500 hover:shadow-2xl">
             <div class="flex flex-col md:flex-row bg-zinc-700 text-white p-4 rounded-lg">
               <div class="md:w-1/4 flex justify-center items-center p-2">
-                  <img src="{{ comic_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" alt="{{review["mangaTitle"]}}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg hover:scale-110 cursor-pointer transition-transform duration-300 review-image">
+                <a href="/{{ review['mangaTitle'] }}/detail"><img src="{{ comic_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" alt="{{review["mangaTitle"]}}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg hover:scale-110 cursor-pointer transition-transform duration-300 review-image"></a>
               </div>
               <div class="md:w-3/4 md:pl-4">
                   <p class="font-semibold">{{ review['mangaTitle'] }}</p>
@@ -168,7 +178,24 @@ document.getElementById("editButton").addEventListener("click", function() {
     }); 
 });
 
-  
+let savedScrollposition = 0;
+
+
+document.getElementById('showMoreResults').addEventListener('click', function() {
+    savedScrollposition = window.scrollY || documentElement.scrollTop;
+
+    document.getElementById('hiddenResults').classList.remove('hidden');
+    this.classList.add('hidden');
+    document.getElementById('showLessResults').classList.remove('hidden');
+});
+
+document.getElementById("showLessResults").addEventListener("click", function() {
+    document.getElementById("hiddenResults").classList.add("hidden"); 
+    this.classList.add("hidden"); 
+    document.getElementById("showMoreResults").classList.remove("hidden"); 
+
+    window.scrollTo(0, savedScrollposition);
+});
 </script>
 
 {% endblock %}

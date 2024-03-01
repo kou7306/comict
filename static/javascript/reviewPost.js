@@ -32,7 +32,7 @@ function validateAndSubmit() {
 
 // 戻るボタン
 function goBack(mangaTitle) {
-    console.log("戻るボタンが動作しています");
+    // console.log("戻るボタンが動作しています");
     const encodedTitle = encodeURIComponent(mangaTitle);
     location.href = `/${encodedTitle}/detail`;
 }
