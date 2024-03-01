@@ -45,6 +45,7 @@ function fetchUser(sortOption, page=1) {
             if (messageContainer) {
                 messageContainer.innerHTML = `<p>${error.message}</p>`;
             }
+            console.error('fetch Error:', error);
             document.getElementById('loadingIndicator').style.display = 'none';
             overlay.style.display = "none";
 
@@ -52,11 +53,12 @@ function fetchUser(sortOption, page=1) {
 }
 
 function appendUsersToDom(users) {
+    // console.log('users:', users);
     const contentContainer = document.querySelector('#user-container');
     contentContainer.classList.add('grid', 'grid-cols-4', 'p-12', 'max-w-4xl');
 
     // users配列が空の場合、メッセージを表示
-    if (currentPage == 1 && users.length === 0) {
+    if (currentPage === 1 && users.length === 0) {
         const noUsersMessage = document.createElement('div');
         noUsersMessage.classList.add('text-center', 'text-xl', 'col-span-4');
         noUsersMessage.textContent = '条件にマッチするユーザーが見つかりません';
@@ -65,23 +67,27 @@ function appendUsersToDom(users) {
     }
 
     users.forEach((user) => {
-        
-        const mangaElement = document.createElement('div');
-        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg');
-        mangaElement.innerHTML = `
-            <div class="w-48 h-full flex justify-center items-center overflow-hidden rounded-lg">
-                <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png"
-                 alt="${user.title}" class="w-32 h-auto object-cover rounded-lg"
-                >
-            </div>
-            <div class="flex items-baseline gap-2">
-                <h3 class="mt-2 text-xl text-center">${user.username}</h3>
-            </div>
-        `;
-        mangaElement.addEventListener('click', () => {
-            window.location.href = `/${encodeURIComponent(user.user_id)}/userpage`;
-        });
-        contentContainer.appendChild(mangaElement);
+        // console.log('user:', user)
+        if (user) {
+            const mangaElement = document.createElement('div');
+            mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg');
+            mangaElement.innerHTML = `
+                <div class="w-48 h-full flex justify-center items-center overflow-hidden rounded-lg">
+                    <img src="https://kotonohaworks.com/free-icons/wp-content/uploads/kkrn_icon_user_1.png"
+                    alt="${user.username}" class="w-32 h-auto object-cover rounded-lg"
+                    >
+                </div>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="mt-2 text-xl text-center">${user.username}</h3>
+                </div>
+            `;
+            mangaElement.addEventListener('click', () => {
+                window.location.href = `/${encodeURIComponent(user.user_id)}/userpage`;
+            });
+            contentContainer.appendChild(mangaElement);
+        } else {
+            console.error('Error');
+        }
     });
 }
 
