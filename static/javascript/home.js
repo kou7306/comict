@@ -1,3 +1,8 @@
+window.addEventListener('load', function() {
+	document.getElementById('loadingIndicator').style.display = 'none';
+	overlay.style.display = "none";
+  });
+  
 const mySwiper = new Swiper('.swiper', {
 	slidesPerView: 2,
 	slidesPerGroup: 2,

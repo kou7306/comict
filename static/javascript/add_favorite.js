@@ -132,6 +132,8 @@ let userId;
 function fetchComics(userId, page=1) {
     if (isLoading || !hasMore) return;
     isLoading = true;
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "block";
     document.getElementById('loadingIndicator').style.display = 'flex';
 
     fetch(`/api/favoriteAdd?user_id=${userId}&page=${page}&page_size=${pageSize}`)
@@ -150,6 +152,7 @@ function fetchComics(userId, page=1) {
             currentPage += 1;
             isLoading = false;
             document.getElementById('loadingIndicator').style.display = 'none';
+            overlay.style.display = "none";
 
         })
         .catch(error => {
@@ -159,6 +162,7 @@ function fetchComics(userId, page=1) {
                 messageContainer.innerHTML = `<p>${error.message}</p>`;
             }
             document.getElementById('loadingIndicator').style.display = 'none';
+            overlay.style.display = "none";
             // document.getElementById('loadingIndicator').classList.add('hidden');
 
         });

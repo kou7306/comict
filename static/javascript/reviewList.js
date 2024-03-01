@@ -9,6 +9,8 @@ function fetchReviews() {
     if (isLoading || !hasMore) return;
     isLoading = true;
     document.getElementById('loadingIndicator').style.display = 'flex';
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "block";
 
     const sortOption = document.getElementById('sort_option').value;
 
@@ -39,6 +41,7 @@ function fetchReviews() {
 
         isLoading = false;
         document.getElementById('loadingIndicator').style.display = 'none';
+        overlay.style.display = "none";
         
     })
     .catch(error => {
@@ -48,6 +51,7 @@ function fetchReviews() {
                 messageContainer.innerHTML = `<p>${error.message}</p>`;
             }
             document.getElementById('loadingIndicator').style.display = 'none';
+            overlay.style.display = "none";
     });
 }
 
@@ -150,7 +154,7 @@ function updateLikeUI(reviewId, data) {
 // 無限スクロール機能
 window.addEventListener('scroll', () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-    if (scrollTop + clientHeight >= scrollHeight - 200 && !isLoading) {
+    if (scrollTop + clientHeight >= scrollHeight* 0.9 && !isLoading) {
         fetchReviews();
     }
 });

@@ -9,6 +9,8 @@ let activeTab = tabs[0];
 function fetchUser(sortOption, page=1) {
     if (isLoading || !hasMore) return;
     isLoading = true;
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "block";
     document.getElementById('loadingIndicator').style.display = 'flex';
 
     fetch(`/api/user?sort_option=${sortOption}&page=${page}&page_size=${pageSize}`)
@@ -34,6 +36,7 @@ function fetchUser(sortOption, page=1) {
             currentPage += 1;
             isLoading = false;
             document.getElementById('loadingIndicator').style.display = 'none';
+            overlay.style.display = "none";
 
         })
         .catch(error => {
@@ -43,6 +46,7 @@ function fetchUser(sortOption, page=1) {
                 messageContainer.innerHTML = `<p>${error.message}</p>`;
             }
             document.getElementById('loadingIndicator').style.display = 'none';
+            overlay.style.display = "none";
 
         });
 }
