@@ -104,6 +104,13 @@ async function search() {
     }
 }
 
+document.getElementById('reviewForm').addEventListener('submit', function() {
+    const submitbutton = document.getElementById('submitbutton');
+    // 送信ボタンを無効化
+    submitbutton.value = '送信中...'; // ボタンのラベルを変更
+    submitbutton.disabled = true; // ボタンを無効化
+});
+
 // 戻るボタン
 function goBack() {
     window.history.back();

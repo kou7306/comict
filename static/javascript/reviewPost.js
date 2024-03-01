@@ -18,6 +18,7 @@ function validateAndSubmit() {
     const rating = document.getElementById('rating_input').value;
     const comment = document.getElementById('comment').value;
     const errorMessage = document.getElementById('errorMessage');
+    const submitButton = document.getElementById('submitbutton');
 
     errorMessage.textContent = '';
 
@@ -25,6 +26,9 @@ function validateAndSubmit() {
     if (!title || rating == '0') {
         errorMessage.textContent = 'タイトル、評価を入力してください';
     } else {
+        submitButton.disabled = true;
+        submitButton.value = '送信中...';
+        
         // フォーム送信
         document.getElementById('reviewForm').submit(); // バリデーションが成功した場合のみフォームを送信
     }
