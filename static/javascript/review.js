@@ -64,7 +64,7 @@ async function search() {
 
     try {
         // ローディング表示
-        document.getElementById('loadingIndicator').style.display = 'block';
+        document.getElementById('loading').style.display = 'block';
         // 検索欄を無効化
         document.getElementById('searchInput').disabled = true;
 
@@ -98,7 +98,7 @@ async function search() {
         alert('エラーが発生しました');
     } finally {
         // ローディング非表示
-        document.getElementById('loadingIndicator').style.display = 'none';
+        document.getElementById('loading').style.display = 'none';
         // 検索欄を有効化
         document.getElementById('searchInput').disabled = false;
     }
