@@ -55,10 +55,23 @@
     <aside class="p-4 w-full" >
       <!-- Navigation -->
       <nav class="">
-        
-        <a href="/comic" class="block py-2 px-4 rounded hover:bg-gray-700 text-2xl mb-12">漫画</a>
-        <a href="/user" class="block py-2 px-4 rounded hover:bg-gray-700 text-2xl my-12">ユーザー</a>
-        <a href="/review" class="block py-2 px-4 rounded hover:bg-gray-700 text-2xl mt-12">レビュー</a>
+        {% if request.path == '/comic' %}
+          <a href="/comic" class="block py-2 px-4 rounded bg-gray-700 text-2xl mb-12">漫画</a>
+        {% else %}
+          <a href="/comic" class="block py-2 px-4 rounded hover:bg-gray-700 text-2xl mb-12">漫画</a>
+        {% endif %}
+
+        {% if request.path == '/user' %}
+          <a href="/user" class="block py-2 px-4 rounded bg-gray-700 text-2xl my-12">ユーザー</a>
+        {% else %}
+          <a href="/user" class="block py-2 px-4 rounded hover:bg-gray-700 text-2xl my-12">ユーザー</a>
+        {% endif %}
+
+        {% if request.path == '/review' %}
+          <a href="/review" class="block py-2 px-4 rounded bg-gray-700 text-2xl mt-12">レビュー</a>
+        {% else %}
+          <a href="/review" class="block py-2 px-4 rounded hover:bg-gray-700 text-2xl mt-12">レビュー</a>
+        {% endif %}
         <!-- More links -->
       </nav>
     </aside>
