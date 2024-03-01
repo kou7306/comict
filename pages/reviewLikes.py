@@ -5,7 +5,7 @@ from firebaseSetUp import db
 reviewLikes_bp = Blueprint('reviewLikes', __name__)
 user_doc_ref = db.collection('user')
 
-# いいね機能
+# いいね機能用のエンドポイント
 @reviewLikes_bp.route("/reviewLike/<review_id>", methods=["POST"])
 def toggle_likes(review_id):
     user_id = session.get("user_id")
@@ -16,15 +16,21 @@ def toggle_likes(review_id):
     review_doc = review_ref.get()
     
     if review_doc.exists:
-        likes = review_doc.to_dict().get('likes', [])
-        if user_id in likes:
-            review_ref.update({'likes': firestore.ArrayRemove([user_id])})
-            review_ref.update({'likes_count': firestore.Increment(-1)})
-            return jsonify({'status': 'unliked'}), 200
-        else:
-            review_ref.update({'likes': firestore.ArrayUnion([user_id])})
-            review_ref.update({'likes_count': firestore.Increment(1)})
-            return jsonify({'status': 'liked'}), 200
+        transaction = db.transaction()
+        @firestore.transactional
+        def update_likes_in_transaction(transaction, review_ref, user_id):
+            review_doc = review_ref.get(transaction=transaction)
+            likes = review_doc.to_dict().get('likes', [])
+            if user_id in likes:
+                likes.remove(user_id)
+                transaction.update(review_ref, {'likes': likes, 'likes_count': firestore.Increment(-1)})
+                return {'status': 'unliked'}
+            else:
+                likes.append(user_id)
+                transaction.update(review_ref, {'likes': likes, 'likes_count': firestore.Increment(1)})
+                return {'status': 'liked'}
+        
+        result = update_likes_in_transaction(transaction, review_ref, user_id)
+        return jsonify(result), 200
     else:
         return jsonify({"error": "Review not found"}), 404
-    

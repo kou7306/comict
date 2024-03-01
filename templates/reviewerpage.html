@@ -9,15 +9,16 @@
             <div id="usernameDisplay">
                 <h2 class="text-3xl" id="username">{{ username }}</h2>               
             </div>
+            {% if logged_in %}
             <div class="follow-user mt-4">
                 <button id="followButton" onclick="toggleFollow()"></button>
-
             </div>
+            {% endif %}
         </div>
         <div class="flex flex-col items-center justify-center w-3/5 text-center">
             <div class="flex border-b border-white border-solid px-8">
                 <p class="text-4xl my-4 w-60">投稿数</p>
-                <p class="text-4xl my-4 ml-20">{{ query|length }}</p>
+                <p class="text-4xl my-4 ml-20">{{ review_num }}</p>
             </div>
             <div class="flex border-b border-white border-solid px-8">
                 <p class="text-4xl my-4 w-60">フォロワー数 </p>
@@ -66,20 +67,40 @@
             {% if query==[] %}
             <p class="mt-8">まだレビューはありません</p>
             {% endif %}
-            {% for review in query %}
-            <a href="/review_detail?review_id={{review.id}}" class="block hover:scale-105">
-                <li class="my-4 mx-8 p-4 bg-zinc-700">
-                  <p>
-                    タイトル：{{review.to_dict()["mangaTitle"]}}
-                  </p>
-                  <p>{{user_doc_ref.document(review.to_dict()["user_id"]).get().to_dict()["username"]}}</p>
-      
-                  {% for _ in range(review.get("evaluation")) %}
-                  <span class="text-yellow-400">★</span>
-                {% endfor %}
-                  <p style="word-wrap: break-word;">{{review.to_dict()["contents"][:100]}}</p>
-                </li>
-              </a>
+            {% for review in reviews %}
+            <div id="review-list" class="review rounded-lg over-flow-hidden shadow-lg m-2 p-4 transition duration-500 hover:shadow-2xl">
+                <div class="flex flex-col md:flex-row bg-zinc-700 text-white p-4 rounded-lg">
+                  <div class="md:w-1/4 flex justify-center items-center p-2">
+                      <img src="{{ comic_doc_ref.document(review['mangaTitle']).get().to_dict()['image'] }}" alt="{{review["mangaTitle"]}}" style="width: 121px; height: 173px; object-fit: contain;" class="rounded-lg hover:scale-110 cursor-pointer transition-transform duration-300 review-image">
+                  </div>
+                  <div class="md:w-3/4 md:pl-4">
+                      <p class="font-semibold">{{ review['mangaTitle'] }}</p>
+                      <p class="text-sm mt-2">{{ user_doc_ref.document(review["user_id"]).get().to_dict()["username"] }}</p>
+                      <span class="text-yellow-400 mt-2">
+                        {% for _ in range(review.get("evaluation")) %}
+                        <span class="text-yellow-400">★</span>
+                        {% endfor %}
+                      </span>
+                      <p class="text-sm mt-2" style="word-wrap: break-word;">{{review["contents"]}}</p>
+                      <div class="flex items-center mt-2">
+                        {% if logged_in %}
+                          {% if review.liked %}
+                              <button id="like-button-{{review['id']}}" class="focus:outline-none"><span class="material-icons text-red-500">favorite</span></button>
+                          {% else %}
+                              <button id="like-button-{{review['id']}}" class="focus:outline-none"><span class="material-icons">favorite_border</span></button>
+                          {% endif %}
+                        {% else %}
+                            {% if review.liked %}
+                                <span class="material-icons text-red-500">favorite</span>
+                            {% else %}
+                                <span class="material-icons">favorite_border</span>
+                            {% endif %}
+                        {% endif %}
+                        <p id="likes-count-${review.id}" class="text-sm ml-4">{{review['likes_count']}}</p>
+                      </div>
+                  </div>
+                </div>
+              </div>
             {% endfor %}
         </div>
     <script>
@@ -123,6 +144,7 @@
                         followButton.textContent = 'フォロー';
                     }
                 }
+                window.location.href = '/{{reviewer_id}}/userpage'
 
             })
             .catch((error) => {

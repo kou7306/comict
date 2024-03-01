@@ -1,5 +1,5 @@
 let currentPage = 1;
-const pageSize = 8;
+const pageSize = 9;
 let isLoading = false;
 let hasMore = true;
 
@@ -51,22 +51,23 @@ let totalComicsCount = 0;
 
 function appendComicsToDom(comics, sortOption) {
     const contentContainer = document.querySelector('#comic-container');
-    contentContainer.classList.add('grid', 'grid-cols-4', 'gap-8', 'p-12');
+    contentContainer.classList.add('grid', 'grid-cols-3', 'gap-8', 'p-12', 'max-w-screen-lg', 'mx-auto');
     comics.forEach((comic) => {
         if (sortOption !== 'recommendations') {
             totalComicsCount += 1;
         }
         const mangaElement = document.createElement('div');
-        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-500', 'hover:scale-110', 'rounded-lg');
+        mangaElement.classList.add('flex', 'flex-col', 'items-center', 'cursor-pointer', 'transform', 'transition', 'duration-300', 'hover:scale-105', 'rounded-lg', 'justify-self-center');
         mangaElement.innerHTML = `
-            <div class="w-64 h-full flex justify-center items-center overflow-hidden bg-gray-200 rounded-lg">
-                <img src="${comic.image}" alt="${comic.title}" class="w-full h-auto object-cover rounded-lg">
+            <div class="w-80 h-full flex justify-center items-center overflow-hidden rounded-lg">
+                <img src="${comic.image}" alt="${comic.title}" style="width: auto; height: 260px; object-fit: contain;" class="rounded-lg">
             </div>
-            <div class="flex items-baseline gap-2">
+            <div class="flex items-center gap-4 w-80 h-20 mt-2">
                 ${sortOption !== 'recommendations' ? `<span class="font-black text-gray-400 text-3xl">${totalComicsCount}.</span>` : ''}
-                <h3 class="mt-2 text-xl text-center">${comic.title}</h3>
+                <h4 class="text-xl truncate w-full" style="max-width: calc(100% - 3rem); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${comic.title}</h4>
             </div>
         `;
+
         mangaElement.addEventListener('click', () => {
             window.location.href = `/${encodeURIComponent(comic.title)}/detail`;
         });

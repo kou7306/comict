@@ -44,9 +44,9 @@ def get_google_book_cover(book_title):
 
    
 
-    GOOGLE_API_KEY =  ""
-    # if GOOGLE_API_KEY is None:
-    #     GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+    GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+    if GOOGLE_API_KEY is None:
+        GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 
 
     print(GOOGLE_API_KEY)
@@ -57,7 +57,7 @@ def get_google_book_cover(book_title):
 
    
    
-    search_word=f"{book_title}1巻"
+    search_word=f"漫画{book_title}1巻の表紙"
     url = f"https://www.googleapis.com/customsearch/v1?key={GOOGLE_API_KEY}&cx={CUSTOM_SEARCH_ENGINE_ID}&searchType=image&q={search_word}&num=2"
 
     # APIリクエストを送信して検索結果を取得
@@ -65,10 +65,10 @@ def get_google_book_cover(book_title):
     print(response)
     data = response.json()
     print(data)
-    print(data['items'])
+    
 
     # 最初にヒットした画像のURLを取得して返す
-    if 'items:' in data and len(data['items']) > 0:
+    if 'items' in data and len(data['items']) > 0:
         print('yes')
         image_url = data['items'][0]['link']
         print('img'+image_url)

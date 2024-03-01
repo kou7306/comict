@@ -12,7 +12,7 @@ user_format={
     "username":None,
     "follow":[],
     "user_query":[],
-    "review_query":[],
+    "comic_query":[],
     "genre":None,   
 }
 

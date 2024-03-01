@@ -30,7 +30,7 @@ function fetchUser(sortOption, page=1) {
                 hasMore = false;
             }
 
-            appendComicsToDom(data.users, sortOption);
+            appendUsersToDom(data.users);
             currentPage += 1;
             isLoading = false;
             document.getElementById('loadingIndicator').classList.add('hidden');
@@ -47,7 +47,7 @@ function fetchUser(sortOption, page=1) {
         });
 }
 
-function appendComicsToDom(users, sortOption) {
+function appendUsersToDom(users) {
     const contentContainer = document.querySelector('#user-container');
     contentContainer.classList.add('grid', 'grid-cols-4', 'p-12', 'max-w-4xl');
     users.forEach((user) => {

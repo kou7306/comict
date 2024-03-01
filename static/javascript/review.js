@@ -103,3 +103,8 @@ async function search() {
         document.getElementById('searchInput').disabled = false;
     }
 }
+
+// 戻るボタン
+function goBack() {
+    window.history.back();
+}

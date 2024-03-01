@@ -33,41 +33,38 @@ def get_wikipedia_page_details(title):
 def get_manga_title(title):
     wikipedia.set_lang('ja')
 
+
     # 最初の検索結果から漫画のカテゴリを取得
-    search_response = wikipedia.search(title)
+    search_results = wikipedia.search(title)
 
-    print(search_response)
 
-    while search_response:
+    
+
+    for result in search_results:
         # 正確なページタイトルを取得
         try:
-            page_title = wikipedia.page(search_response[0]).title
+            page = wikipedia.page(result)
         except wikipedia.exceptions.DisambiguationError as e:
-            # 曖昧性のあるページの場合、最初の候補を使用
-            page_title = e.options[0]
+            # 曖昧性のあるページの場合、漫画カテゴリに属する最初の候補を選択
+            for option in e.options:
+                try:
+                    option_page = wikipedia.page(option)
+                    if any('漫画' in category for category in option_page.categories):
+                        print(f'入力されたタイトル "{title}" の正確なページタイトル: {option}')
+                        return option
+                except wikipedia.exceptions.PageError:
+                    continue
+        except wikipedia.exceptions.PageError:
+            continue
 
-        # ページ情報を取得
-        page_data = wikipedia.page(page_title)
-        categories = page_data.categories
-
-       
         # カテゴリが「漫画」のものを検索
-        for category in categories:
-            
-            if '漫画' in category:
-                print(f'入力されたタイトル "{title}" の正確なページタイトル: {page_title}')
-                return page_title
-            
+        if any('漫画' in category for category in page.categories):
+            print(f'入力されたタイトル "{title}" の正確なページタイトル: {page.title}')
+            return page.title
 
-        # 次の検索結果を取得
-        if len(search_response) > 1:
-            search_response = wikipedia.search(search_response[1])
-        else:
-            print(f'入力されたタイトル "{title}" に関連する「漫画」のカテゴリは見つかりませんでした。')
-            return None
-    
+    print(f'入力されたタイトル "{title}" に対応する漫画のページが見つかりませんでした。')
     return None
-        
+
 
 def get_manga_detail():
     wikipedia.set_lang('ja')
