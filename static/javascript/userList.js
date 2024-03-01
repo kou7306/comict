@@ -55,9 +55,8 @@ function appendUsersToDom(users) {
     if (currentPage == 1 && users.length === 0) {
         const noUsersMessage = document.createElement('div');
         noUsersMessage.classList.add('text-center', 'text-xl', 'col-span-4');
-        noUsersMessage.textContent = 'ユーザーが見つかりません';
+        noUsersMessage.textContent = '条件にマッチするユーザーが見つかりません';
         contentContainer.appendChild(noUsersMessage);
-        isFirstLoad = false;
         return;
     }
 
