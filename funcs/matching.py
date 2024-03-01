@@ -72,7 +72,7 @@ def matching(mangaAnswer,user_id,genre):
 
 
                     if genre == 1:
-                        if "バトル" in comic.to_dict()['genre'] or "アクション" in comic.to_dict()['genre'] or "格闘" in comic.to_dict()['genre']:
+                        if "バトル" in comic.to_dict()['genre'] or "アクション" in comic.to_dict()['genre'] or "格闘" in comic.to_dict()['genre'] or "戦" in comic.to_dict()['genre']:
                             if comic.id not in comic_query_results:
                                 comic_query_results.append(comic.id)
                     
