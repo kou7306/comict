@@ -1,7 +1,16 @@
-{% extends "base.html" %} {% block extra_css %} 
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comict</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body>
 
 
-{% endblock %} {% block content%}
     <form action="/genre" method="POST" class="text-center mt-12">
         <div id="genre_selelct" class="radio-box">
             <h2 class="text-4xl font-bold">一番好きなジャンルはなんですか</h2>
@@ -41,4 +50,6 @@
         <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 my-4 w-3/12">決定</button>
         </div>   
     </form>
-    {% endblock %}
+
+  </body>
+  </html> 

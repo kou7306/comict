@@ -20,6 +20,7 @@ async function searchTitle() {
     var is_exist = data.is_exist;
     if (selectedTitle == null || is_exist == false) {
         document.getElementById('loadingIndicator').style.display = 'none';
+        overlay.style.display = "none";
         // 検索結果が空の場合は処理しない
         alert('作品がありませんでした');
         

@@ -1,7 +1,22 @@
 <!-- [コメディー]を選んだ人への質問リストです -->
-{% extends "base.html" %} {% block extra_css %} 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/question.css') }}">
-{% endblock %} {% block content%}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comict</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/question.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+</head>
+<body>
+  <div id="matchLoad" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" style="display: none;">
+    <div class="animate-spin rounded-full h-32 w-32 border-b-4 border-blue-500"></div>
+  </div>
+  
+  
+
+  <div class="overlay fixed inset-0 bg-zinc-900 bg-opacity-80 z-49" id="overlay" style="display: none;"></div>
 <form action="/{{genre}}/question" method="POST" class="mt-12">
   <div class="form-group">
     <h1>あなたの好みを教えてください</h1>
@@ -100,6 +115,14 @@
           sliderValueElements[index].textContent = slider.value;
       });
   });
+
+  function loading() {
+    document.getElementById('matchLoad').style.display = 'flex';
+    var overlay = document.getElementById("overlay");
+    overlay.style.display = "block";
+
+  }
 </script>
 
-{% endblock %}
+</body>
+</html> 
