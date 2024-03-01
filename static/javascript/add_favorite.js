@@ -1,33 +1,35 @@
 searchEnd = false;
 // 作品名が入力された時の処理
 function inputFunction(user_id,title){
-  if(searchEnd){
-    // POSTリクエストのオプションを設定
-    const options = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json', // コンテントタイプをJSONに設定
-            // 必要に応じて他のヘッダーを追加
-        },
-        body: JSON.stringify({
-            title: title,
-            // 他に送りたいデータがあればここに追加
-            requested_user_id: user_id, //更新したいuser_id
-        }),
-        credentials: 'same-origin' // CSRF対策
-    };
+    document.getElementById('modalLoadingIndicator').style.display = 'flex';
+    if(searchEnd){
+        // POSTリクエストのオプションを設定
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json', // コンテントタイプをJSONに設定
+                // 必要に応じて他のヘッダーを追加
+            },
+            body: JSON.stringify({
+                title: title,
+                // 他に送りたいデータがあればここに追加
+                requested_user_id: user_id, //更新したいuser_id
+            }),
+            credentials: 'same-origin' // CSRF対策
+        };
 
-    // fetch APIを使用してリクエストを送信
-    url = "/favoriteAdd";   
-    fetch(url, options)
-        .then(response => response.json()) // レスポンスのJSONを解析
-        .then(data => {
-            location.reload();
-        })
-        .catch(error => {
-            console.error('Error:', error); // エラーをコンソールに表示
-        });
-  }
+        // fetch APIを使用してリクエストを送信
+        url = "/favoriteAdd";   
+        fetch(url, options)
+            .then(response => response.json()) // レスポンスのJSONを解析
+            .then(data => {
+                document.getElementById('modalLoadingIndicator').style.display = 'none';
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error); // エラーをコンソールに表示
+            });
+    }
 }
 
 
