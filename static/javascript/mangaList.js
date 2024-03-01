@@ -9,7 +9,7 @@ let activeTab = tabs[0];
 function fetchComics(sortOption, page=1) {
     if (isLoading || !hasMore) return;
     isLoading = true;
-    document.getElementById('loadingIndicator').classList.remove('hidden');
+    document.getElementById('loadingIndicator').style.display = 'flex';
 
     fetch(`/api/comics?sort_option=${sortOption}&page=${page}&page_size=${pageSize}`)
         .then(response => {
@@ -33,7 +33,7 @@ function fetchComics(sortOption, page=1) {
             appendComicsToDom(data.comics, sortOption);
             currentPage += 1;
             isLoading = false;
-            document.getElementById('loadingIndicator').classList.add('hidden');
+            document.getElementById('loadingIndicator').style.display = 'none';
 
         })
         .catch(error => {
@@ -42,7 +42,7 @@ function fetchComics(sortOption, page=1) {
             if (messageContainer) {
                 messageContainer.innerHTML = `<p>${error.message}</p>`;
             }
-            document.getElementById('loadingIndicator').classList.add('hidden');
+            document.getElementById('loadingIndicator').style.display = 'none';
 
         });
 }
@@ -89,7 +89,7 @@ window.addEventListener('scroll', () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
     const sortOption = activeTab.getAttribute('data-tab');
 
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
+    if (scrollTop + clientHeight >= scrollHeight - 200) {
         fetchComics(sortOption, currentPage);
     }
 });
