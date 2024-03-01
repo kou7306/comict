@@ -16,8 +16,6 @@ load_dotenv()  # .env ファイルを読み込む
 
 
 
-
-
 # 楽天ブックスAPIを叩く関数
 def get_rakuten_book_cover(book_title):
     api_key = '1078500249535096776'
