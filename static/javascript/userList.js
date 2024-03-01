@@ -50,6 +50,17 @@ function fetchUser(sortOption, page=1) {
 function appendUsersToDom(users) {
     const contentContainer = document.querySelector('#user-container');
     contentContainer.classList.add('grid', 'grid-cols-4', 'p-12', 'max-w-4xl');
+
+    // users配列が空の場合、メッセージを表示
+    if (currentPage == 1 && users.length === 0) {
+        const noUsersMessage = document.createElement('div');
+        noUsersMessage.classList.add('text-center', 'text-xl', 'col-span-4');
+        noUsersMessage.textContent = 'ユーザーが見つかりません';
+        contentContainer.appendChild(noUsersMessage);
+        isFirstLoad = false;
+        return;
+    }
+
     users.forEach((user) => {
         
         const mangaElement = document.createElement('div');
