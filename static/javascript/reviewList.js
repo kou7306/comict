@@ -13,7 +13,6 @@ function fetchReviews() {
     overlay.style.display = "block";
 
     const sortOption = document.getElementById('sort_option').value;
-
     fetch('/api/reviews', {
         method: 'POST',
         headers: {
