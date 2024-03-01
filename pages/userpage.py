@@ -20,7 +20,13 @@ def get_bar_color(ans):
 
 
 def get_bar_width(ans):
-    return ((ans + 5) / 10) * 100
+    bar_width = ((ans + 5) / 10) * 100
+    if bar_width < 5:
+        return 5
+    elif bar_width > 100:
+        return 100
+    else:
+        return bar_width
 
 # マイページ
 @userpage_bp.route('/userpage', methods=['GET', 'POST'])
@@ -108,8 +114,8 @@ def edit_name(user_id):
     data = request.json
 
     new_username = data.get("username")
-    print(new_username)
-    print(user_id)
+    # print(new_username)
+    # print(user_id)
     user_doc_ref.document(user_id).update({"username": new_username})
     return jsonify({"status": "success"})
 
