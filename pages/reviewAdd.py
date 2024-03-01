@@ -45,6 +45,7 @@ def review():
         manga_title = request.form['work_name']
         rating = request.form['rating']
         comment = request.form['comment_text']
+        redirect_to = request.form.get('redirect_to')
         # Firestoreから指定したuser_idに対応するユーザーネームを取得
         user_doc = user_doc_ref.document(user_id)
         user=user_doc.get()
@@ -80,8 +81,11 @@ def review():
         else:
             # 作品データベースの`reviews`フィールドに`id`を追加
             comics_doc_ref.document(manga_title).update({"reviews": firestore.ArrayUnion([review_document_id])})
-            
-        return redirect(f"/{manga_title}/detail")
+        
+        if redirect_to == "detail":
+            return redirect(f"/{manga_title}/detail")
+        else:
+            return redirect('/review')
     
 @reviewAdd_bp.route('/reviewAdd/manga-detail',methods=['GET','POST'])
 def review_post():

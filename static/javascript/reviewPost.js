@@ -22,8 +22,8 @@ function validateAndSubmit() {
     errorMessage.textContent = '';
 
     // バリデーションチェック
-    if (!title || rating == '0' ||  !comment) {
-        errorMessage.textContent = 'タイトル、評価、コメントの全てを入力してください';
+    if (!title || rating == '0') {
+        errorMessage.textContent = 'タイトル、評価を入力してください';
     } else {
         // フォーム送信
         document.getElementById('reviewForm').submit(); // バリデーションが成功した場合のみフォームを送信
