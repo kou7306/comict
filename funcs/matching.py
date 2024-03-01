@@ -109,7 +109,9 @@ def matching(mangaAnswer,user_id,genre):
 
             # お気に入り漫画の情報を取り出す
                 favorite_query = user_doc_ref.document(user_id).get().to_dict()["bookmark"]
-                for comic in favorite_query:
+
+                for comic_id in favorite_query:
+                    comic = comic_doc_ref.document(comic_id).get()
                     if genre == 1:
                         if "バトル" in comic.to_dict()['genre'] or "アクション" in comic.to_dict()['genre'] or "格闘" in comic.to_dict()['genre']:
                             if comic.id not in comic_query_results:
@@ -154,9 +156,9 @@ def matching(mangaAnswer,user_id,genre):
                             comic_query_results.append(comic.id)
 
                 
-                for comic in favorite_query:
-                    if comic.id not in comic_query_results:
-                        comic_query_results.append(comic.id)              
+                for comic_id in favorite_query:
+                    if comic_id not in comic_query_results:
+                        comic_query_results.append(comic_id)              
 
 
         
