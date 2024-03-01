@@ -52,7 +52,7 @@ def user_page():
 
     # アンケート結果の取得・表示
     genre_value=user_data.get("genre")
-    start_question = 20 * (int(genre_value) - 1)
+    start_question = 20 * (genre_value - 1)
     end_question = start_question + 20
 
     html_file_path=f"templates/question{genre_value}.html"
@@ -77,7 +77,7 @@ def user_page():
 
     #選択したジャンルを取得
     genre_list = ["バトル", "スポーツ", "恋愛", "ミステリー", "コメディ", "SF", "歴史"]
-    genre_choice = genre_list[int(genre_value)-1]
+    genre_choice = genre_list[genre_value-1]
     
     updated_combined_list = []
     for q, ans in combined_list:
