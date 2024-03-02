@@ -36,7 +36,7 @@ def fetch_user():
         
     sort_option = request.args.get('sort_option', 'suggestions')
     page = int(request.args.get('page', 1))
-    page_size = int(request.args.get('page_size', 8))
+    page_size = int(request.args.get('page_size', 16))
     
     # print("sort_option:", sort_option)
     # print("page:", page)
