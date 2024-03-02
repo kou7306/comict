@@ -1,5 +1,5 @@
 let currentPage = 1;
-const pageSize = 8;
+const pageSize = 16;
 let isLoading = false;
 let hasMore = true;
 
@@ -93,7 +93,7 @@ window.addEventListener('scroll', () => {
     const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
     const sortOption = activeTab.getAttribute('data-tab');
 
-    if (scrollTop + clientHeight >= scrollHeight - 50) {
+    if (scrollTop + clientHeight >= scrollHeight* 0.9 && !isLoading) {
         fetchUser(sortOption, currentPage);
     }
 });
