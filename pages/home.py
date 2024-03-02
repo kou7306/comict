@@ -113,15 +113,15 @@ def home():
     # ユーザー系
     # レビュー投稿数が多いユーザーの表示
     # 全期間
-    all_review_users = suggestion_doc_ref.document('all').get().to_dict()['most_review_users'][:10]
+    all_review_users = suggestion_doc_ref.document('all').get().to_dict()['most_review_users'][:5]
 
 
     # 一週間以内
-    oneweek_review_users  = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_users'][:10]
+    oneweek_review_users  = suggestion_doc_ref.document('oneweek').get().to_dict()['most_review_users'][:5]
 
 
     # フォロワーが多いユーザーの表示
-    most_follow_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user'][:10]
+    most_follow_user = suggestion_doc_ref.document('all').get().to_dict()['most_follow_user'][:5]
 
     # 新着レビュー
     reviews = review_sort('newest',None,limit=5)[:5]
