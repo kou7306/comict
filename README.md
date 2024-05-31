@@ -1,10 +1,15 @@
 # comict(コミクト)
 
-### アンケートに答えることによって、ユーザーの属性を判別し、その属性に近いレビュワーとマッチングできるプロダクト。それにより、より自分の好みに合う漫画や好みが似ている人を見つけることができる。
+## 概要
+自分の好みの漫画になかなか出会うことができない...</br>
+1巻だけ買ったけどなんか違った...</br>
+こんな悩みを解決するために生まれたプロダクト</br>
+アンケートに答えることで、ユーザーの属性を判別し、漫画をレコメンドします。</br>
+また、趣味や嗜好が似ているユーザーとのマッチング機能もあるため、似たような漫画が好きなユーザーと繋がることができます。</br>
 
-### https://comict-hvzxesylwq-an.a.run.app
+## URL
+https://comict-hvzxesylwq-an.a.run.app
 
-## 概要はこちら
-https://www.canva.com/design/DAF15dmZLMc/92dKzVKYS-D2vmjLBXNBKQ/view?utm_content=DAF15dmZLMc&utm_campaign=designshare&utm_medium=link&utm_source=editor#1
-
-## 技育CAMPハッカソンvol.12,技育博 企業賞受賞作品
+## 表彰
+2023年技育CAMPマンスリーハッカソンvol.12 株式会社マイクロアド賞受賞</br>
+技育博2024春　株式会社YUMEMI賞受賞
